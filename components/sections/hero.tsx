@@ -10,10 +10,10 @@ import { Counter } from "@/components/motion/counter";
 import { FloatingOrbs } from "@/components/motion/floating-orbs";
 
 const METRICS = [
-  { v: 120, suffix: "+", l: "Projects" },
-  { v: 18, suffix: "", l: "Team" },
-  { v: 4.9, suffix: "", l: "만족도", decimals: 1 },
-  { v: 92, suffix: "%", l: "재의뢰율" },
+  { v: 30, suffix: "+", l: "Products" },
+  { v: 5, suffix: "년차", l: "Experience" },
+  { v: 324, suffix: "+", l: "Spec Docs" },
+  { v: 4, suffix: "", l: "Disciplines" },
 ];
 
 export function Hero() {
@@ -39,22 +39,22 @@ export function Hero() {
             <span className="absolute inset-0 animate-ping rounded-full bg-fuchsia-400 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-fuchsia-400" />
           </span>
-          지금 7개 프로젝트 진행 중 · 2026 슬롯 4자리 남음
+          새 프로젝트 받고 있어요 · 2026 슬롯 4자리 남음
         </motion.div>
 
         <h1 className="mt-6 text-balance font-heading text-[2.6rem] font-bold leading-[1.05] tracking-tight sm:mt-8 sm:text-6xl md:text-7xl lg:text-[5.5rem]">
           <MultiLineReveal
             eager
             lines={[
-              <span key="l1">본질을 뽑아</span>,
+              <span key="l1">AI와 함께 빠르게 만들고,</span>,
               <span key="l2">
                 <span
-                  data-text="BUILD"
+                  data-text="끝까지"
                   className="glitch gradient-text mr-2 sm:mr-3"
                 >
-                  BUILD
+                  끝까지
                 </span>
-                <span>합니다.</span>
+                <span>완성합니다.</span>
               </span>,
             ]}
             step={0.14}
@@ -70,13 +70,13 @@ export function Hero() {
         >
           <span className="block">
             <LineReveal eager delay={0.7} sweep={false}>
-              디자인 · 개발 · AI · 그로스.
+              기획 · 디자인 · 풀스택 개발 · AI 자동화.
             </LineReveal>
           </span>
           <span className="block">
             <LineReveal eager delay={0.85} sweep={false}>
-              <span className="text-foreground">한 팀</span>이 처음부터 끝까지
-              책임지는 디지털 프로덕트 스튜디오.
+              <span className="text-foreground">1인 풀스펙 스튜디오</span>가
+              제품을 통째로 책임집니다.
             </LineReveal>
           </span>
         </motion.div>
@@ -127,7 +127,6 @@ export function Hero() {
               <Counter
                 to={m.v}
                 suffix={m.suffix}
-                decimals={m.decimals ?? 0}
                 className="block font-heading text-3xl font-bold tracking-tight gradient-text sm:text-3xl"
               />
               <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">

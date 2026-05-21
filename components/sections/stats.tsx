@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, Users, Calendar, Award } from "lucide-react";
+import { Briefcase, FileText, Calendar, Wand2 } from "lucide-react";
 import { GlitchText } from "@/components/glitch-text";
 import { Counter } from "@/components/motion/counter";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
@@ -10,31 +10,31 @@ import { Parallax } from "@/components/motion/parallax";
 const STATS = [
   {
     icon: Briefcase,
-    to: 120,
+    to: 30,
     suffix: "+",
-    l: "프로젝트",
-    sub: "스타트업부터 대기업까지",
-  },
-  {
-    icon: Users,
-    to: 18,
-    suffix: "",
-    l: "팀 멤버",
-    sub: "디자이너 · 엔지니어 · PM · AI",
+    l: "프로덕트 출시",
+    sub: "외주 · 개인 · AI 작품 합산",
   },
   {
     icon: Calendar,
-    to: 8,
-    suffix: "년",
-    l: "운영 기간",
-    sub: "2018년 창립 이래 흑자 운영",
+    to: 5,
+    suffix: "년차",
+    l: "스타트업 경험",
+    sub: "기획 · 디자인 · 개발 · 마케팅",
   },
   {
-    icon: Award,
-    to: 23,
+    icon: FileText,
+    to: 324,
+    suffix: "+",
+    l: "스펙 문서",
+    sub: "Obsidian + 21개 템플릿",
+  },
+  {
+    icon: Wand2,
+    to: 4,
     suffix: "",
-    l: "수상 & 피처",
-    sub: "Awwwards · CSS Design Awards 등",
+    l: "AI 자체 도구",
+    sub: "Planning Kit · Video Kit · MCP · Orchestrator",
   },
 ];
 
@@ -52,14 +52,20 @@ export function Stats() {
 
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <Reveal className="mb-12 flex flex-col items-start gap-4">
-          <div className="eyebrow">— 우리에 대하여</div>
+          <div className="eyebrow">— PLUCK에 대하여</div>
           <h2 className="max-w-3xl font-heading text-3xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
-            <CharReveal text="8년간 멈추지 않고 " />
-            <GlitchText className="inline-block">만들어왔습니다</GlitchText>{" "}
+            <CharReveal text="혼자서도 " />
+            <GlitchText className="inline-block">서비스를</GlitchText>{" "}
             <span className="gradient-text">
-              <CharReveal text="제품을." delay={0.2} />
+              <CharReveal text="만들어내는 사람." delay={0.2} />
             </span>
           </h2>
+          <p className="lead-copy mt-4 max-w-2xl">
+            스타트업 5년차, 5번의 이직을 통해 기획 · 디자인 · 개발 · 마케팅을
+            모두 거쳤습니다. 월급이 밀리기도 했고 회사가 망하기도 했지만, 그
+            과정에서 &ldquo;혼자서도 서비스를 만들어낼 수 있는 사람&rdquo;이
+            됐습니다.
+          </p>
         </Reveal>
 
         <Stagger

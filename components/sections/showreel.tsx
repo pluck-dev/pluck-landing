@@ -19,45 +19,50 @@ import { cn } from "@/lib/utils";
 
 const CLIPS = [
   {
-    title: "핀테크 온보딩 리디자인",
-    handle: "Series B · Finance",
-    tags: "Web · iOS · Android",
-    plays: "+38%",
+    title: "NDrop · 디지털 명함 플랫폼",
+    handle: "외주 · Next.js 15",
+    tags: "QR · OAuth · 통합 인증",
+    plays: "B2B/B2C",
+    link: "https://www.ndrop.kr/",
     grad: "from-fuchsia-500/80 via-violet-500/70 to-cyan-400/70",
   },
   {
-    title: "AI 추천 커머스",
-    handle: "Seed · Commerce",
-    tags: "Next.js · LLM · RAG",
-    plays: "+2.4x",
+    title: "몇기야 · ROTC 커뮤니티",
+    handle: "개인 · Next.js 16",
+    tags: "Supabase · TipTap · 실시간",
+    plays: "Live",
+    link: "https://www.myotgiya.com/",
     grad: "from-rose-500/80 via-fuchsia-500/70 to-violet-500/70",
   },
   {
-    title: "B2B SaaS 대시보드",
-    handle: "Series A · SaaS",
-    tags: "Web · Charts · 디자인시스템",
-    plays: "92 NPS",
+    title: "DVIA · 기업 웹",
+    handle: "외주 · Next.js + Three.js",
+    tags: "3D · GSAP · 다국어",
+    plays: "Global",
+    link: "https://web-daeilsys-v2.vercel.app/",
     grad: "from-cyan-400/80 via-emerald-400/70 to-lime-400/70",
   },
   {
-    title: "헬스케어 모바일 앱",
-    handle: "대기업 신사업",
-    tags: "iOS · Android · 모션",
-    plays: "4.8★",
+    title: "FitGenie · 피트니스 CRM",
+    handle: "외주 · 풀스택",
+    tags: "Prisma · Supabase · FullCalendar",
+    plays: "Admin + App",
+    link: "https://admin-pando.vercel.app/",
     grad: "from-orange-400/80 via-rose-500/70 to-fuchsia-500/70",
   },
   {
-    title: "교육 플랫폼 풀빌드",
-    handle: "Pre-A · EdTech",
-    tags: "Web · 결제 · LMS",
-    plays: "5만 MAU",
+    title: "사주 오케스트레이터",
+    handle: "AI · MCP Server",
+    tags: "5-Stage LLM · Webhook · CLI",
+    plays: "AI Agent",
     grad: "from-emerald-400/80 via-cyan-400/70 to-fuchsia-500/70",
   },
   {
-    title: "여행 큐레이션 리브랜드",
-    handle: "Series A · Travel",
-    tags: "Brand · Web · 앱",
-    plays: "+62%",
+    title: "플럭 드로우 · QR 이벤트",
+    handle: "개인 · draw.pluck.co.kr",
+    tags: "QR · 실시간 추첨",
+    plays: "Live",
+    link: "https://draw.pluck.co.kr/",
     grad: "from-violet-500/80 via-rose-500/70 to-orange-400/70",
   },
 ];
@@ -87,21 +92,20 @@ export function Showreel() {
           <div className="eyebrow mb-5">— 우리가 만든 것들</div>
           <h2 className="font-heading text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
             <span className="block">
-              <LineReveal>최근 작업을</LineReveal>
+              <LineReveal>실제 라이브 중인</LineReveal>
             </span>
             <span className="block">
               <LineReveal delay={0.15} sweep>
-                <GlitchText className="inline-block">살펴보세요</GlitchText>
-                <span className="ml-2 inline-block gradient-text">.</span>
+                <GlitchText className="inline-block">프로덕트</GlitchText>
+                <span className="ml-2 inline-block gradient-text">들.</span>
               </LineReveal>
             </span>
           </h2>
           <p className="lead-copy mt-5">
-            지난 90일간 송출/런칭한 실제 프로덕트의 하이라이트입니다.
+            외주 · 개인 · AI 작품 합쳐 30개 이상. 아래는 최근 라인업입니다.
           </p>
         </Reveal>
 
-        {/* 메인 케이스 스튜디오 — 브라운관 켜짐 */}
         <motion.div
           style={{ y: heroY, scale: heroScale }}
           className="relative isolate w-full overflow-hidden rounded-3xl"
@@ -119,9 +123,7 @@ export function Showreel() {
               playsInline
               poster=""
               preload="metadata"
-            >
-              {/* TODO: 실제 영상 URL */}
-            </video>
+            />
 
             <div
               aria-hidden
@@ -142,14 +144,14 @@ export function Showreel() {
                 <span className="absolute inset-0 animate-ping rounded-full bg-fuchsia-400 opacity-80" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-fuchsia-400" />
               </span>
-              FEATURED CASE · 2026
+              FEATURED · 2026
             </div>
 
             <div className="absolute right-4 top-4 grid grid-cols-3 gap-3 sm:right-6 sm:top-6 sm:gap-5">
               {[
-                { l: "활성 사용자", v: "120K" },
-                { l: "전환율", v: "+38%" },
-                { l: "릴리즈", v: "12주" },
+                { l: "Stack", v: "Next.js 16" },
+                { l: "Status", v: "LIVE" },
+                { l: "Lead", v: "1인" },
               ].map((m) => (
                 <div key={m.l} className="text-right">
                   <div className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
@@ -184,16 +186,15 @@ export function Showreel() {
 
             <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-1 sm:bottom-6 sm:left-6 sm:right-6">
               <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/70 sm:text-[11px]">
-                Case · 2026 Q1 · Fintech · Series B
+                Case · 몇기야 · ROTC 동기 커뮤니티
               </div>
               <div className="font-heading text-xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                12주만에 핵심 지표 38% 끌어올린 리디자인
+                기획 → 디자인 → 풀스택 → 런칭 5주
               </div>
             </div>
           </CRTReveal>
         </motion.div>
 
-        {/* 클립 캐러셀 */}
         <div className="mt-10 sm:mt-14">
           <div className="mb-4 flex items-center justify-between">
             <div className="font-mono text-[11px] uppercase tracking-[0.32em] text-muted-foreground">
@@ -223,67 +224,79 @@ export function Showreel() {
             ref={railRef}
             className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:-mx-6 sm:px-6 [&::-webkit-scrollbar]:hidden"
           >
-            {CLIPS.map((c, i) => (
-              <motion.article
-                key={c.title}
-                initial={{ opacity: 0, x: 80, rotate: 4 }}
-                whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{
-                  delay: i * 0.06,
-                  duration: 0.7,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className={cn(
-                  "group glow-border relative isolate aspect-[9/16] w-[68vw] shrink-0 snap-start overflow-hidden rounded-3xl sm:w-[280px]"
-                )}
-              >
-                <div
-                  aria-hidden
-                  className={cn("absolute inset-0 bg-gradient-to-br", c.grad)}
-                />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,oklch(0.09_0.012_280_/_0.85)_100%)]"
-                />
-                <div aria-hidden className="absolute inset-0 noise" />
+            {CLIPS.map((c, i) => {
+              const inner = (
+                <article
+                  className={cn(
+                    "group glow-border relative isolate aspect-[9/16] h-full w-full overflow-hidden rounded-3xl"
+                  )}
+                >
+                  <div
+                    aria-hidden
+                    className={cn("absolute inset-0 bg-gradient-to-br", c.grad)}
+                  />
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,oklch(0.09_0.012_280_/_0.85)_100%)]"
+                  />
+                  <div aria-hidden className="absolute inset-0 noise" />
 
-                <video
-                  className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  muted
-                  loop
-                  playsInline
-                  preload="none"
-                  poster=""
-                />
-
-                <div className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full glass px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.22em] text-foreground">
-                  <MonitorPlay className="size-3" />
-                  {c.tags}
-                </div>
-
-                <div className="absolute right-3 top-3 rounded-full glass px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.22em] text-foreground">
-                  {c.plays}
-                </div>
-
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <div className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/70">
-                    <Hash className="size-2.5" />
-                    {c.handle}
+                  <div className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full glass px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.22em] text-foreground">
+                    <MonitorPlay className="size-3" />
+                    {c.tags}
                   </div>
-                  <div className="mt-1 font-heading text-base font-semibold tracking-tight text-foreground sm:text-lg">
-                    {c.title}
-                  </div>
-                </div>
 
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
-                  <span className="relative inline-flex size-14 items-center justify-center rounded-full bg-background/40 backdrop-blur-md">
-                    <span className="absolute inset-0 rounded-full border border-white/30" />
-                    <Play className="ml-0.5 size-5 fill-current text-foreground" />
-                  </span>
-                </div>
-              </motion.article>
-            ))}
+                  <div className="absolute right-3 top-3 rounded-full glass px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.22em] text-foreground">
+                    {c.plays}
+                  </div>
+
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <div className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/70">
+                      <Hash className="size-2.5" />
+                      {c.handle}
+                    </div>
+                    <div className="mt-1 font-heading text-base font-semibold tracking-tight text-foreground sm:text-lg">
+                      {c.title}
+                    </div>
+                  </div>
+
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                    <span className="relative inline-flex size-14 items-center justify-center rounded-full bg-background/40 backdrop-blur-md">
+                      <span className="absolute inset-0 rounded-full border border-white/30" />
+                      <Play className="ml-0.5 size-5 fill-current text-foreground" />
+                    </span>
+                  </div>
+                </article>
+              );
+
+              return (
+                <motion.div
+                  key={c.title}
+                  initial={{ opacity: 0, x: 80, rotate: 4 }}
+                  whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    delay: i * 0.06,
+                    duration: 0.7,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="aspect-[9/16] w-[68vw] shrink-0 snap-start sm:w-[280px]"
+                >
+                  {c.link ? (
+                    <a
+                      href={c.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block h-full"
+                    >
+                      {inner}
+                    </a>
+                  ) : (
+                    inner
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -10,33 +10,33 @@ import { LineReveal } from "@/components/motion/line-reveal";
 const STEPS = [
   {
     n: "01",
-    t: "Discover",
-    d: "사용자 인터뷰 · 시장 분석 · 경쟁사 매핑. 진짜 풀어야 할 문제를 정합니다.",
+    t: "Kickoff",
+    d: "클라이언트 미팅 · 비즈니스 목표 · KPI · 마일스톤 정의. PRD 초안까지 첫 주에 끝냅니다.",
   },
   {
     n: "02",
-    t: "Define",
-    d: "JTBD · 페르소나 · 메트릭 정의. 성공의 기준을 숫자로 박아둡니다.",
+    t: "Plan",
+    d: "유저 페르소나 · 시나리오 · IA · 화면설계서 · 기능명세서 · API 명세서 · 데이터 정의서 · 권한 매트릭스.",
   },
   {
     n: "03",
     t: "Design",
-    d: "IA · 와이어 · 비주얼 · 프로토타입. 개발 직전까지 손에 잡히는 형태로.",
+    d: "Figma · shadcn 기반 디자인 시스템 → 와이어 → 비주얼 → 인터랙션. 프로토타입까지.",
   },
   {
     n: "04",
     t: "Build",
-    d: "스프린트 단위 개발 · 매주 리뷰 데모. 변경에 강한 견고한 코드.",
+    d: "Next.js · NestJS · Supabase · React Native. 스프린트 단위 개발과 매주 데모 리뷰.",
   },
   {
     n: "05",
     t: "Launch",
-    d: "QA · 모니터링 · 운영 핸드오버. 끄지 않고 안정적으로 띄웁니다.",
+    d: "QA · 모니터링 · 분석 셋업 · 운영 핸드오버. 끄지 않고 안정적으로 띄웁니다.",
   },
   {
     n: "06",
     t: "Grow",
-    d: "지표 분석 · A/B · 다음 이터레이션. 런칭이 아닌 성장이 끝입니다.",
+    d: "지표 분석 · A/B · 다음 이터레이션. 런칭이 아닌 운영이 진짜 시작.",
   },
 ];
 
@@ -56,7 +56,7 @@ export function Process() {
             <div className="eyebrow mb-5">— 일하는 방식</div>
             <h2 className="font-heading text-3xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
               <span className="block">
-                <LineReveal>아이디어에서 매출까지</LineReveal>
+                <LineReveal>1인 풀스펙</LineReveal>
               </span>
               <span className="block">
                 <LineReveal delay={0.15} sweep>
@@ -66,9 +66,9 @@ export function Process() {
             </h2>
           </div>
           <p className="lead-copy text-[15px] sm:max-w-sm sm:text-right sm:text-[16px]">
-            평균 킥오프 1주, 첫 데모까지 3주.
+            평균 킥오프 1주, 첫 데모 2~3주.
             <br />
-            매주 한 번의 데모로 방향을 함께 잡습니다.
+            324개+ 스펙 문서를 굴려본 검증된 워크플로.
           </p>
         </Reveal>
 
@@ -140,11 +140,11 @@ export function Process() {
           <div className="rounded-3xl glass p-6 text-center sm:p-10">
             <p className="font-heading text-2xl font-bold leading-[1.2] tracking-tight sm:text-4xl">
               <LineReveal>
-                <CharReveal text="한 번도 멈춘 적 없습니다." />
+                <CharReveal text="기획부터 운영까지, 끊김 없이." />
               </LineReveal>
             </p>
             <p className="lead-copy mt-3">
-              지난 8년간 진행한 모든 프로젝트가 라이브로 돌아갑니다.
+              외주 핑퐁이 없으니 빠르고, 한 사람이 책임지니 흔들리지 않습니다.
             </p>
           </div>
         </Reveal>

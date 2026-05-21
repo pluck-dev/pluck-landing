@@ -9,30 +9,30 @@ import { CharReveal } from "@/components/motion/char-reveal";
 const QUOTES = [
   {
     quote:
-      "스튜디오가 아니라 한 팀처럼 일했습니다. 디자인부터 운영까지 끊김 없이 흘러갔고, 출시 3개월만에 핵심 지표가 두 배가 됐어요.",
-    name: "정민호",
-    role: "CPO · 시리즈 B 핀테크",
+      "기획부터 개발까지 한 사람이 다 들어가니까 의사결정이 비교할 수 없이 빨랐어요. 매주 데모가 진짜 데모였습니다.",
+    name: "스타트업 대표",
+    role: "Pre-A · SaaS",
     accent: "from-fuchsia-500/30 to-fuchsia-500/0",
   },
   {
     quote:
-      "AI 기능을 처음 도입할 때 사실 반신반의했는데, 실제 매출이 따라왔어요. 가설부터 검증까지 우리보다 더 빨랐습니다.",
-    name: "이수진",
-    role: "Founder · AI 커머스",
+      "AI 기능을 어떻게 끼울지 막막했는데, MVP 안에 자연스럽게 들어왔어요. 출시 후에도 같이 봐주는 게 진짜 좋았습니다.",
+    name: "프로덕트 매니저",
+    role: "Seed · 커머스",
     accent: "from-cyan-400/30 to-cyan-400/0",
   },
   {
     quote:
-      "여러 에이전시랑 일해봤지만 이렇게 코드 품질이 좋은 곳은 처음입니다. 6개월 지나도 우리가 그대로 운영해도 막힘이 없어요.",
-    name: "김도윤",
-    role: "CTO · SaaS",
+      "기획서 퀄리티가 인하우스 PM보다 좋아서 놀랐습니다. 외주 받는 느낌이 아니라 우리 팀 한 명이 늘어난 느낌.",
+    name: "CTO",
+    role: "Series A · B2B",
     accent: "from-violet-500/30 to-violet-500/0",
   },
   {
     quote:
-      "디자이너 한 명, PM 한 명이 우리 채널에 풀타임처럼 들어왔습니다. 분기 OKR을 같이 맞추는 게 진짜 큰 차이예요.",
-    name: "박지혜",
-    role: "VP Product · 대기업",
+      "사이드 프로젝트로 시작했는데 한 달 만에 라이브 가능한 형태로 나왔어요. 가성비도 좋고 결과물 만족도가 가장 큽니다.",
+    name: "솔로 창업자",
+    role: "Bootstrapped",
     accent: "from-rose-500/30 to-rose-500/0",
   },
 ];
@@ -45,16 +45,16 @@ export function Testimonials() {
     >
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <Reveal className="mb-14 max-w-2xl">
-          <div className="eyebrow mb-5">— 클라이언트 후기</div>
+          <div className="eyebrow mb-5">— 함께한 분들 후기</div>
           <h2 className="font-heading text-3xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
-            <CharReveal text="우리보다 " />
-            <GlitchText className="inline-block">고객이</GlitchText>
+            <CharReveal text="결과로 " />
+            <GlitchText className="inline-block">증명합니다</GlitchText>
             <span className="ml-2 gradient-text">
-              <CharReveal text=" 더 잘 압니다." delay={0.2} />
+              <CharReveal text="." delay={0.2} />
             </span>
           </h2>
           <p className="lead-copy mt-5">
-            지난 8년간 함께한 분들이 들려준 이야기입니다.
+            지난 5년간 함께한 분들의 이야기입니다.
           </p>
         </Reveal>
 

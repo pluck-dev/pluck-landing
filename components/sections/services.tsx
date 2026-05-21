@@ -1,12 +1,12 @@
 "use client";
 
 import {
+  FileText,
   Palette,
   Code2,
+  Smartphone,
   Cpu,
-  TrendingUp,
-  Sparkles,
-  Cloud,
+  Workflow,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { GlitchText } from "@/components/glitch-text";
@@ -17,56 +17,56 @@ import { CharReveal } from "@/components/motion/char-reveal";
 
 const SERVICES = [
   {
-    icon: Palette,
-    tag: "디자인",
-    title: "Product Design",
-    desc: "리서치 → IA → 와이어 → 비주얼. 사용자 행동을 끌어내는 UX/UI를 설계합니다.",
-    metric: "Figma · 디자인 시스템",
+    icon: FileText,
+    tag: "기획",
+    title: "Product Planning",
+    desc: "PRD · 화면설계서 · 기능명세서 · API 명세서 · RBAC. 클라이언트 미팅부터 설계까지 1인 풀스펙.",
+    metric: "21개 템플릿 · Obsidian",
     accent: "from-fuchsia-500/40 to-fuchsia-500/0",
     spot: "oklch(0.78 0.22 305 / 0.25)",
   },
   {
-    icon: Code2,
-    tag: "엔지니어링",
-    title: "Web & App",
-    desc: "Next.js · React Native · TypeScript. 빠르고 견고한 풀스택 구현.",
-    metric: "Web · iOS · Android",
+    icon: Palette,
+    tag: "디자인",
+    title: "UI/UX Design",
+    desc: "와이어 · 비주얼 · 인터랙션. shadcn/ui · Framer Motion 기반의 모던 인터페이스.",
+    metric: "Figma · shadcn · Motion",
     accent: "from-violet-500/40 to-violet-500/0",
     spot: "oklch(0.7 0.25 295 / 0.25)",
+  },
+  {
+    icon: Code2,
+    tag: "프론트",
+    title: "Frontend",
+    desc: "Next.js 14/15/16 · React 19 · TypeScript. 빠르고 견고한 풀-페이지 인터랙티브 웹.",
+    metric: "Next.js · React · TS",
+    accent: "from-cyan-400/40 to-cyan-400/0",
+    spot: "oklch(0.85 0.18 200 / 0.25)",
+  },
+  {
+    icon: Smartphone,
+    tag: "모바일",
+    title: "Mobile App",
+    desc: "React Native · Expo · Flutter. Play Store · App Store 배포까지 책임.",
+    metric: "RN · Expo · Flutter",
+    accent: "from-rose-500/40 to-rose-500/0",
+    spot: "oklch(0.78 0.24 340 / 0.25)",
+  },
+  {
+    icon: Workflow,
+    tag: "백엔드",
+    title: "Backend & DB",
+    desc: "NestJS · Node · Python · FastAPI · Supabase · Prisma · GraphQL. 결제 · 인증 · 자동화까지.",
+    metric: "NestJS · Supabase · FastAPI",
+    accent: "from-lime-400/40 to-lime-400/0",
+    spot: "oklch(0.9 0.22 130 / 0.22)",
   },
   {
     icon: Cpu,
     tag: "AI",
     title: "AI & Automation",
-    desc: "LLM, 추천, 검색, RAG. 실제 비즈니스에 들어가는 AI 기능 구현.",
-    metric: "OpenAI · Anthropic · 자체모델",
-    accent: "from-rose-500/40 to-rose-500/0",
-    spot: "oklch(0.78 0.24 340 / 0.25)",
-  },
-  {
-    icon: Sparkles,
-    tag: "브랜드",
-    title: "Brand & Motion",
-    desc: "로고 · 가이드 · 모션. 제품과 한 몸이 되는 브랜드 시스템을 만듭니다.",
-    metric: "Identity · Storytelling",
-    accent: "from-cyan-400/40 to-cyan-400/0",
-    spot: "oklch(0.85 0.18 200 / 0.25)",
-  },
-  {
-    icon: TrendingUp,
-    tag: "그로스",
-    title: "Growth",
-    desc: "퍼포먼스 · CRM · 그로스 실험. 런칭 후 매출 곡선을 책임집니다.",
-    metric: "GA4 · Amplitude · A/B",
-    accent: "from-lime-400/40 to-lime-400/0",
-    spot: "oklch(0.9 0.22 130 / 0.22)",
-  },
-  {
-    icon: Cloud,
-    tag: "DevOps",
-    title: "Cloud & DevOps",
-    desc: "AWS · Vercel · Supabase · 모니터링. 안정적이고 확장 가능한 인프라.",
-    metric: "CI/CD · Observability",
+    desc: "LLM 파이프라인 · MCP 서버 · Claude Code 스킬. 진짜 운영되는 AI 기능을 만듭니다.",
+    metric: "Claude · OpenAI · MCP",
     accent: "from-orange-400/40 to-orange-400/0",
     spot: "oklch(0.83 0.18 60 / 0.22)",
   },
@@ -79,15 +79,15 @@ export function Services() {
         <Reveal className="mb-14 max-w-2xl">
           <div className="eyebrow mb-5">— 우리가 잘하는 일</div>
           <h2 className="font-heading text-3xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
-            <CharReveal text="한 팀이 처음부터 " />
+            <CharReveal text="한 사람이 처음부터 " />
             <GlitchText className="inline-block">끝까지</GlitchText>{" "}
             <span className="gradient-text">
-              <CharReveal text="책임집니다." delay={0.2} />
+              <CharReveal text="만듭니다." delay={0.2} />
             </span>
           </h2>
           <p className="lead-copy mt-5 max-w-xl">
-            6개 디시플린이 한 스튜디오에 모여 있습니다. 외주 핑퐁 없이 한
-            팀에서 본질만 뽑아냅니다.
+            기획 · 디자인 · 풀스택 · AI까지 한 명이 책임집니다. 외주 핑퐁 없이,
+            결정이 빠르고 결과물에 흔들림이 없습니다.
           </p>
         </Reveal>
 

@@ -10,28 +10,28 @@ import { cn } from "@/lib/utils";
 
 const FAQS = [
   {
-    q: "어떤 규모의 회사와 일하나요?",
-    a: "Pre-Seed부터 대기업까지 함께합니다. 다만 '왜 이걸 만드는가'에 답이 명확한 팀과 가장 좋은 결과가 나옵니다.",
+    q: "정말 1인이 다 하나요? 품질이 괜찮나요?",
+    a: "기획 · 디자인 · 풀스택 개발 · AI 자동화까지 한 명이 합니다. 5년간 30개 이상의 프로덕트를 라이브로 띄웠고, 324+개의 스펙 문서를 굴려왔습니다. 외주 핑퐁이 없으니 의사결정과 결과물이 더 단단합니다.",
   },
   {
-    q: "최소 프로젝트 규모는 어떻게 되나요?",
-    a: "SPRINT(2주, 9.9M)부터 시작할 수 있습니다. 짧은 검증 → 풀빌드로 자연스럽게 이어지는 경우가 많습니다.",
-  },
-  {
-    q: "기존 디자이너/개발자 팀과 협업이 가능한가요?",
-    a: "네. EMBEDDED 모델에서는 고객 팀과 매일 같이 일합니다. 코드 컨벤션 · 디자인 시스템 · OKR을 정합하는 방식으로요.",
+    q: "어떤 규모의 프로젝트를 받나요?",
+    a: "MVP 2~3개월짜리부터 6개월+ 풀스케일까지. Pre-Seed/Seed/Series A 스타트업과 가장 잘 맞습니다. 동시에 받는 프로젝트는 1~2개로 제한합니다.",
   },
   {
     q: "사용하는 기술 스택은요?",
-    a: "Next.js, React Native, TypeScript, Python, Go, AWS, Vercel, Supabase, OpenAI/Anthropic. 새 스택 도입도 가능합니다.",
+    a: "Frontend: Next.js 14/15/16, React 19, TypeScript, Tailwind, shadcn, Framer Motion / Backend: NestJS, Node, Python, FastAPI, Supabase, Prisma, PostgreSQL / Mobile: React Native, Expo, Flutter / AI: Claude, OpenAI, MCP, LangChain.",
   },
   {
-    q: "AI 프로젝트도 가능한가요?",
-    a: "LLM 기반 챗봇, RAG 검색, 추천, 자동화까지. 데모만이 아니라 운영까지 책임지는 형태로 진행합니다.",
+    q: "기획 문서는 어떻게 산출되나요?",
+    a: "Obsidian + 21개 Templater 템플릿 기반으로 PRD · 화면설계서 · 기능명세서 · API 명세서 · 데이터 정의서 · RBAC 매트릭스를 자동 생성합니다. 문서 간 [[양방향 링크]] 자동 참조, 진행률 대시보드까지.",
   },
   {
-    q: "런칭 이후에도 운영을 맡길 수 있나요?",
-    a: "기본 BUILD 패키지에 런칭 후 1개월 안정화가 포함됩니다. 그 이후는 리테이너 또는 EMBEDDED로 전환합니다.",
+    q: "AI 기능 도입도 가능한가요?",
+    a: "사주 오케스트레이터(5-Stage LLM), Claude Planning Kit, Claude Video Kit, Pluck Orchestrator(Electron) 등 자체 AI 도구를 4개 운영 중. LLM 파이프라인, MCP 서버, RAG, 자동화까지 운영 가능한 형태로 만들어 드립니다.",
+  },
+  {
+    q: "런칭 후에도 운영을 맡길 수 있나요?",
+    a: "기본 패키지에 런칭 후 1개월 안정화가 포함됩니다. 이후엔 월 단위 리테이너 또는 장기 임베디드(EMBEDDED)로 전환합니다.",
   },
 ];
 

@@ -10,7 +10,6 @@ const PRODUCT = [
 const COMPANY = [
   { l: "About", h: "#stats" },
   { l: "FAQ", h: "#faq" },
-  { l: "Privacy", h: "#" },
 ];
 
 export function Footer() {
@@ -47,8 +46,8 @@ export function Footer() {
             PLUCK
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-            본질을 뽑아 제품으로 만드는 디지털 프로덕트 스튜디오.
-            8년간 120개 제품, 평균 만족도 4.9.
+            AI와 함께 빠르게 만들고, 끝까지 완성하는 1인 풀스펙 스튜디오.
+            기획부터 운영까지, 한 사람이 통째로 책임집니다.
           </p>
         </div>
 
@@ -85,6 +84,16 @@ export function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <a
+                href="https://github.com/pluck-dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-foreground/80 transition hover:text-fuchsia-300"
+              >
+                GitHub
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -93,8 +102,24 @@ export function Footer() {
             Contact
           </div>
           <ul className="space-y-2 text-sm text-foreground/80">
-            <li>hello@pluck.studio</li>
-            <li>+82 02-0000-0000</li>
+            <li>
+              <a
+                href="mailto:hello@pluck.co.kr"
+                className="transition hover:text-fuchsia-300"
+              >
+                hello@pluck.co.kr
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.pluck.co.kr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:text-fuchsia-300"
+              >
+                pluck.co.kr
+              </a>
+            </li>
             <li>Seoul, KR</li>
           </ul>
         </div>
