@@ -1,12 +1,10 @@
 "use client";
 
-import { motion } from "motion/react";
 import { ArrowUpRight, Globe } from "lucide-react";
-import { GlitchText } from "@/components/glitch-text";
-import { LineReveal } from "@/components/motion/line-reveal";
+import { KineticText } from "@/components/motion/kinetic-text";
 import { Reveal } from "@/components/motion/reveal";
-import { FlyInCard } from "@/components/motion/fly-in-card";
-import { SpotlightCard } from "@/components/motion/spotlight-card";
+import { Panel3D } from "@/components/motion/panel-3d";
+import { DisplaceDefs } from "@/components/motion/displace-defs";
 import { cn } from "@/lib/utils";
 
 type Work = {
@@ -17,10 +15,9 @@ type Work = {
   highlight: string;
   link?: string;
   domain: string;
-  /** 카드 사이즈 */
-  size?: "wide" | "tall" | "default";
+  /** 마소너리 카드 높이 — 가변 */
+  h: "sm" | "md" | "lg";
   grad: string;
-  accent: string;
 };
 
 const WORKS: Work[] = [
@@ -32,9 +29,8 @@ const WORKS: Work[] = [
     highlight: "기획 → 디자인 → 풀스택 → 런칭 5주",
     link: "https://www.myotgiya.com/",
     domain: "myotgiya.com",
-    size: "wide",
-    grad: "from-fuchsia-500/70 via-violet-500/55 to-cyan-400/55",
-    accent: "fuchsia",
+    h: "lg",
+    grad: "from-fuchsia-500/35 via-violet-500/22 to-cyan-400/18",
   },
   {
     title: "NDrop",
@@ -44,8 +40,8 @@ const WORKS: Work[] = [
     highlight: "B2B/B2C · QR 통합 인증",
     link: "https://www.ndrop.kr/",
     domain: "ndrop.kr",
-    grad: "from-cyan-400/70 via-fuchsia-500/55 to-violet-500/55",
-    accent: "cyan",
+    h: "md",
+    grad: "from-cyan-400/32 via-fuchsia-500/20 to-violet-500/18",
   },
   {
     title: "DVIA",
@@ -55,8 +51,8 @@ const WORKS: Work[] = [
     highlight: "3D + 다국어 + 견적 문의",
     link: "https://web-daeilsys-v2.vercel.app/",
     domain: "daeilsys.com",
-    grad: "from-emerald-400/70 via-cyan-400/55 to-fuchsia-500/55",
-    accent: "emerald",
+    h: "sm",
+    grad: "from-emerald-400/32 via-cyan-400/20 to-fuchsia-500/16",
   },
   {
     title: "FitGenie + 스포짐",
@@ -66,8 +62,8 @@ const WORKS: Work[] = [
     highlight: "어드민 + 모바일 분리 운영",
     link: "https://admin-pando.vercel.app/",
     domain: "fitgenie / 스포짐",
-    grad: "from-orange-400/70 via-rose-500/55 to-fuchsia-500/55",
-    accent: "orange",
+    h: "lg",
+    grad: "from-orange-400/32 via-rose-500/20 to-fuchsia-500/16",
   },
   {
     title: "사주 오케스트레이터",
@@ -76,8 +72,8 @@ const WORKS: Work[] = [
     stack: ["Claude API", "MCP", "n8n", "Node.js"],
     highlight: "CLI / MCP / Webhook 3-mode",
     domain: "AI Agent",
-    grad: "from-violet-500/70 via-fuchsia-500/55 to-rose-500/55",
-    accent: "violet",
+    h: "md",
+    grad: "from-violet-500/35 via-fuchsia-500/20 to-rose-500/16",
   },
   {
     title: "플럭 드로우",
@@ -87,8 +83,8 @@ const WORKS: Work[] = [
     highlight: "실시간 추첨 + 관리자",
     link: "https://draw.pluck.co.kr/",
     domain: "draw.pluck.co.kr",
-    grad: "from-rose-500/70 via-violet-500/55 to-cyan-400/55",
-    accent: "rose",
+    h: "sm",
+    grad: "from-rose-500/32 via-violet-500/20 to-cyan-400/16",
   },
 ];
 
@@ -98,26 +94,30 @@ const CATEGORY_COLOR: Record<Work["category"], string> = {
   AI: "bg-cyan-400/15 border-cyan-400/30 text-cyan-200",
 };
 
+const HEIGHT: Record<Work["h"], string> = {
+  sm: "min-h-[300px]",
+  md: "min-h-[380px]",
+  lg: "min-h-[460px]",
+};
+
 export function Showreel() {
   return (
     <section id="showreel" className="relative overflow-hidden py-24 sm:py-32">
+      <DisplaceDefs />
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <Reveal className="mb-12 flex flex-col gap-6 sm:mb-16 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
             <div className="eyebrow mb-5">— 우리가 만든 것들</div>
             <h2 className="font-heading text-3xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
               <span className="block">
-                <LineReveal>실제 라이브 중인</LineReveal>
+                <KineticText text="실제 라이브 중인" eager />
               </span>
               <span className="block">
-                <LineReveal delay={0.15} sweep>
-                  <GlitchText className="inline-block">프로덕트</GlitchText>
-                  <span className="ml-2 inline-block gradient-text">들.</span>
-                </LineReveal>
+                <KineticText text="프로덕트들." gradient delay={0.18} />
               </span>
             </h2>
             <p className="lead-copy mt-5 max-w-xl">
-              외주 · 개인 · AI 작품 합쳐 30개 이상. 아래는 최근 라인업입니다.
+              외주 · 개인 · AI 작품 합쳐 30개 이상. 마우스를 올려보세요.
             </p>
           </div>
           <a
@@ -131,17 +131,14 @@ export function Showreel() {
           </a>
         </Reveal>
 
-        {/* Bento 그리드 */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {WORKS.map((w, i) => (
-            <FlyInCard
-              key={w.title}
-              index={i}
-              from="scatter"
-              className={cn(w.size === "wide" && "sm:col-span-2 lg:col-span-2")}
-            >
-              <WorkCard work={w} />
-            </FlyInCard>
+        {/* Fluid 마소너리 — CSS columns 로 가변 높이 흐름 */}
+        <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 [&>*]:mb-5">
+          {WORKS.map((w) => (
+            <div key={w.title} className="break-inside-avoid">
+              <Panel3D>
+                <WorkCard work={w} />
+              </Panel3D>
+            </div>
           ))}
         </div>
       </div>
@@ -151,68 +148,38 @@ export function Showreel() {
 
 function WorkCard({ work }: { work: Work }) {
   const inner = (
-    <SpotlightCard
-      color="oklch(0.78 0.22 305 / 0.22)"
-      className="group relative h-full overflow-hidden rounded-3xl glass transition-transform duration-300 hover:-translate-y-1.5"
+    <div
+      className={cn(
+        "group relative w-full overflow-hidden rounded-3xl border border-white/10 bg-card/40",
+        HEIGHT[work.h]
+      )}
     >
-      {/* 브라우저 mockup */}
+      {/* 아트 레이어 — 호버 시 displace + scale */}
       <div
+        aria-hidden
         className={cn(
-          "relative overflow-hidden rounded-2xl m-3",
-          work.size === "wide" ? "aspect-[16/9]" : "aspect-[16/10]"
+          "displace-art chroma scanlines absolute inset-0 bg-gradient-to-br",
+          work.grad
         )}
+      />
+      {/* 노이즈 + 거대 워터마크 타이포 */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-6 -right-3 select-none font-heading text-[7rem] font-black leading-none tracking-tighter text-white/[0.06] sm:text-[9rem]"
       >
-        <div
-          aria-hidden
-          className={cn("absolute inset-0 bg-gradient-to-br", work.grad)}
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(60%_60%_at_30%_30%,oklch(1_0_0_/_0.1),transparent_55%)]"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,oklch(0_0_0_/_0.5)_100%)]"
-        />
-        <div aria-hidden className="absolute inset-0 noise" />
+        {work.category}
+      </div>
 
-        {/* 브라우저 chrome */}
-        <div className="absolute inset-x-0 top-0 flex h-8 items-center gap-1.5 bg-black/30 px-3 backdrop-blur-sm">
-          <span className="size-2 rounded-full bg-rose-400/80" />
-          <span className="size-2 rounded-full bg-amber-400/80" />
-          <span className="size-2 rounded-full bg-emerald-400/80" />
-          <div className="ml-3 inline-flex items-center gap-1.5 rounded-full bg-black/30 px-2.5 py-0.5 text-[10px] font-mono text-foreground/75">
-            <Globe className="size-2.5" />
-            {work.domain}
+      {/* 콘텐츠 */}
+      <div className="relative z-10 flex h-full flex-col p-6">
+        <div className="flex items-start gap-2">
+          <div className="inline-flex max-w-[70%] items-center gap-1.5 rounded-full border border-white/10 bg-background/40 px-3 py-1 text-[11px] font-mono text-foreground/80 backdrop-blur-md">
+            <Globe className="size-3 shrink-0" />
+            <span className="truncate">{work.domain}</span>
           </div>
-        </div>
-
-        {/* 사이트 뼈대 — 와이어 라인 */}
-        <div className="absolute inset-x-6 top-12 space-y-2">
-          <div className="h-3 w-1/3 rounded bg-white/25" />
-          <div className="h-2 w-3/5 rounded bg-white/15" />
-          <div className="h-2 w-1/2 rounded bg-white/15" />
-        </div>
-        <div
-          className={cn(
-            "absolute inset-x-6 grid gap-2",
-            work.size === "wide"
-              ? "bottom-6 grid-cols-3"
-              : "bottom-6 grid-cols-2"
-          )}
-        >
-          <div className="aspect-square rounded-lg bg-white/15" />
-          <div className="aspect-square rounded-lg bg-white/10" />
-          {work.size === "wide" && (
-            <div className="aspect-square rounded-lg bg-white/15" />
-          )}
-        </div>
-
-        {/* 카테고리 뱃지 */}
-        <div className="absolute right-3 top-12">
           <span
             className={cn(
-              "rounded-full border px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase",
+              "shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase",
               CATEGORY_COLOR[work.category]
             )}
           >
@@ -220,36 +187,39 @@ function WorkCard({ work }: { work: Work }) {
           </span>
         </div>
 
-        {/* 호버 시 우상단 화살표 */}
-        {work.link && (
-          <div className="absolute right-3 bottom-3 inline-flex size-9 items-center justify-center rounded-full bg-background/40 backdrop-blur-md transition-transform group-hover:-translate-y-1 group-hover:scale-110">
-            <ArrowUpRight className="size-4 text-foreground" />
+        {/* 하단 정보 — 평소엔 타이틀, 호버 시 디테일이 부드럽게 올라옴 */}
+        <div className="mt-auto">
+          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-fuchsia-200/90">
+            {work.highlight}
           </div>
+          <h3 className="mt-2 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            {work.title}
+          </h3>
+          <p className="mt-1 text-[15px] text-foreground/75">{work.tagline}</p>
+
+          <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:grid-rows-[1fr]">
+            <div className="overflow-hidden">
+              <div className="flex flex-wrap gap-1.5 pt-4">
+                {work.stack.slice(0, 4).map((s) => (
+                  <span
+                    key={s}
+                    className="rounded-full border border-white/10 bg-background/40 px-2.5 py-1 text-[11px] font-medium text-foreground/85 backdrop-blur-md"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {work.link && (
+          <span className="absolute right-6 top-6 inline-flex size-10 translate-y-1 items-center justify-center rounded-full bg-background/55 opacity-0 backdrop-blur-md transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+            <ArrowUpRight className="size-4 text-foreground" />
+          </span>
         )}
       </div>
-
-      {/* 정보 */}
-      <div className="p-5 pt-2 sm:p-6 sm:pt-3">
-        <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-fuchsia-300">
-          {work.highlight}
-        </div>
-        <h3 className="mt-2 font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-          {work.title}
-        </h3>
-        <p className="mt-1 text-[14px] text-muted-foreground">{work.tagline}</p>
-
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {work.stack.slice(0, 4).map((s) => (
-            <span
-              key={s}
-              className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[11px] font-medium text-foreground/85"
-            >
-              {s}
-            </span>
-          ))}
-        </div>
-      </div>
-    </SpotlightCard>
+    </div>
   );
 
   if (work.link) {
@@ -258,11 +228,11 @@ function WorkCard({ work }: { work: Work }) {
         href={work.link}
         target="_blank"
         rel="noopener noreferrer"
-        className="block h-full"
+        className="block"
       >
         {inner}
       </a>
     );
   }
-  return <div className="h-full">{inner}</div>;
+  return inner;
 }

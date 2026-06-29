@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { CharReveal } from "@/components/motion/char-reveal";
+import { KineticText } from "@/components/motion/kinetic-text";
 
 export function BigStatement() {
   const ref = useRef<HTMLDivElement>(null);
@@ -30,8 +30,8 @@ export function BigStatement() {
       >
         <div className="eyebrow">— 우리의 약속</div>
         <h3 className="mt-5 font-heading text-[2.4rem] font-black leading-[1.0] tracking-tighter sm:text-7xl md:text-[7.5rem]">
-          <span className="block gradient-text">
-            <CharReveal text="CRAFT." />
+          <span className="block">
+            <KineticText text="CRAFT." gradient stagger={0.05} />
           </span>
           <span className="block">
             <span
@@ -40,13 +40,11 @@ export function BigStatement() {
                 WebkitTextStroke: "1.5px oklch(0.78 0.22 305 / 0.85)",
               }}
             >
-              <CharReveal text="SHIP." delay={0.15} />
+              <KineticText text="SHIP." delay={0.2} stagger={0.05} />
             </span>
           </span>
           <span className="block">
-            <span data-text="REPEAT." className="glitch gradient-text">
-              <CharReveal text="REPEAT." delay={0.3} />
-            </span>
+            <KineticText text="REPEAT." gradient delay={0.4} stagger={0.05} />
           </span>
         </h3>
         <p className="lead-copy mx-auto mt-6 max-w-xl">

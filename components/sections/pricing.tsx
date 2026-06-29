@@ -8,54 +8,53 @@ import { FlyInCard } from "@/components/motion/fly-in-card";
 import { Magnetic } from "@/components/motion/magnetic";
 import { Reveal } from "@/components/motion/reveal";
 import { SpotlightCard } from "@/components/motion/spotlight-card";
-import { CharReveal } from "@/components/motion/char-reveal";
 import { cn } from "@/lib/utils";
 
 const PLANS = [
   {
-    name: "SPRINT",
-    price: "₩ 9.9M",
-    sub: "2주 / 단발 검증",
-    desc: "프로토타이핑 · UX 리서치 · 디자인 시스템 세팅 같은 짧고 깊은 작업.",
+    name: "기획 스프린트",
+    price: "₩ 9.9M~",
+    sub: "2주 / 범위와 방향 정리",
+    desc: "아이디어는 있는데 무엇을 먼저 만들지 애매할 때. 사용자 흐름, 핵심 화면, 개발 범위를 빠르게 정리합니다.",
     features: [
-      "디자이너 1 + PM 1",
-      "Figma 결과물 인도",
-      "최종 인사이트 리포트",
-      "차주 미팅 1회",
+      "문제 정의 + 사용자 시나리오",
+      "핵심 화면 와이어프레임",
+      "MVP 기능 범위와 우선순위",
+      "개발 일정 · 예산 가이드",
     ],
-    cta: "스프린트 시작하기",
+    cta: "기획부터 상담하기",
     featured: false,
     from: "left" as const,
   },
   {
-    name: "BUILD",
+    name: "MVP 빌드",
     price: "₩ 50M~",
-    sub: "3개월 / MVP 풀빌드",
-    desc: "0에서 1을 만드는 가장 일반적인 방식. 디자인부터 런칭까지.",
+    sub: "8–12주 / 설계부터 런칭까지",
+    desc: "검증할 제품을 실제로 출시해야 할 때. 디자인, 개발, QA, 배포까지 한 팀처럼 맡습니다.",
     features: [
-      "디자이너 + 풀스택 + PM",
-      "리서치 · 디자인 · 개발 · QA",
-      "주간 데모 + Slack 채널",
-      "런칭 후 1개월 안정화 포함",
-      "분석 & 모니터링 셋업",
+      "제품 기획 + UI 디자인",
+      "프론트엔드 · 백엔드 개발",
+      "주간 데모와 의사결정 미팅",
+      "배포 · QA · 기본 분석 셋업",
+      "런칭 후 1개월 안정화",
     ],
-    cta: "빌드 상담받기",
+    cta: "MVP 상담받기",
     featured: true,
     from: "bottom" as const,
   },
   {
-    name: "EMBEDDED",
-    price: "맞춤형",
-    sub: "장기 / 팀에 합류",
-    desc: "고객 팀에 우리 팀이 들어가는 형태. 시리즈 B+ 기업에 적합.",
+    name: "운영 파트너",
+    price: "맞춤 견적",
+    sub: "3개월+ / 개선과 확장",
+    desc: "이미 운영 중인 서비스의 기능 개선, 자동화, 실험, 유지보수가 필요할 때 월 단위로 함께합니다.",
     features: [
-      "전담 3~6명 풀타임",
-      "고객 워크플로 통합",
-      "쿼터별 OKR 정합",
-      "고객 PM과 조인트 리뷰",
-      "분기별 인사이트 워크숍",
+      "월별 개발·개선 백로그 운영",
+      "기존 코드 진단과 리팩터링",
+      "관리자·자동화·데이터 기능 추가",
+      "정기 릴리즈와 성과 리뷰",
+      "고객 팀 툴·프로세스에 맞춰 협업",
     ],
-    cta: "엠베디드 문의",
+    cta: "운영 파트너 문의",
     featured: false,
     from: "right" as const,
   },
@@ -66,14 +65,13 @@ export function Pricing() {
     <section id="pricing" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <Reveal className="mb-14 max-w-2xl">
-          <div className="eyebrow mb-5">— 참여 방식</div>
+          <div className="eyebrow mb-5">— 협업 방식</div>
           <h2 className="font-heading text-3xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
-            <GlitchText className="inline-block">3가지</GlitchText>{" "}
-            <span className="gradient-text">엔게이지먼트</span>{" "}
-            <CharReveal text="모델" delay={0.15} />
+            <GlitchText className="inline-block">필요한 만큼만</GlitchText>{" "}
+            <span className="gradient-text">함께합니다.</span>
           </h2>
           <p className="lead-copy mt-5">
-            상황과 단계에 맞춰 고르세요. 사이에 있다면 함께 정의합니다.
+            아직 범위가 흐리면 기획부터, 출시가 목표면 MVP 빌드부터, 운영 중이면 월 단위 파트너로 시작하세요.
           </p>
         </Reveal>
 
@@ -96,11 +94,11 @@ export function Pricing() {
                 {p.featured && (
                   <div className="absolute right-5 top-5 inline-flex items-center gap-1 rounded-full bg-fuchsia-500/15 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.22em] text-fuchsia-300">
                     <Star className="size-3 fill-current" />
-                    Most picked
+                    추천
                   </div>
                 )}
 
-                <div className="font-mono text-xs uppercase tracking-[0.32em] text-muted-foreground">
+                <div className="text-sm font-semibold text-muted-foreground">
                   {p.name}
                 </div>
                 <div className="mt-4 flex items-baseline gap-2">

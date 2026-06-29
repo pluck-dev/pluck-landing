@@ -1,0 +1,13 @@
+{
+  "owner": "hud",
+  "pid": 17332,
+  "cwd": "/Users/simjaehyeong/Desktop/pluck/company/pluck-landing",
+  "heartbeat_at": "2026-06-25T15:36:19.515Z",
+  "cooldown_ms": 5000,
+  "jitter_ms": 75,
+  "skip_count": 356091,
+  "last_status": "spawned",
+  "last_reason": "spawned",
+  "last_spawn_at": "2026-06-25T15:36:19.515Z",
+  "next_allowed_at": "2026-06-25T15:36:24.590Z"
+}

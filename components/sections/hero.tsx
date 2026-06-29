@@ -4,7 +4,8 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LineReveal, MultiLineReveal } from "@/components/motion/line-reveal";
+import { LineReveal } from "@/components/motion/line-reveal";
+import { KineticText } from "@/components/motion/kinetic-text";
 import { Magnetic } from "@/components/motion/magnetic";
 import { Counter } from "@/components/motion/counter";
 import { FloatingOrbs } from "@/components/motion/floating-orbs";
@@ -43,22 +44,20 @@ export function Hero() {
         </motion.div>
 
         <h1 className="mt-6 text-balance font-heading text-[2.6rem] font-bold leading-[1.05] tracking-tight sm:mt-8 sm:text-6xl md:text-7xl lg:text-[5.5rem]">
-          <MultiLineReveal
-            eager
-            lines={[
-              <span key="l1">AI와 함께 빠르게 만들고,</span>,
-              <span key="l2">
-                <span
-                  data-text="끝까지"
-                  className="glitch gradient-text mr-2 sm:mr-3"
-                >
-                  끝까지
-                </span>
-                <span>완성합니다.</span>
-              </span>,
-            ]}
-            step={0.14}
-          />
+          <span className="block">
+            <KineticText text="AI와 함께 빠르게 만들고," eager stagger={0.03} />
+          </span>
+          <span className="block">
+            <KineticText
+              text="끝까지"
+              eager
+              gradient
+              delay={0.45}
+              stagger={0.04}
+              className="mr-2 sm:mr-3"
+            />
+            <KineticText text="완성합니다." eager delay={0.6} stagger={0.03} />
+          </span>
         </h1>
 
         <motion.div
