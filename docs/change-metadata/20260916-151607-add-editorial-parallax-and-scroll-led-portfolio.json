@@ -1,0 +1,242 @@
+{
+  "schema_version": "1.0",
+  "change_id": "20260916-151607-add-editorial-parallax-and-scroll-led-portfolio",
+  "created_at": "2026-09-16T15:16:07+09:00",
+  "repository": "pluck-landing",
+  "branch": "main",
+  "baseline_commit": "5b988c0dea07822da15700217a66e1295e5bf2d9",
+  "request": "User asks for attractive parallax and scroll design that does not feel like a generic AI template",
+  "title": "Add editorial parallax and scroll-led portfolio",
+  "purpose": "Replace repetitive cards with distinctive typography, layered art and native scroll choreography",
+  "files": [
+    {
+      "path": "app/globals.css",
+      "change_type": "modified",
+      "previous_path": null,
+      "line_ranges": [
+        {
+          "old_start": 2,
+          "old_end": 132,
+          "new_start": 2,
+          "new_end": 917
+        },
+        {
+          "old_start": 135,
+          "old_end": 182,
+          "new_start": 920,
+          "new_end": 1223
+        },
+        {
+          "old_start": 185,
+          "old_end": 186,
+          "new_start": 1226,
+          "new_end": 1234
+        }
+      ],
+      "working_tree_sha256": "6ae990030cad2c7bdf25b6152369dc9376d6957527e1f0044dad06bf3c8e239e",
+      "symbols": [
+        "hero-pin",
+        "sculpture-object",
+        "project-parallax",
+        "expertise-heading",
+        "responsive and reduced-motion rules"
+      ],
+      "purpose": "Build an editorial visual system with responsive native-scroll transformations.",
+      "previous_behavior": "Uniform white and blue card grids with a static process diagram.",
+      "new_behavior": "Warm paper palette, large typography, metal P artwork, asymmetric project grid, sticky desktop hero and service heading, and desktop scroll-driven decorative layers.",
+      "data_impact": "None: static presentation and ephemeral DOM styles only; no operational data reads, writes or schemas.",
+      "access_control_impact": "None: public content with no authentication or permission changes.",
+      "risks": [
+        "Fixed-height project artwork can crop decorative content; essential project text is outside artwork.",
+        "Korean typography uses installed system fonts."
+      ],
+      "rollback": "Revert this commit including all three source files to restore the prior static redesign. No data migration or operational rollback."
+    },
+    {
+      "path": "app/page.tsx",
+      "change_type": "modified",
+      "previous_path": null,
+      "line_ranges": [
+        {
+          "old_start": 1,
+          "old_end": 1,
+          "new_start": 1,
+          "new_end": 5
+        },
+        {
+          "old_start": 3,
+          "old_end": 7,
+          "new_start": null,
+          "new_end": null
+        },
+        {
+          "old_start": 9,
+          "old_end": 11,
+          "new_start": 8,
+          "new_end": 31
+        },
+        {
+          "old_start": 14,
+          "old_end": 17,
+          "new_start": 34,
+          "new_end": 49
+        },
+        {
+          "old_start": 20,
+          "old_end": 21,
+          "new_start": 52,
+          "new_end": 53
+        },
+        {
+          "old_start": 26,
+          "old_end": 27,
+          "new_start": 58,
+          "new_end": 61
+        },
+        {
+          "old_start": 30,
+          "old_end": 32,
+          "new_start": 64,
+          "new_end": 74
+        },
+        {
+          "old_start": 34,
+          "old_end": 34,
+          "new_start": 76,
+          "new_end": 81
+        },
+        {
+          "old_start": 37,
+          "old_end": 49,
+          "new_start": 84,
+          "new_end": 363
+        },
+        {
+          "old_start": 51,
+          "old_end": 51,
+          "new_start": null,
+          "new_end": null
+        },
+        {
+          "old_start": 53,
+          "old_end": 53,
+          "new_start": null,
+          "new_end": null
+        },
+        {
+          "old_start": 55,
+          "old_end": 62,
+          "new_start": 367,
+          "new_end": 450
+        },
+        {
+          "old_start": 64,
+          "old_end": 71,
+          "new_start": null,
+          "new_end": null
+        },
+        {
+          "old_start": 73,
+          "old_end": 74,
+          "new_start": 453,
+          "new_end": 461
+        }
+      ],
+      "working_tree_sha256": "8e818586d29cbc04161ba6ac52dedaf42a58ae43c996f26aca24f4e10bd76bfd",
+      "symbols": [
+        "Home",
+        "services",
+        "faqs",
+        "ExternalArrow"
+      ],
+      "purpose": "Replace template-like content composition with a visually varied product studio narrative.",
+      "previous_behavior": "Centered Korean hero, static diagram, equal service and portfolio cards.",
+      "new_behavior": "Editorial hero with Korean supporting copy, studio statement, bespoke project illustrations, sequential service descriptions, process, FAQ and unchanged email/project link destinations.",
+      "data_impact": "None: static presentation and ephemeral DOM styles only; no operational data reads, writes or schemas.",
+      "access_control_impact": "None: public content with no authentication or permission changes.",
+      "risks": [
+        "Artwork is an editorial illustration, not a literal screenshot of external products.",
+        "English display headings may be less direct for Korean-only readers."
+      ],
+      "rollback": "Revert this commit including all three source files to restore the prior static redesign. No data migration or operational rollback."
+    },
+    {
+      "path": "components/scroll-experience.tsx",
+      "change_type": "added",
+      "previous_path": null,
+      "line_ranges": [
+        {
+          "old_start": null,
+          "old_end": null,
+          "new_start": 1,
+          "new_end": 141
+        }
+      ],
+      "working_tree_sha256": "71ff7c6c7104741d5151df554dbf847f60d7ad2efe536407f02f520180799743",
+      "symbols": [
+        "ScrollExperience",
+        "PluckSculpture"
+      ],
+      "purpose": "Implement event-driven parallax without React rerenders or intercepting native scrolling.",
+      "previous_behavior": "No client-side scroll choreography on the redesigned homepage.",
+      "new_behavior": "Passive listener batches geometry reads and CSS variable writes in requestAnimationFrame. Desktop media queries and live reduced-motion changes enable/disable motion; SVG sculpture stays visible without JavaScript.",
+      "data_impact": "None: static presentation and ephemeral DOM styles only; no operational data reads, writes or schemas.",
+      "access_control_impact": "None: public content with no authentication or permission changes.",
+      "risks": [
+        "Scroll geometry queries add work per active scroll frame; runtime testing was in Chromium only.",
+        "Mobile and short-height viewports intentionally render static artwork rather than pinned motion."
+      ],
+      "rollback": "Revert this commit including all three source files to restore the prior static redesign. No data migration or operational rollback."
+    }
+  ],
+  "production_safety": {
+    "operational_data": "No production operational data read, created, updated or deleted.",
+    "schema_migration": "None: presentation-only changes.",
+    "external_side_effects": [
+      "Local build and browser tests only; no production deployment, Git push, messages or form submission. Existing project and email destinations preserved."
+    ]
+  },
+  "verification": [
+    {
+      "command": "npx.cmd eslint app/page.tsx components/scroll-experience.tsx",
+      "result": "passed",
+      "evidence": "No errors or warnings in changed TSX files."
+    },
+    {
+      "command": "npm.cmd run build",
+      "result": "passed",
+      "evidence": "Next.js compilation, TypeScript validation and static route generation passed after final edits."
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed",
+      "evidence": "No whitespace errors."
+    },
+    {
+      "command": "Playwright production server http://localhost:3095",
+      "result": "passed",
+      "evidence": "Hero transform matrix changed after scrolling 450px. No missing anchor targets. FAQ opens. No page errors. Screenshots inspected on desktop and mobile."
+    },
+    {
+      "command": "Playwright viewport and accessibility preference checks",
+      "result": "passed",
+      "evidence": "No horizontal overflow at 320, 390, 768, 1024 and 1440px. Mobile data-motion=false; reduced motion data-motion=false and hero position=relative. Heading visible with JavaScript disabled."
+    },
+    {
+      "command": "Playwright video capture",
+      "result": "passed",
+      "evidence": "Recorded approximately 15 seconds of native scrolling through hero and portfolio into pluck-scroll-preview.webm."
+    },
+    {
+      "command": "Full-repository lint",
+      "result": "not_run",
+      "evidence": "Known unmodified legacy smooth-scroll.tsx hook error and line-reveal.tsx unused variable from prior turn. Changed-file lint and full build passed."
+    }
+  ],
+  "residual_risks": [
+    "Not deployed; external project destinations and email delivery not retested.",
+    "Cross-browser Safari/Firefox and low-powered device frame rate not measured.",
+    "Existing unused motion files retain their previously documented full-repository lint issues."
+  ],
+  "commit": "same-as-metadata-file"
+}
