@@ -1,0 +1,181 @@
+{
+  "schema_version": "1.0",
+  "change_id": "20260916-142310-redesign-pluck-as-a-clean-product-studio",
+  "created_at": "2026-09-16T14:23:10+09:00",
+  "repository": "pluck-landing",
+  "branch": "main",
+  "baseline_commit": "56a75e1d4cfdab8ae2c484a0a3e554e2616d5eee",
+  "request": "User wants a clean Silicon Valley IT company style redesign",
+  "title": "Redesign Pluck as a clean product studio",
+  "purpose": "Replace glitch styling with a restrained enterprise visual system",
+  "files": [
+    {
+      "path": "app/globals.css",
+      "change_type": "modified",
+      "previous_path": null,
+      "line_ranges": [
+        {
+          "old_start": 1,
+          "old_end": 3,
+          "new_start": null,
+          "new_end": null
+        },
+        {
+          "old_start": 5,
+          "old_end": 67,
+          "new_start": 2,
+          "new_end": 182
+        },
+        {
+          "old_start": 69,
+          "old_end": 415,
+          "new_start": null,
+          "new_end": null
+        },
+        {
+          "old_start": 417,
+          "old_end": 465,
+          "new_start": 185,
+          "new_end": 186
+        }
+      ],
+      "working_tree_sha256": "9832dad50151f9d3f1b8a9dc0ecbfb698bd8b8b952ef6c3ffeaa622bb6279ec4",
+      "symbols": [
+        "Global styles, responsive grids, focus indicators, reduced motion"
+      ],
+      "purpose": "Replace glitch styling with a restrained enterprise visual system",
+      "previous_behavior": "Dark neon styling, glitch keyframes, animated decorative effects and external Korean font stylesheet.",
+      "new_behavior": "Light responsive enterprise layout with blue accents, native scrolling, visible keyboard focus and reduced-motion support.",
+      "data_impact": "None: CSS only, no data operations.",
+      "access_control_impact": "None: public presentation only.",
+      "risks": [
+        "Old unmounted section components depend on removed CSS and must be restyled before reuse. Korean font appearance depends on system fonts."
+      ],
+      "rollback": "Revert this change commit together with page and layout. Data remains compatible without migration."
+    },
+    {
+      "path": "app/layout.tsx",
+      "change_type": "modified",
+      "previous_path": null,
+      "line_ranges": [
+        {
+          "old_start": 4,
+          "old_end": 4,
+          "new_start": null,
+          "new_end": null
+        },
+        {
+          "old_start": 7,
+          "old_end": 7,
+          "new_start": 6,
+          "new_end": 6
+        },
+        {
+          "old_start": 22,
+          "old_end": 22,
+          "new_start": 21,
+          "new_end": 21
+        },
+        {
+          "old_start": 39,
+          "old_end": 40,
+          "new_start": 38,
+          "new_end": 38
+        },
+        {
+          "old_start": 42,
+          "old_end": 44,
+          "new_start": 40,
+          "new_end": 40
+        }
+      ],
+      "working_tree_sha256": "77211419d0b59b68d328da46a4d8729abd9d73c09ba75af5231191bd6e74b69a",
+      "symbols": [
+        "RootLayout, geistSans, metadata.metadataBase"
+      ],
+      "purpose": "Replace glitch styling with a restrained enterprise visual system",
+      "previous_behavior": "Forced dark class, Lenis scroll wrapper and pluck.studio metadata base.",
+      "new_behavior": "Native document scrolling, explicit Geist variable, light document, production domain metadata base.",
+      "data_impact": "None: document rendering only.",
+      "access_control_impact": "None: no authentication or authorization changed.",
+      "risks": [
+        "Scroll feel changes from Lenis to native browser behavior."
+      ],
+      "rollback": "Revert this change commit to restore previous wrapper and metadata. No data compatibility constraints."
+    },
+    {
+      "path": "app/page.tsx",
+      "change_type": "modified",
+      "previous_path": null,
+      "line_ranges": [
+        {
+          "old_start": 1,
+          "old_end": 16,
+          "new_start": 1,
+          "new_end": 22
+        },
+        {
+          "old_start": 21,
+          "old_end": 36,
+          "new_start": 27,
+          "new_end": 71
+        },
+        {
+          "old_start": 38,
+          "old_end": 38,
+          "new_start": 73,
+          "new_end": 73
+        }
+      ],
+      "working_tree_sha256": "13ee3ee5a274c138da2785b49fea3341c7e34ca5870f3634965f74f1cbb25a6e",
+      "symbols": [
+        "Home, Arrow, projects, services, faqs"
+      ],
+      "purpose": "Replace glitch styling with a restrained enterprise visual system",
+      "previous_behavior": "Home mounted animated neon sections, pricing, stats, testimonials and a form showing success without submission.",
+      "new_behavior": "Server-rendered homepage with restrained product diagram, services, existing external project links, process, native FAQ and explicit mailto contact. Pricing, metrics and testimonials are omitted from the redesigned presentation.",
+      "data_impact": "No stored data touched. Contact no longer collects fields into a mock submission; a visitor can open their email client and send themselves.",
+      "access_control_impact": "None: public homepage and existing public links only.",
+      "risks": [
+        "Email contact requires a configured mail client. Portfolio artwork is typographic rather than actual product screenshots. External project availability is not verified."
+      ],
+      "rollback": "Revert the redesign commit to restore previous section composition and matching styles; no database rollback needed."
+    }
+  ],
+  "production_safety": {
+    "operational_data": "No production operational data read, created, updated or deleted.",
+    "schema_migration": "None: no database or schema changes.",
+    "external_side_effects": [
+      "Cloned existing GitHub repository and installed locked npm dependencies. Local production server and browser verification only. No push, remote deployment or outbound email."
+    ]
+  },
+  "verification": [
+    {
+      "command": "npm.cmd run build",
+      "result": "passed",
+      "evidence": "Next.js production compilation, TypeScript checking and static route generation succeeded."
+    },
+    {
+      "command": "npx.cmd eslint app/page.tsx app/layout.tsx; git diff --check",
+      "result": "passed",
+      "evidence": "Changed TSX files passed lint and patch whitespace checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "result": "failed",
+      "evidence": "Existing unmodified smooth-scroll.tsx has react-hooks/set-state-in-effect error; line-reveal.tsx has unused sweepIn warning. Neither is mounted by the new home."
+    },
+    {
+      "command": "Playwright against http://localhost:3094 at 1440x1000 and 390x844",
+      "result": "passed",
+      "evidence": "No horizontal overflow, no missing internal anchor targets, FAQ opens, mailto target is correct, zero page errors. Desktop and mobile full-page screenshots visually reviewed."
+    }
+  ],
+  "residual_risks": [
+    "Full-repository lint retains pre-existing errors in unused motion components.",
+    "Email delivery is not tested; the explicit mailto action depends on the visitor's email client.",
+    "Not deployed; review local design before production release.",
+    "Local Node 21 emitted dependency engine warnings during npm ci; production build still passed."
+  ],
+  "commit": "same-as-metadata-file"
+}
