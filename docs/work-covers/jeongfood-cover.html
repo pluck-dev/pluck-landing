@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+.word { position: absolute; left: 72px; bottom: 110px; font-size: 230px; color: #374730; letter-spacing: -0.07em; }
+.app { left: 640px; top: 120px; width: 600px; height: 760px; background: #f7f7f2; padding: 36px; color: #202523; }
+.app h4 { font-size: 26px; font-weight: 600; letter-spacing: -0.6px; }
+.tree { display: flex; gap: 10px; margin-top: 18px; }
+.tree span { font-size: 15px; border-radius: 20px; padding: 7px 14px; border: 1.5px solid #d0d6c9; }
+.tree .on { background: #202523; color: #f7f7f2; border-color: #202523; }
+.rows { margin-top: 24px; display: grid; gap: 12px; }
+.row { display: grid; grid-template-columns: 130px 1fr 92px; align-items: center; gap: 16px; border: 1.5px solid #e1e4dc; border-radius: 16px; padding: 18px 20px; font-size: 18px; }
+.meter { height: 12px; border-radius: 6px; background: #e3e7de; overflow: hidden; } .meter i { display: block; height: 100%; background: #9cbf3a; border-radius: 6px; }
+.meter.low i { background: #e0794b; }
+.price { justify-self: end; font-size: 14px; border-radius: 20px; padding: 6px 12px; background: #eef1fd; color: #335aeb; white-space: nowrap; }
+.sms { left: 1180px; top: 470px; width: 360px; background: #202523; color: #eef0e9; padding: 28px; }
+.sms small { font-size: 14px; letter-spacing: 2px; color: #9aa39a; }
+.bubble { margin-top: 16px; background: #2f3632; border-radius: 18px 18px 18px 4px; padding: 18px; font-size: 18px; line-height: 1.55; }
+.sent { margin-top: 16px; display: flex; align-items: center; gap: 10px; font-size: 16px; color: #d9eba7; }
+.sent i { width: 26px; height: 26px; border-radius: 50%; background: #d9eba7; color: #202523; display: grid; place-items: center; font-style: normal; font-weight: 700; font-size: 15px; }
+</style></head>
+<body><div class="art tone-lime">
+<span class="caption">정푸드 관리 시스템 / Client work</span>
+<div class="panel app">
+  <h4>재고 현황</h4>
+  <div class="tree"><span class="on">채소</span><span>육류</span><span>가공식품</span><span>양념</span></div>
+  <div class="rows">
+    <div class="row"><b>양파</b><span class="meter"><i style="width:78%"></i></span><span class="price">A 단가</span></div>
+    <div class="row"><b>대파</b><span class="meter low"><i style="width:24%"></i></span><span class="price">B 단가</span></div>
+    <div class="row"><b>감자</b><span class="meter"><i style="width:62%"></i></span><span class="price">A 단가</span></div>
+    <div class="row"><b>당근</b><span class="meter"><i style="width:55%"></i></span><span class="price">C 단가</span></div>
+    <div class="row"><b>배추</b><span class="meter low"><i style="width:31%"></i></span><span class="price">B 단가</span></div>
+    <div class="row"><b>마늘</b><span class="meter"><i style="width:70%"></i></span><span class="price">A 단가</span></div>
+  </div>
+</div>
+<div class="panel sms"><small>안내 문자</small><div class="bubble">오늘의 단가표를 보내드립니다. 거래처별 단가로 자동 작성됐어요.</div><div class="sent"><i>✓</i>발송 완료 · 이력 저장</div></div>
+<div class="word">재고<span class="blue">.</span></div>
+</div></body></html>

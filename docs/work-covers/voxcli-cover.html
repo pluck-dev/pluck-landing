@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+.art { background: #1f201d; color: #f1f0e8; }
+.word { position: absolute; left: 72px; bottom: 120px; font-size: 140px; }
+.word em { font-style: normal; color: #b9d34a; }
+.phone { left: 900px; top: 90px; width: 410px; height: 830px; border-radius: 56px; background: #252623; border: 10px solid #121310; padding: 40px 30px; display: flex; flex-direction: column; }
+.chip { align-self: center; font-size: 17px; border: 1.5px solid #3b3d37; border-radius: 30px; padding: 9px 18px; color: #cfd0c5; display: flex; gap: 10px; align-items: center; }
+.chip i { width: 9px; height: 9px; border-radius: 50%; background: #8aa315; box-shadow: 0 0 0 4px #8aa31533; }
+.mic { position: relative; margin: 80px auto 0; width: 150px; height: 150px; border-radius: 50%; background: #b9d34a; display: grid; place-items: center; }
+.mic svg { width: 58px; height: 58px; }
+.mic::before, .mic::after { content: ""; position: absolute; border-radius: 50%; border: 2px solid #b9d34a; opacity: .35; }
+.mic::before { inset: -34px; } .mic::after { inset: -72px; opacity: .15; }
+.ask { text-align: center; margin-top: 80px; font-size: 26px; font-weight: 500; letter-spacing: -0.5px; }
+.wave { display: flex; align-items: center; justify-content: center; gap: 5px; height: 60px; margin-top: 34px; } .wave i { width: 5px; border-radius: 3px; background: #8aa315; } .say { text-align: center; margin-top: 18px; font-size: 18px; color: #a3a597; }
+.card { margin-top: auto; background: #2e302b; border-radius: 22px; padding: 22px 22px 24px; }
+.card .top { display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: #a3a597; }
+.pill { font-size: 14px; color: #1f201d; background: #b9d34a; border-radius: 20px; padding: 5px 12px; font-weight: 600; }
+.card p { font-size: 18px; margin-top: 12px; line-height: 1.5; color: #e6e6dc; }
+.nodes { position: absolute; left: 1330px; top: 260px; display: grid; gap: 40px; }
+.node { width: 210px; border: 1.5px solid #3b3d37; border-radius: 18px; padding: 16px 18px; font-family: "Geist Mono", monospace; font-size: 15px; color: #a3a597; background: #232420; }
+.node b { display: block; color: #f1f0e8; font-family: "Geist", sans-serif; font-size: 19px; font-weight: 600; margin-bottom: 4px; }
+.node.hub { border-color: #8aa315; }
+.lines { position: absolute; left: 1300px; top: 300px; }
+</style></head>
+<body><div class="art">
+<span class="caption">VoxCLI / App</span>
+<div class="word">Talk to<br>your <em>terminal.</em></div>
+<div class="panel phone">
+  <span class="chip"><i></i>Desktop · codex</span>
+  <span class="mic"><svg viewBox="0 0 24 24" fill="none" stroke="#1f201d" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+  <p class="ask">무엇을 개발할까요?</p>
+  <div class="wave"><i style="height:18%"></i><i style="height:59%"></i><i style="height:69%"></i><i style="height:40%"></i><i style="height:41%"></i><i style="height:69%"></i><i style="height:58%"></i><i style="height:19%"></i><i style="height:59%"></i><i style="height:68%"></i><i style="height:39%"></i><i style="height:42%"></i><i style="height:69%"></i><i style="height:58%"></i><i style="height:20%"></i><i style="height:60%"></i><i style="height:68%"></i><i style="height:39%"></i><i style="height:43%"></i><i style="height:69%"></i><i style="height:57%"></i><i style="height:21%"></i><i style="height:60%"></i><i style="height:68%"></i><i style="height:38%"></i><i style="height:43%"></i><i style="height:69%"></i><i style="height:56%"></i></div>
+  <p class="say">“로그인 테스트 고치고 결과 알려줘”</p>
+  <div class="card"><div class="top"><span>결과 카드</span><span class="pill">completed</span></div><p>테스트 통과 · 변경 파일 요약이 도착했어요.</p></div>
+</div>
+<div class="nodes">
+  <div class="node hub"><b>Hub</b>route · policy</div>
+  <div class="node"><b>Agent · PC 1</b>tmux / codex</div>
+  <div class="node"><b>Agent · PC 2</b>tmux / claude</div>
+</div>
+</div></body></html>

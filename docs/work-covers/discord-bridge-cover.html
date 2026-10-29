@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+.stage { position: absolute; inset: 0; }
+.word { position: absolute; left: 72px; bottom: 120px; font-size: 150px; color: #eef0e9; }
+.word em { font-style: normal; color: #8fa4ff; }
+.rings { width: 900px; height: 900px; right: -260px; top: -300px; }
+.chat { left: 840px; top: 150px; width: 640px; background: #262d31; padding: 34px 34px 40px; color: #e7eaea; }
+.chat-head { display: flex; align-items: center; gap: 14px; font-size: 19px; color: #9aa6ab; padding-bottom: 24px; border-bottom: 1px solid #343c41; }
+.chat-head b { color: #e7eaea; font-weight: 600; }
+.hash { font-size: 26px; color: #6f7c82; }
+.msg { display: flex; gap: 18px; margin-top: 28px; }
+.ava { width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; }
+.ava.u { background: #d9eba7; }
+.ava.b { background: #335aeb; display: grid; place-items: center; font-weight: 700; color: #fff; font-size: 22px; }
+.who { font-size: 18px; font-weight: 600; }
+.who small { font-weight: 400; color: #7f8a90; font-size: 14px; margin-left: 8px; }
+.txt { margin-top: 6px; font-size: 21px; }
+.txt code { font-family: "Geist Mono", monospace; background: #1b2124; padding: 3px 9px; border-radius: 6px; font-size: 19px; }
+.embed { margin-top: 12px; border-left: 5px solid; border-radius: 8px; background: #1e2427; padding: 16px 20px; width: 470px; }
+.embed.run { border-color: #4a7bff; }
+.embed.done { border-color: #5fbf7a; }
+.embed strong { display: block; font-size: 19px; }
+.embed span { display: block; font-family: "Geist Mono", monospace; font-size: 15px; color: #8d989d; margin-top: 8px; }
+.bar { height: 6px; border-radius: 3px; background: #2f3a52; margin-top: 14px; overflow: hidden; }
+.bar i { display: block; width: 62%; height: 100%; background: #4a7bff; }
+</style></head>
+<body><div class="art tone-forest">
+<span class="caption">Discord–Codex Bridge / AI &amp; Automation</span>
+<span class="rings"></span>
+<div class="word">Chat is<br>the <em>terminal.</em></div>
+<div class="panel chat">
+  <div class="chat-head"><span class="hash">#</span><b>workspace-web</b><span>· 채널 = 작업 공간</span></div>
+  <div class="msg"><span class="ava u"></span><div><div class="who">you <small>오늘 14:02</small></div><div class="txt"><code>!git status</code></div></div></div>
+  <div class="msg"><span class="ava u"></span><div><div class="who">you <small>오늘 14:03</small></div><div class="txt">로그인 페이지 문구 정리해줘</div></div></div>
+  <div class="msg"><span class="ava b">C</span><div><div class="who">codex-bridge <small>BOT</small></div>
+    <div class="embed run"><strong>Codex running…</strong><span>00:24 · D:\dev\web</span><div class="bar"><i></i></div></div>
+    <div class="embed done"><strong>Completed</strong><span>00:51 · output.txt 첨부</span></div>
+  </div></div>
+</div>
+<span class="coord">! shell · /codex · /start<br>per-channel session</span>
+</div></body></html>

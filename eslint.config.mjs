@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Offline Node scripts that render designed portfolio covers.
+    "docs/work-covers/**",
   ]),
 ]);
 

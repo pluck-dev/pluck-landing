@@ -1,0 +1,57 @@
+[
+  {
+    "name": "voxcli-01", "tone": "stone", "caption": "VoxCLI / Architecture",
+    "title": "폰 → Hub → 각 PC의 Agent<span class=\"blue\">.</span>",
+    "layout": "flow",
+    "items": [
+      { "h": "Remote 앱", "p": "PC와 CLI 세션을 고르고 음성이나 텍스트로 지시합니다." },
+      { "h": "Hub", "p": "WebSocket으로 요청을 라우팅하고 정책을 검사합니다.", "hi": true },
+      { "h": "Agent", "p": "PC마다 상주하며 tmux 세션에 프롬프트를 주입합니다." },
+      { "h": "결과 카드", "p": "터미널 출력과 요약이 다시 앱으로 돌아옵니다." }
+    ]
+  },
+  {
+    "name": "voxcli-02", "tone": "ink", "caption": "VoxCLI / Safety policy",
+    "title": "말로 시키되,<br>위험한 일은 멈춘다<span class=\"blue\">.</span>",
+    "layout": "cols",
+    "items": [
+      { "small": "BLOCK", "h": "위험 명령 차단", "p": "배포, DB 마이그레이션, 강제 푸시 같은 명령은 정책 패키지가 걸러냅니다.", "cmd": "git push --force ✕" },
+      { "small": "APPROVE", "h": "승인 후 실행", "p": "확인이 필요한 작업은 앱에서 한 번 더 승인해야 진행됩니다.", "cmd": "승인 대기 · 1건", "hi": true },
+      { "small": "DRIVE", "h": "운전 모드", "p": "화면을 보지 않아도 되도록 음성 중심으로 상태를 알려줍니다.", "cmd": "voice-only" }
+    ]
+  },
+  {
+    "name": "thumbnail-01", "tone": "paper", "caption": "YouTube 썸네일 생성기 / Pipeline",
+    "title": "주제 하나에서<br>네 장의 시안까지<span class=\"blue\">.</span>",
+    "layout": "flow",
+    "items": [
+      { "h": "조사", "p": "비슷한 영상의 상위 썸네일을 YouTube Data API로 모읍니다." },
+      { "h": "콘셉트 A–D", "p": "호기심 간극·페인 포인트 관점으로 네 방향을 세웁니다.", "hi": true },
+      { "h": "레퍼런스", "p": "콘셉트마다 참고 이미지를 수집합니다." },
+      { "h": "생성", "p": "브랜드 가이드를 반영한 프롬프트로 병렬 생성합니다." },
+      { "h": "2×2 비교", "p": "그리드로 비교하고 고른 방향을 리파인합니다." }
+    ]
+  },
+  {
+    "name": "thumbnail-02", "tone": "lime", "caption": "YouTube 썸네일 생성기 / Scripts",
+    "title": "에이전트가 부르는<br>작은 CLI 도구들<span class=\"blue\">.</span>",
+    "layout": "rows",
+    "items": [
+      { "a": "search", "b": "유사 영상·썸네일 조사", "c": "JSON OUT" },
+      { "a": "download", "b": "레퍼런스 이미지 저장", "c": "JSON OUT" },
+      { "a": "generate", "b": "콘셉트별 이미지 생성", "c": "JSON OUT" },
+      { "a": "create-grid", "b": "A/B/C/D 2×2 비교 그리드", "c": "PNG" }
+    ]
+  },
+  {
+    "name": "dealer-settlement-02", "tone": "paper", "caption": "자동차보험 딜러 정산 플랫폼 / Status model",
+    "title": "정산 상태를<br>데이터로 정의하다<span class=\"blue\">.</span>",
+    "layout": "flow",
+    "items": [
+      { "h": "정산대기", "p": "계약이 등록되면 수수료 정산 대상이 됩니다." },
+      { "h": "월말정산", "p": "월 단위로 모아 한 번에 처리합니다.", "hi": true },
+      { "h": "지급보류 · 미지급", "p": "확인이 필요한 건은 따로 분리합니다." },
+      { "h": "정산완료", "p": "지급이 끝난 건은 이력으로 남습니다." }
+    ]
+  }
+]

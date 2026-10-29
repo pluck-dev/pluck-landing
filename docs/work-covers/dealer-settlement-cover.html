@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+.word { position: absolute; left: 72px; bottom: 110px; font-size: 230px; color: #202523; letter-spacing: -0.07em; }
+.app { left: 640px; top: 120px; width: 890px; height: 760px; background: #f7f7f2; display: grid; grid-template-columns: 210px 1fr; box-shadow: 0 60px 120px -60px rgba(23,39,61,.45); }
+.side { background: #202523; color: #c9cec6; padding: 34px 22px; display: flex; flex-direction: column; gap: 10px; font-size: 17px; }
+.side .logo { font-weight: 700; color: #f7f7f2; font-size: 22px; margin-bottom: 22px; letter-spacing: -0.5px; }
+.side span { padding: 11px 14px; border-radius: 12px; }
+.side .on { background: #335aeb; color: #fff; }
+.main { padding: 34px 34px; }
+.main h4 { font-size: 26px; font-weight: 600; letter-spacing: -0.6px; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 22px; }
+.kpi { border: 1.5px solid #d9ddd5; border-radius: 16px; padding: 16px 18px; }
+.kpi small { font-size: 14px; color: #6b7668; } .kpi b { display: block; margin-top: 8px; font-size: 26px; letter-spacing: -0.8px; font-weight: 600; }
+.rows { margin-top: 24px; display: grid; gap: 12px; }
+.row { display: grid; grid-template-columns: 1.3fr 1fr auto; align-items: center; gap: 12px; border: 1.5px solid #e1e4dc; border-radius: 16px; padding: 18px 20px; font-size: 18px; }
+.bar { height: 10px; border-radius: 5px; background: #e3e7de; } .bar.w1 { width: 70%; } .bar.w2 { width: 55%; } .bar.w3 { width: 80%; }
+.amt { font-family: "Geist Mono", monospace; font-size: 17px; color: #202523; }
+.chip { font-size: 14px; border-radius: 20px; padding: 6px 12px; white-space: nowrap; }
+.wait { background: #eef1fd; color: #335aeb; } .month { background: #e6f1c4; color: #374730; } .done { background: #202523; color: #f7f7f2; } .spark { display: flex; align-items: flex-end; gap: 6px; height: 46px; margin-top: 12px; } .spark i { flex: 1; background: #335aeb; border-radius: 4px; opacity: .85; } .kpi:nth-child(2) .spark i { background: #9cbf3a; } .kpi:nth-child(3) .spark i { background: #9aa594; }
+.renew { border: 1.5px dashed #9aa594; color: #4f5a4c; }
+.tree { position: absolute; left: 110px; top: 210px; width: 420px; height: 300px; }
+.tree i { position: absolute; width: 74px; height: 74px; border-radius: 50%; border: 3px solid #202523; background: #dfe3da; }
+.tree i.root { left: 173px; top: 0; background: #335aeb; border-color: #335aeb; }
+.tree svg { position: absolute; inset: 0; }
+</style></head>
+<body><div class="art tone-stone">
+<span class="caption">자동차보험 딜러 정산 플랫폼 / Client work</span>
+<div class="tree">
+  <svg viewBox="0 0 420 300" fill="none" stroke="#202523" stroke-width="3"><path d="M210 74V120M70 160V120H350V160M210 120V160"/></svg>
+  <i class="root"></i><i style="left:33px;top:160px"></i><i style="left:173px;top:160px"></i><i style="left:313px;top:160px"></i>
+</div>
+<div class="panel app">
+  <div class="side"><span class="logo">정산</span><span>대시보드</span><span>딜러 관리</span><span>계약 관리</span><span class="on">정산 관리</span><span>레퍼럴 트리</span></div>
+  <div class="main">
+    <h4>이번 달 정산</h4>
+    <div class="kpis"><div class="kpi"><small>정산대기</small><span class="spark"><i style="height:40%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:80%"></i><i style="height:70%"></i></span></div><div class="kpi"><small>월말정산</small><span class="spark"><i style="height:55%"></i><i style="height:45%"></i><i style="height:75%"></i><i style="height:60%"></i><i style="height:90%"></i></span></div><div class="kpi"><small>갱신 예정</small><span class="spark"><i style="height:30%"></i><i style="height:50%"></i><i style="height:45%"></i><i style="height:60%"></i><i style="height:40%"></i></span></div></div>
+    <div class="rows">
+      <div class="row"><span class="bar w1"></span><span class="amt">800,000원</span><span class="chip wait">정산대기</span></div>
+      <div class="row"><span class="bar w2"></span><span class="amt">350,000원</span><span class="chip month">월말정산</span></div>
+      <div class="row"><span class="bar w3"></span><span class="amt">620,000원</span><span class="chip renew">갱신</span></div>
+      <div class="row"><span class="bar w2"></span><span class="amt">410,000원</span><span class="chip wait">정산대기</span></div>
+      <div class="row"><span class="bar w1"></span><span class="amt">275,000원</span><span class="chip done">정산완료</span></div>
+    </div>
+  </div>
+</div>
+<div class="word">정산<span class="blue">.</span></div>
+</div></body></html>
