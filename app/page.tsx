@@ -4,6 +4,11 @@ import {
   ScrollExperience,
 } from "@/components/scroll-experience";
 import { ProjectIndex } from "@/components/project-index";
+import {
+  ContactSection,
+  StudioFooter,
+  StudioHeader,
+} from "@/components/site-chrome";
 import { getPortfolioStats, projects } from "@/lib/portfolio";
 
 const services = [
@@ -59,30 +64,7 @@ export default function Home() {
   const stats = getPortfolioStats(projects);
   return (
     <ScrollExperience>
-      <a className="skip-link" href="#main">
-        본문으로 건너뛰기
-      </a>
-      <header className="site-header">
-        <div className="shell header-inner">
-          <a className="wordmark" href="#top" aria-label="PLUCK 홈">
-            pluck<span>®</span>
-          </a>
-          <nav className="desktop-nav" aria-label="주요 메뉴">
-            <a href="#showreel">Work</a>
-            <a href="#services">Expertise</a>
-            <a href="#process">Approach</a>
-          </nav>
-          <a className="header-contact" href="#contact">
-            Let’s talk <ArrowUpRight size={18} aria-hidden="true" />
-          </a>
-        </div>
-        <nav className="mobile-nav shell" aria-label="모바일 메뉴">
-          <a href="#showreel">프로젝트</a>
-          <a href="#services">서비스</a>
-          <a href="#process">진행 방식</a>
-          <a href="#faq">FAQ</a>
-        </nav>
-      </header>
+      <StudioHeader home />
       <main id="main">
         <section
           className="hero-scene"
@@ -455,40 +437,9 @@ export default function Home() {
             ))}
           </div>
         </section>
-        <section className="contact-section" id="contact" data-scene="contact">
-          <div className="shell">
-            <p className="eyebrow">HAVE SOMETHING IN MIND?</p>
-            <a
-              className="contact-title"
-              href="mailto:hello@pluck.co.kr?subject=PLUCK%20프로젝트%20문의"
-            >
-              Let’s make
-              <br />
-              <span>it happen.</span>
-              <ArrowUpRight aria-hidden="true" />
-            </a>
-            <div className="contact-bottom">
-              <p>
-                아직 정리되지 않은 생각도 좋습니다.
-                <br />
-                이야기에서부터 시작해요.
-              </p>
-              <div>
-                <a href="mailto:hello@pluck.co.kr">hello@pluck.co.kr</a>
-                <small>이메일 앱으로 연결됩니다.</small>
-              </div>
-            </div>
-          </div>
-        </section>
+        <ContactSection />
       </main>
-      <footer className="shell footer">
-        <a className="wordmark" href="#top" aria-label="PLUCK 홈">
-          pluck<span>®</span>
-        </a>
-        <span>© {new Date().getFullYear()} PLUCK</span>
-        <span>Independent in Seoul. Open to everywhere.</span>
-        <a href="#top">Back to top ↑</a>
-      </footer>
+      <StudioFooter />
     </ScrollExperience>
   );
 }
