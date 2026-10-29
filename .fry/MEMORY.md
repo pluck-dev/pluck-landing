@@ -65,26 +65,29 @@
 - 카피는 한국어 우선. categoryLabels/statusLabels 도 한글(클라이언트/자체 서비스/앱/AI·자동화, 라이브/개발 중/사례/콘셉트).
 
 ## 홈 흐름 = 한국 이커머스 상세페이지식 설득 구조
-- 히어로 핀 씬(거대 헤드라인 + CTA, 실제 화면 쇼케이스) → 숫자 밴드(블루 풀블리드, getPortfolioStats) → 이런 고민(다크) → 한 팀 4분야(각 분야에 실제 적용 사례 링크) → 라이브 클라이언트 작업 크게(featured) → 전체 그리드 → 진행 방식(번호 없음) → FAQ → 상담 CTA.
+- 3D 히어로(PLUCK 심볼 필드 → 스크롤로 큰 심볼 하나로 수렴) → 숫자 밴드(블루 풀블리드, getPortfolioStats) → 이런 고민(다크) → 한 팀 4분야(각 분야에 실제 적용 사례 링크) → 라이브 클라이언트 작업 크게(featured) → 전체 그리드 → 진행 방식(번호 없음) → FAQ → 상담 CTA.
 - 2026-10 오너 지시로 'THE WAY WE THINK' 스테이트먼트와 NDrop/DVIA/몇기야 아트카드 섹션 삭제(재추가 금지).
 - 히어로 숫자는 getPortfolioStats 로만. live 는 "지금 접속해 볼 수 있는 서비스"로 표기(THOUSAND 처럼 실주문 없는 라이브가 있어 '운영 실적'처럼 쓰지 않기 위함). 지어낸 지표·후기·로고 금지.
-- featured 는 실제 운영 클라이언트(boryoung, rba, dealer-settlement, dvia). 콜라주(hero-collage)는 2026-10 "히어로가 얌전하다(toss.im 참고)" 피드백으로 삭제 → components/hero-reel.tsx.
+- featured 는 실제 운영 클라이언트(boryoung, rba, dealer-settlement, dvia). 콜라주(hero-collage)는 2026-10 "히어로가 얌전하다(toss.im 참고)" 피드백으로 삭제 → components/hero-reel.tsx → 2026-10 feat/hero-3d 에서 Lusion 풍 3D 히어로로 교체(hero-reel 컴포넌트·CSS 삭제, public/reel 이미지는 남겨둠).
 
 ## 폰트/모션 함정
 - Geist 는 한글이 없어 Windows 에서 맑은고딕으로 떨어져 헤드라인이 약해 보였음 → layout.tsx 에 Noto_Sans_KR(preload:false, --font-noto-kr)을 Geist 다음 폴백으로 추가.
 - ScrollExperience 의 --progress 는 이제 모든 data-scene 에 같은 공식(뷰포트 통과율). 예전 hero 전용 핀 공식은 hero 가 고정 높이가 아니면 0→1로 튀어서 제거.
 - next/image `priority` 는 Next 16 에서 deprecated → `preload` 또는 loading="eager"+fetchPriority.
 
-# Hero reel: 핀 씬 스크롤 타임라인, toss 레퍼런스, 폰 크롭(public/reel), 함정
+# Hero 3D + PLUCK 심볼: lib/pluck-scene.ts, 스크롤 수렴 p, 폴백, 브랜드 에셋 재생성
 
-## 구조와 WHY (2026-10-29, feat/hero-bold)
-- 오너 "히어로가 얌전하다, toss.im 봐라" → docs/reference-toss.md 실측(80px/700 헤드라인, 3~9.5 뷰포트 sticky 씬, 풀블리드↔카드 스케일). PLUCK 방식: 종이 바탕 거대 헤드라인(clamp(56px,min(9vw,14.6svh),140px), 800) + 하단에서 엿보이는 실제 화면(dvia) → 풀블리드 → 다크에서 카드로 비켜나며 "기획부터/디자인/개발/AI 자동화까지" 문장 교체(각각 rba/thousand/dealer-settlement/boryoung 화면) → 폰이 날아옴 → "한 팀이, 처음부터 끝까지." 펼침.
-- 진행도 p = (scrollY - trackTop + header)/(track 높이 - stage 높이). 키프레임 [p,x,y,scale,rot,opacity] 를 JS가 rAF에서 transform/opacity로만 기록. 문장 구간은 0.28~0.86 균등 분할(steps 수에 따라 자동).
-- CSS 기본값 = p=0 상태(프레임 peek 위치를 calc 로 JS 공식과 동일하게: 데스크톱 0.24h+fh/2, 모바일 0.22h+fh/2). 바꾸면 양쪽(hero-reel.tsx peekY 와 globals .reel-frame transform)을 같이 바꿔야 하이드레이션 점프가 없다.
-- sticky stage top = 헤더 높이(--head, JS가 실측. CSS 기본 81px / 모바일 105px).
-- 숫자 밴드의 CountUp 은 SSR 에 실제 값, 화면 밖에서 마운트될 때만 0부터 카운트(크롤러·캡처에 0 노출 방지).
+## 구조와 WHY (2026-10-29, feat/hero-3d)
+- 오너 요청: lusion.co 의 에너지(광택 3D 오브젝트 + 커서 물리)는 가져오되 형태는 우리 것으로. 그래서 오브젝트가 PLUCK 심볼 자체(p + 뽑혀 나온 점)이고 동반 오브젝트는 심볼에서 떼어낸 링/알약. Lusion 의 십자 파이프·다크 카드 프레임은 일부러 피했다(밝은 종이 바탕 풀블리드).
+- 심볼 기하는 한 곳(lib/pluck-symbol-3d.ts, 120 그리드 좌표)에서만 정의. 평면 SVG 생성기 docs/brand/symbol-svg.js 와 좌표가 같아야 함 → 하나를 바꾸면 둘 다 바꾸고 docs/brand-symbol.md 표도 갱신.
+- 진행도 p 하나만 외부 입력: hero-3d.tsx 가 p=(stickyTop - sectionRect.top)/(section 높이 - stage 높이) 를 scene.setProgress 와 CSS --p 에 같이 씀. 씬 내부 파생: gather=smooth(0.04,0.62) 소용돌이+스켈레톤 슬롯 수렴, merge=smooth(0.6,0.8) 작은 것 축소, 큰 심볼은 셰이더에서 uP 로 reveal=smooth(0.6,0.82) 노이즈 디졸브(라임 엣지). CSS: 카피 opacity 1-5p, 캡션 (p-0.76)*7. data-phase=logo(p>0.22)일 때 카피 visibility hidden(투명 버튼 클릭 방지).
+- 오브젝트는 DOM 카피 박스(setCopyRect, h1/리드/버튼 union, fit-content 필수 — block 이면 박스가 전폭이 됨)를 피해 배치 + idle 동안 밖으로 밀어냄. 심볼은 거의 세운 방향(Euler 제한) + 진자 흔들림 — 자유 회전시키면 b/d/q 글자 수프로 읽혔음.
+- 성능 실측(Playwright, ANGLE): 데스크톱 1440 60fps / 모바일 390 60fps. 삼각형 데스크톱 52.8k(수렴 중 피크 59.3k), 모바일 28.9k. 그림자맵은 데스크톱만. DPR 캡 1.75(모바일 1.5).
+- three 는 boot 시 dynamic import + load 후 requestIdleCallback → 헤드라인이 LCP. 포스터 webp(public/brand/pluck-symbol-3d.webp)가 첫 프레임 전까지 보이고, reduced-motion/WebGL 실패/`?nofx` 면 data-state=fallback 으로 트랙 높이 auto + 포스터 정적 화면.
 
 ## 함정
-- reduced-motion 정적 레이아웃에서 `translate: none`(또는 0 0)을 `transform: none` 옆에 두면 Next 16 CSS 미니파이어가 translate 를 날려버림 → 중앙정렬 translate 는 `@media (prefers-reduced-motion: no-preference)` 안에만 둔다.
-- public/reel/*.webp 는 public/work 의 390 폰 합성 이미지(compose.js 슬롯 x=156/599/1042, y=90, 404x850)에서 한 대씩 크롭한 것. dealer-mobile 은 카영 브랜드가 보이지만 이미 갤러리 공개 이미지(오너 허용 범위). 등록 폼 크롭은 미사용.
-- html 의 scroll-behavior:smooth 때문에 Playwright 캡처 시 scrollTo({behavior:"instant"}) 필수.
+- next start 실행 중에 next build 하면 옛 서버가 새 청크를 못 찾아 씬이 안 뜸(data-state 미설정). TaskStop 은 npx 래퍼만 죽이고 node 는 3311 을 계속 잡고 있음 → Get-NetTCPConnection -LocalPort 3311 로 PID 찾아 종료.
+- 브랜드 에셋 재생성은 레포 밖 툴 폴더(esbuild, playwright, sharp, opentype.js, geist 설치)에서 NODE_PATH 로: `node docs/brand/symbol-svg.js public/brand`, `node docs/brand/render-3d.js`. docs/brand 는 eslint ignore.
+- reduced-motion 정적 레이아웃에서 `translate: none`(또는 0 0)을 `transform: none` 옆에 두면 Next 16 CSS 미니파이어가 translate 를 날려버림 → 중앙정렬 translate 를 reduce 블록에서 리셋하지 말 것.
+- 숫자 밴드의 CountUp 은 SSR 에 실제 값, 화면 밖에서 마운트될 때만 0부터 카운트(크롤러·캡처에 0 노출 방지).
+- html 의 scroll-behavior:smooth 때문에 Playwright 캡처 시 scrollTo({behavior:"instant"}) 필수. 수렴 프레임은 p 위치로 스크롤 후 ~1.6s 대기(스크롤 p 를 씬이 smoothP 로 따라감).

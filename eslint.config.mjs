@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Offline Node scripts that render designed portfolio covers.
     "docs/work-covers/**",
+    // Offline brand asset generators (symbol SVGs, 3D still render).
+    "docs/brand/**",
   ]),
 ]);
 

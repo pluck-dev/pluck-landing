@@ -200,68 +200,106 @@ summary:focus-visible {
   color: var(--text-2);
 }
 
-/* Opening scene: pinned stage. Hero copy on paper, a real screen peeks from below,
-   grows to full bleed, then steps aside on dark while statements swap (components/hero-reel.tsx).
-   JS writes transform/opacity only; the CSS below is the progress-0 state. */
-.reel {
+/* Opening scene: full-bleed WebGL field of PLUCK symbols (components/hero-3d.tsx,
+   lib/pluck-scene.ts). JS writes one number, --p (pinned-track progress 0..1);
+   copy fade and the logo-moment caption are derived from it here. */
+.hero3d {
   --head: 81px;
+  --p: 0;
   position: relative;
-  height: 560svh;
+  height: 250svh;
 }
-.reel-stage {
+.hero3d-stage {
   position: sticky;
   top: var(--head);
   height: calc(100svh - var(--head));
   overflow: hidden;
+  background:
+    radial-gradient(90% 80% at 68% 38%, #fdfdfa 0%, #f1f2ec 52%, #e6e9e1 100%);
 }
-.reel-dark {
+.hero3d-canvas,
+.hero3d-poster {
   position: absolute;
+  pointer-events: none;
+  transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.hero3d-canvas {
   inset: 0;
-  background: #0f1211;
+  width: 100%;
+  height: 100%;
   opacity: 0;
 }
-.reel-intro {
-  position: relative;
-  z-index: 3;
-  padding-top: clamp(24px, 6svh, 64px);
-  will-change: transform, opacity;
+.hero3d-poster {
+  top: 50%;
+  right: 7%;
+  width: min(44vw, 74%);
+  height: auto;
+  max-height: 78%;
+  object-fit: contain;
+  translate: 0 -50%;
 }
-[data-phase="reel"] .reel-intro,
-[data-phase="end"] .reel-intro {
+.hero3d[data-state="live"] .hero3d-canvas {
+  opacity: 1;
+}
+.hero3d[data-state="live"] .hero3d-poster {
+  opacity: 0;
+}
+.hero3d-copy {
+  position: absolute;
+  right: 0;
+  bottom: clamp(36px, 8svh, 88px);
+  left: 0;
+  z-index: 2;
+  opacity: clamp(0, 1 - var(--p) * 5, 1);
+  transform: translate3d(0, calc(var(--p) * -110px), 0);
+}
+.hero3d-copy > * {
+  width: fit-content;
+  max-width: 100%;
+}
+.hero3d[data-phase="logo"] .hero3d-copy {
   visibility: hidden;
 }
-.reel-title {
-  font-size: clamp(56px, min(9vw, 14.6svh), 140px);
+.hero3d-title {
+  font-size: clamp(46px, min(6.4vw, 11svh), 108px);
   font-weight: 800;
-  line-height: 1.06;
+  line-height: 1.04;
   letter-spacing: -0.058em;
   word-break: keep-all;
 }
-.reel-title > span {
+.hero3d-title > span {
   display: block;
 }
-.reel-title-accent {
+.hero3d-accent {
   color: var(--blue);
 }
-.reel-intro-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px 40px;
-  margin-top: clamp(20px, 4.4svh, 44px);
-}
-.reel-lead {
+.hero3d-lead {
   max-width: 24em;
-  font-size: clamp(17px, 1.5vw, 22px);
+  margin-top: clamp(16px, 2.6svh, 26px);
+  font-size: clamp(17px, 1.4vw, 21px);
   font-weight: 500;
   line-height: 1.55;
   letter-spacing: -0.02em;
   color: var(--text-2);
 }
-.reel-actions {
+.hero3d-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  margin-top: clamp(20px, 3.4svh, 34px);
+}
+.hero3d-closing {
+  position: absolute;
+  right: 0;
+  bottom: clamp(26px, 6svh, 60px);
+  left: 0;
+  z-index: 2;
+  text-align: center;
+  font-size: clamp(22px, 2.3vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  opacity: clamp(0, (var(--p) - 0.76) * 7, 1);
+  transform: translate3d(0, calc(clamp(0, (0.9 - var(--p)) * 7, 1) * 18px), 0);
 }
 .button-xl {
   min-height: 64px;
@@ -269,150 +307,6 @@ summary:focus-visible {
   font-size: 17px;
   font-weight: 700;
 }
-.reel-objects {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-}
-.reel-frame,
-.reel-phone,
-.reel-extra {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  will-change: transform, opacity;
-}
-/* Centering lives here (not reset in the reduce block): the CSS minifier drops a
-   `translate` reset that sits next to `transform: none`. */
-@media (prefers-reduced-motion: no-preference) {
-  .reel-frame,
-  .reel-phone,
-  .reel-extra {
-    translate: -50% -50%;
-  }
-}
-.reel-frame {
-  width: 62vw;
-  overflow: hidden;
-  border-radius: 22px;
-  background: #fff;
-  box-shadow:
-    0 0 0 1px #20252314,
-    0 60px 120px -40px #0b100e80,
-    0 20px 40px -20px #0b100e40;
-  transform: translate3d(
-    0,
-    calc(0.24 * (100svh - var(--head)) + 19.375vw + 15px),
-    0
-  );
-}
-.reel-bar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 30px;
-  padding-inline: 14px;
-  background: #eef0eb;
-}
-.reel-bar i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #cdd2c8;
-}
-.reel-screen {
-  position: relative;
-  display: block;
-  aspect-ratio: 16 / 10;
-}
-.reel-shot {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-}
-.reel-shot:first-child {
-  opacity: 1;
-}
-.reel-shot img,
-.reel-extra img {
-  object-fit: cover;
-  object-position: top center;
-}
-.reel-phone {
-  width: clamp(150px, 13.5vw, 224px);
-  aspect-ratio: 400 / 846;
-  overflow: hidden;
-  border-radius: 11% / 5.2%;
-  background: #1b1f1d;
-  box-shadow:
-    0 0 0 6px #1b1f1d,
-    0 0 0 7px #ffffff26,
-    0 50px 90px -30px #000c;
-  opacity: 0;
-}
-.reel-extra {
-  width: 30vw;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: 16px;
-  box-shadow: 0 40px 80px -30px #000c;
-  opacity: 0;
-}
-.reel-lines {
-  position: absolute;
-  top: 50%;
-  left: max(56px, calc((100vw - 1320px) / 2));
-  z-index: 3;
-  display: grid;
-  width: 40vw;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  translate: 0 -50%;
-}
-.reel-line {
-  grid-area: 1 / 1;
-  opacity: 0;
-  will-change: transform, opacity;
-}
-.reel-statement {
-  font-size: clamp(52px, 5.6vw, 100px);
-  font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: -0.058em;
-  color: #fff;
-}
-.reel-detail {
-  max-width: 22em;
-  margin-top: 28px;
-  font-size: 18px;
-  line-height: 1.6;
-  color: #a3aba5;
-}
-.reel-detail strong {
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 600;
-  color: #fff;
-}
-.reel-closing {
-  position: absolute;
-  top: clamp(24px, 7svh, 72px);
-  right: 24px;
-  left: 24px;
-  z-index: 3;
-  font-size: clamp(44px, 5.4vw, 92px);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.055em;
-  text-align: center;
-  color: #fff;
-  opacity: 0;
-  word-break: keep-all;
-}
-
 /* Real numbers from lib/portfolio.ts, shown big */
 .proof-band {
   padding-block: clamp(96px, 15svh, 168px);
@@ -1666,29 +1560,35 @@ summary:focus-visible {
   }
 }
 @media (max-width: 760px) {
-  .reel {
+  .hero3d {
     --head: 105px;
-    height: 480svh;
+    height: 220svh;
   }
-  .reel-intro {
-    padding-top: 22px;
+  .hero3d-poster {
+    top: 6%;
+    right: 50%;
+    width: min(70vw, 46%);
+    translate: 50% 0;
   }
-  .reel-title {
-    font-size: clamp(44px, 14vw, 64px);
+  .hero3d-copy {
+    bottom: 22px;
+  }
+  .hero3d-title {
+    font-size: clamp(42px, 12.6vw, 60px);
     line-height: 1.08;
   }
-  .reel-intro-row {
-    flex-direction: column;
-    align-items: stretch;
-    margin-top: 18px;
-  }
-  .reel-lead {
+  .hero3d-lead {
     font-size: 16px;
   }
-  .reel-actions {
+  .hero3d-actions {
     display: grid;
     grid-template-columns: 1.3fr 1fr;
     gap: 8px;
+  }
+  .hero3d-closing {
+    bottom: 34px;
+    padding-inline: 20px;
+    font-size: 22px;
   }
   .button-xl {
     min-height: 54px;
@@ -1697,54 +1597,6 @@ summary:focus-visible {
   }
   .button-xl svg {
     display: none;
-  }
-  .reel-frame {
-    width: calc(100vw - 40px);
-    border-radius: 14px;
-    transform: translate3d(
-      0,
-      calc(0.22 * (100svh - var(--head)) + (100vw - 40px) * 0.3125 + 10px),
-      0
-    );
-  }
-  .reel-bar {
-    height: 20px;
-    gap: 4px;
-    padding-inline: 10px;
-  }
-  .reel-bar i {
-    width: 6px;
-    height: 6px;
-  }
-  .reel-phone {
-    width: 33vw;
-    box-shadow:
-      0 0 0 4px #1b1f1d,
-      0 0 0 5px #ffffff26,
-      0 30px 50px -20px #000c;
-  }
-  .reel-extra {
-    width: 62vw;
-    border-radius: 12px;
-  }
-  .reel-lines {
-    top: 7%;
-    right: 20px;
-    left: 20px;
-    width: auto;
-    translate: none;
-  }
-  .reel-statement {
-    font-size: clamp(44px, 13vw, 60px);
-  }
-  .reel-detail {
-    margin-top: 14px;
-    font-size: 14.5px;
-    line-height: 1.5;
-  }
-  .reel-closing {
-    top: 8%;
-    font-size: clamp(38px, 11.5vw, 52px);
   }
   .proof-band {
     padding-block: 88px;
@@ -1760,69 +1612,35 @@ summary:focus-visible {
     font-size: 16px;
   }
 }
+/* Reduced motion / no WebGL: one static screen, poster instead of the scene. */
+.hero3d[data-state="fallback"] {
+  height: auto;
+}
+.hero3d[data-state="fallback"] .hero3d-canvas,
+.hero3d[data-state="fallback"] .hero3d-closing {
+  display: none;
+}
+.hero3d[data-state="fallback"] .hero3d-stage {
+  position: relative;
+  top: auto;
+  min-height: 560px;
+}
 @media (prefers-reduced-motion: reduce) {
-  .reel {
+  .hero3d {
     height: auto;
   }
-  .reel-stage {
-    position: relative;
-    top: auto;
-    height: auto;
-    padding-bottom: 96px;
-    overflow: visible;
-  }
-  .reel-dark,
-  .reel-extra,
-  .reel-closing {
+  .hero3d-canvas,
+  .hero3d-closing {
     display: none;
   }
-  .reel-objects {
+  .hero3d-stage {
     position: relative;
     top: auto;
-    left: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    width: min(1320px, calc(100% - 40px));
-    margin: 56px auto 0;
+    min-height: 560px;
   }
-  .reel-frame,
-  .reel-phone {
-    position: relative;
+  .hero3d-copy {
+    opacity: 1;
     transform: none;
-    opacity: 1;
-  }
-  .reel-frame {
-    width: 100%;
-  }
-  .reel-phone {
-    width: min(200px, 40%);
-  }
-  .reel-lines {
-    position: relative;
-    top: auto;
-    right: auto;
-    left: auto;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 24px;
-    width: min(1320px, calc(100% - 40px));
-    margin: 56px auto 0;
-    translate: 0 0;
-  }
-  .reel-line {
-    grid-area: auto;
-    opacity: 1;
-  }
-  .reel-statement {
-    font-size: clamp(32px, 3.4vw, 48px);
-    color: var(--ink);
-  }
-  .reel-detail {
-    color: var(--text-2);
-  }
-  .reel-detail strong {
-    color: var(--ink);
   }
 }
 @media (prefers-reduced-motion: reduce) {

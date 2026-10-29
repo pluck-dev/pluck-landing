@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { CountUp } from "@/components/count-up";
-import { HeroReel } from "@/components/hero-reel";
+import { Hero3D } from "@/components/hero-3d";
 import { ProjectIndex } from "@/components/project-index";
 import { ScrollExperience } from "@/components/scroll-experience";
 import {
@@ -123,58 +123,13 @@ function requireProject(slug: string) {
   return project;
 }
 
-/** Opening scene: each statement swaps the framed screen to a real project. */
-const reelSteps = [
-  { statement: "기획부터", slug: "rba" },
-  { statement: "디자인", slug: "thousand" },
-  { statement: "개발", slug: "dealer-settlement" },
-  { statement: "AI 자동화까지", slug: "boryoung" },
-] as const;
-
-/** Single phones cropped from the 390px composites (public/reel). */
-const reelPhones = [
-  { src: "/reel/setflow-home.webp", alt: "Setflow 오늘 운동 홈 모바일 화면" },
-  { src: "/reel/dealer-mobile.webp", alt: "딜러 정산 플랫폼 모바일 소개 화면" },
-  { src: "/reel/naengkeep-fridge.webp", alt: "냉킵 나의 작은 냉장고 모바일 화면" },
-  { src: "/reel/setflow-dark.webp", alt: "Setflow 다크 모드 함께 운동 화면" },
-];
-
-function reelScreen(slug: string) {
-  const project = requireProject(slug);
-  return { src: project.cover.src, alt: project.cover.alt, name: project.name };
-}
-
 export default function Home() {
   const stats = getPortfolioStats(projects);
   return (
     <ScrollExperience>
       <StudioHeader home />
       <main id="main">
-        <section className="hero-reel" aria-labelledby="hero-title">
-          <HeroReel
-            title={
-              <>
-                <span>아이디어만 가져오세요.</span>{" "}
-                <span className="reel-title-accent">운영되는 서비스로</span>{" "}
-                <span>만들어 드립니다.</span>
-              </>
-            }
-            lead="기획·디자인·개발·AI 자동화까지, 한 팀이 처음부터 끝까지 맡습니다."
-            contactHref={CONTACT_MAIL}
-            opening={reelScreen("dvia")}
-            steps={reelSteps.map(({ statement, slug }) => {
-              const project = requireProject(slug);
-              return {
-                statement,
-                detail: project.detail.oneLiner,
-                screen: reelScreen(slug),
-              };
-            })}
-            phones={reelPhones}
-            extras={[reelScreen("v8-cal-lab"), reelScreen("myotgiya")]}
-            closing="한 팀이, 처음부터 끝까지."
-          />
-        </section>
+        <Hero3D contactHref={CONTACT_MAIL} />
 
         <section className="proof-band" aria-labelledby="proof-title">
           <div className="shell">
