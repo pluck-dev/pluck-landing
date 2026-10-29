@@ -43,17 +43,17 @@ export type PortfolioProject = {
 };
 
 export const categoryLabels: Record<ProjectCategory, string> = {
-  client: "Client work",
-  product: "Product",
-  app: "App",
-  ai: "AI & Automation",
+  client: "클라이언트",
+  product: "자체 서비스",
+  app: "앱",
+  ai: "AI·자동화",
 };
 
 export const statusLabels: Record<ProjectStatus, string> = {
-  live: "Live",
-  development: "In development",
-  case: "Case study",
-  concept: "Concept",
+  live: "라이브",
+  development: "개발 중",
+  case: "사례",
+  concept: "콘셉트",
 };
 
 export const categoryOrder: readonly ProjectCategory[] = [

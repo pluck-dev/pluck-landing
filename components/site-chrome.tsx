@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 /**
  * Header, contact block and footer shared by the home page and /work/[slug].
@@ -8,6 +8,21 @@ import { ArrowUpRight } from "lucide-react";
 function anchor(home: boolean, id: string) {
   return home ? `#${id}` : `/#${id}`;
 }
+
+export const CONTACT_EMAIL = "hello@pluck.co.kr";
+
+export function contactMail(subject = "PLUCK 프로젝트 문의") {
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
+}
+
+export const CONTACT_MAIL = contactMail();
+
+const navItems = [
+  ["work", "포트폴리오"],
+  ["services", "서비스"],
+  ["process", "진행 방식"],
+  ["faq", "FAQ"],
+] as const;
 
 export function StudioHeader({ home = false }: { home?: boolean }) {
   const href = (id: string) => anchor(home, id);
@@ -18,25 +33,30 @@ export function StudioHeader({ home = false }: { home?: boolean }) {
       </a>
       <header className="site-header">
         <div className="shell header-inner">
-          <Link className="wordmark" href={home ? "#top" : "/"} aria-label="PLUCK 홈">
+          <Link
+            className="wordmark"
+            href={home ? "#top" : "/"}
+            aria-label="PLUCK 홈"
+          >
             pluck<span>®</span>
           </Link>
           <nav className="desktop-nav" aria-label="주요 메뉴">
-            <Link href={href("showreel")}>Work</Link>
-            <Link href={href("index")}>Index</Link>
-            <Link href={href("services")}>Expertise</Link>
-            <Link href={href("process")}>Approach</Link>
+            {navItems.map(([id, label]) => (
+              <Link key={id} href={href(id)}>
+                {label}
+              </Link>
+            ))}
           </nav>
-          <Link className="header-contact" href={href("contact")}>
-            Let’s talk <ArrowUpRight size={18} aria-hidden="true" />
-          </Link>
+          <a className="header-contact" href={CONTACT_MAIL}>
+            상담하기
+          </a>
         </div>
         <nav className="mobile-nav shell" aria-label="모바일 메뉴">
-          <Link href={href("showreel")}>프로젝트</Link>
-          <Link href={href("index")}>인덱스</Link>
-          <Link href={href("services")}>서비스</Link>
-          <Link href={href("process")}>진행 방식</Link>
-          <Link href={href("faq")}>FAQ</Link>
+          {navItems.map(([id, label]) => (
+            <Link key={id} href={href(id)}>
+              {label}
+            </Link>
+          ))}
         </nav>
       </header>
     </>
@@ -49,28 +69,28 @@ export function ContactSection({
   subject?: string;
 }) {
   return (
-    <section className="contact-section" id="contact" data-scene="contact">
-      <div className="shell">
-        <p className="eyebrow">HAVE SOMETHING IN MIND?</p>
-        <a
-          className="contact-title"
-          href={`mailto:hello@pluck.co.kr?subject=${encodeURIComponent(subject)}`}
-        >
-          Let’s make
+    <section
+      className="contact-section"
+      id="contact"
+      aria-labelledby="contact-title"
+    >
+      <div className="shell contact-inner">
+        <h2 id="contact-title">
+          아이디어가 있다면,
           <br />
-          <span>it happen.</span>
-          <ArrowUpRight aria-hidden="true" />
-        </a>
-        <div className="contact-bottom">
+          지금 이야기해 주세요.
+        </h2>
+        <div className="contact-side">
           <p>
-            아직 정리되지 않은 생각도 좋습니다.
-            <br />
-            이야기에서부터 시작해요.
+            아직 정리되지 않은 생각이어도 괜찮습니다. 해결하고 싶은 문제만
+            알려주시면, 무엇부터 만들지 함께 정리해 드립니다.
           </p>
-          <div>
-            <a href="mailto:hello@pluck.co.kr">hello@pluck.co.kr</a>
-            <small>이메일 앱으로 연결됩니다.</small>
-          </div>
+          <a className="button button-ink" href={contactMail(subject)}>
+            프로젝트 상담하기 <ArrowRight size={18} aria-hidden="true" />
+          </a>
+          <a className="contact-email" href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
+          </a>
         </div>
       </div>
     </section>
@@ -84,8 +104,15 @@ export function StudioFooter() {
         pluck<span>®</span>
       </Link>
       <span>© {new Date().getFullYear()} PLUCK</span>
-      <span>Independent in Seoul. Open to everywhere.</span>
-      <a href="#top">Back to top ↑</a>
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+      <a
+        href="https://github.com/pluck-dev"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+      <a href="#top">맨 위로 ↑</a>
     </footer>
   );
 }

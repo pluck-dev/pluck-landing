@@ -1,46 +1,102 @@
-import { ArrowDown, ArrowUpRight, Plus } from "lucide-react";
-import {
-  PluckSculpture,
-  ScrollExperience,
-} from "@/components/scroll-experience";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
+import { HeroCollage } from "@/components/hero-collage";
 import { ProjectIndex } from "@/components/project-index";
+import { ScrollExperience } from "@/components/scroll-experience";
 import {
+  CONTACT_MAIL,
   ContactSection,
   StudioFooter,
   StudioHeader,
 } from "@/components/site-chrome";
-import { getPortfolioStats, projects } from "@/lib/portfolio";
+import { getPortfolioStats, getProject, projects } from "@/lib/portfolio";
+
+const worries = [
+  "기획, 디자인, 개발을 각각 다른 곳에 맡겼더니 서로 조율하다 일정이 다 지나갔어요.",
+  "시안은 예쁘게 나왔는데, 실제로 돌아가는 서비스는 끝내 나오지 않았어요.",
+  "엑셀과 단톡방으로 돌리던 업무를 시스템으로 옮기고 싶은데, 어디서부터 시작할지 모르겠어요.",
+  "AI를 쓰면 좋다는데, 우리 업무 어디에 붙여야 효과가 있는지 감이 안 와요.",
+];
 
 const services = [
   {
-    number: "01",
-    title: "Find the essential.",
-    name: "제품 전략 & 디자인",
+    title: "기획",
+    lead: "무엇을 먼저 만들지부터 정합니다.",
     description:
-      "무엇을 더할지보다, 무엇이 중요한지 먼저 묻습니다. 아이디어의 본질을 찾고 사용자가 이해하는 경험으로 설계합니다.",
-    tags: "Product strategy / UX·UI / Design systems",
+      "해결하려는 문제와 사용자를 정리하고, 꼭 필요한 기능과 우선순위를 나눠 개발 범위를 구체화합니다.",
+    deliverables: ["기능 우선순위", "화면 흐름", "개발 범위"],
+    example: "rba",
   },
   {
-    number: "02",
-    title: "Make it work.",
-    name: "웹 & 모바일 개발",
+    title: "디자인",
+    lead: "처음 써도 헤매지 않는 화면.",
     description:
-      "보이는 화면부터 보이지 않는 구조까지. 빠르게 만들고, 오래 사용할 수 있도록 제품의 기반을 단단하게 연결합니다.",
-    tags: "Web / Mobile / Backend engineering",
+      "브랜드의 인상과 사용 흐름을 함께 설계합니다. 고객용 화면부터 운영자가 쓰는 어드민까지 한 톤으로 만듭니다.",
+    deliverables: ["UI 디자인", "디자인 시스템", "모바일 대응"],
+    example: "thousand",
   },
   {
-    number: "03",
-    title: "Go a little further.",
-    name: "AI & 업무 자동화",
+    title: "개발",
+    lead: "시안이 아니라 운영되는 서비스.",
     description:
-      "사람이 집중해야 할 일에 더 많은 시간을. 실제 업무의 흐름을 이해하고 필요한 곳에 AI와 자동화를 더합니다.",
-    tags: "AI integration / Agents / Automation",
+      "웹, 앱, 어드민, 정산 같은 실제 업무 기능까지 구현하고 배포합니다. 출시 후 운영에 필요한 구조를 처음부터 고려합니다.",
+    deliverables: ["웹·앱", "운영 어드민", "배포"],
+    example: "dealer-settlement",
+  },
+  {
+    title: "AI 자동화",
+    lead: "반복 업무는 맡기고, 사람은 중요한 일에.",
+    description:
+      "업무 흐름을 먼저 이해한 뒤 효과가 나는 지점에만 AI와 자동화를 더합니다. 콘텐츠 작성 보조, 데이터 정리, 알림까지.",
+    deliverables: ["AI 기능 연동", "업무 자동화", "콘텐츠 생성"],
+    example: "boryoung",
+  },
+] as const;
+
+/** Live client work shown large. `detail` = gallery index for the inset frame. */
+const featured = [
+  { slug: "boryoung", detail: 3 },
+  { slug: "rba", detail: 3 },
+  { slug: "dealer-settlement", detail: 0 },
+  { slug: "dvia", detail: 0 },
+] as const;
+
+const steps = [
+  {
+    title: "상담",
+    description:
+      "해결하고 싶은 문제와 원하는 결과를 듣습니다. 아직 정리되지 않은 생각이어도 괜찮습니다.",
+    outcome: "필요한 기능과 우선순위 정리",
+  },
+  {
+    title: "설계",
+    description:
+      "사용자 흐름과 화면을 설계하고, 프로토타입으로 방향을 먼저 확인합니다.",
+    outcome: "화면 흐름과 프로토타입",
+  },
+  {
+    title: "제작",
+    description:
+      "핵심 기능부터 구현하고, 실제로 동작하는 결과물을 보며 피드백을 반영합니다.",
+    outcome: "직접 써볼 수 있는 결과물",
+  },
+  {
+    title: "출시와 운영",
+    description:
+      "배포와 안정화를 거쳐, 운영하며 필요한 개선과 추가 기능을 함께 검토합니다.",
+    outcome: "실제 운영되는 서비스",
   },
 ];
+
 const faqs = [
   [
     "아이디어만 있어도 시작할 수 있나요?",
     "네. 해결하려는 문제와 원하는 결과를 알려주세요. 필요한 기능과 우선순위를 함께 정리하고, 디자인과 개발 범위를 구체화합니다.",
+  ],
+  [
+    "기획, 디자인, 개발을 모두 맡길 수 있나요?",
+    "네. PLUCK은 한 팀이 기획부터 디자인, 개발, 배포까지 이어서 진행합니다. 필요한 부분만 맡기셔도 됩니다.",
   ],
   [
     "진행 과정은 어떻게 공유하나요?",
@@ -51,13 +107,19 @@ const faqs = [
     "현재 서비스의 구조와 요구사항을 살펴본 뒤 리디자인, 기능 개선, AI 연동 등 필요한 범위를 제안합니다.",
   ],
   [
-    "출시 이후 운영도 함께할 수 있나요?",
-    "출시 후 안정화와 유지보수, 추가 기능 개발을 협의할 수 있습니다. 일정과 비용, 지원 범위는 프로젝트 상담에서 안내합니다.",
+    "비용과 일정은 어떻게 정해지나요?",
+    "만들 범위에 따라 달라집니다. 상담에서 필요한 기능을 함께 정리한 뒤 일정과 비용을 안내합니다.",
   ],
-];
+  [
+    "출시 이후 운영도 함께할 수 있나요?",
+    "출시 후 안정화와 유지보수, 추가 기능 개발을 협의할 수 있습니다. 지원 범위는 프로젝트 상담에서 안내합니다.",
+  ],
+] as const;
 
-function ExternalArrow() {
-  return <ArrowUpRight size={22} aria-hidden="true" />;
+function requireProject(slug: string) {
+  const project = getProject(slug);
+  if (!project) throw new Error(`Unknown portfolio slug: ${slug}`);
+  return project;
 }
 
 export default function Home() {
@@ -67,347 +129,285 @@ export default function Home() {
       <StudioHeader home />
       <main id="main">
         <section
-          className="hero-scene"
+          className="hero"
           id="top"
           data-scene="hero"
           aria-labelledby="hero-title"
         >
-          <div className="hero-pin">
-            <div className="hero-grid shell">
-              <div className="hero-copy">
-                <p className="eyebrow">INDEPENDENT DIGITAL STUDIO · SEOUL</p>
-                <h1 id="hero-title">
-                  Ideas.
-                  <br />
-                  <span>Made real.</span>
-                </h1>
-                <div className="hero-description">
-                  <span className="little-line" />
-                  <p>
-                    가능성에 머무르지 않도록.
-                    <br />
-                    생각을 꺼내, 쓰이는 제품으로 만듭니다.
-                  </p>
-                </div>
-                <a className="text-link hero-link" href="#showreel">
-                  우리가 만든 것들 <ArrowDown size={18} aria-hidden="true" />
+          <div className="shell hero-grid">
+            <div className="hero-copy">
+              <h1 id="hero-title" className="hero-title">
+                아이디어만 가져오세요.
+                <br />
+                <span>운영되는 서비스</span>로
+                <br />
+                만들어 드립니다.
+              </h1>
+              <p className="hero-lead">
+                기획·디자인·개발·AI 자동화를 한 팀이 처음부터 끝까지.{" "}
+                <br className="desktop-break" />
+                업체 여러 곳을 오가며 조율할 필요 없이, 실제로 쓰이는
+                서비스까지 만듭니다.
+              </p>
+              <div className="hero-actions">
+                <a className="button button-primary" href={CONTACT_MAIL}>
+                  프로젝트 상담하기 <ArrowRight size={18} aria-hidden="true" />
+                </a>
+                <a className="button button-ghost" href="#work">
+                  포트폴리오 보기
                 </a>
               </div>
-              <PluckSculpture />
+              <dl className="hero-proof">
+                <div>
+                  <dt>지금 접속해 볼 수 있는 서비스</dt>
+                  <dd>
+                    {stats.live}
+                    <small>개</small>
+                  </dd>
+                </div>
+                <div>
+                  <dt>클라이언트 프로젝트</dt>
+                  <dd>
+                    {stats.client}
+                    <small>건</small>
+                  </dd>
+                </div>
+                <div>
+                  <dt>지금까지 만든 프로젝트</dt>
+                  <dd>
+                    {stats.total}
+                    <small>개</small>
+                  </dd>
+                </div>
+              </dl>
             </div>
-            <div className="hero-bottom shell">
-              <span>STRATEGY. DESIGN. ENGINEERING.</span>
-              <a href="#studio-note">
-                SCROLL TO EXPLORE <ArrowDown size={15} aria-hidden="true" />
-              </a>
-              <span className="hero-progress" aria-hidden="true">
-                <i />
-              </span>
-            </div>
-            <span className="hero-watermark" aria-hidden="true">
-              From thought to thing.
-            </span>
+            <HeroCollage />
+          </div>
+        </section>
+
+        <section className="worries" aria-labelledby="worries-title">
+          <div className="shell">
+            <h2 id="worries-title" className="section-title">
+              이런 고민, 있으신가요?
+            </h2>
+            <ul className="worry-list">
+              {worries.map((worry) => (
+                <li key={worry}>
+                  <p>“{worry}”</p>
+                </li>
+              ))}
+            </ul>
+            <p className="worries-answer">
+              PLUCK은 이 고민을 <strong>한 팀</strong>으로 해결합니다.
+            </p>
           </div>
         </section>
 
         <section
-          className="studio-note shell"
-          id="studio-note"
-          data-scene="statement"
+          className="services shell"
+          id="services"
+          aria-labelledby="services-title"
         >
-          <p className="eyebrow">01 / THE WAY WE THINK</p>
-          <div>
-            <h2>
-              좋은 제품은
+          <div className="section-head">
+            <h2 id="services-title" className="section-title">
+              기획·디자인·개발·AI,
               <br />
-              덜어낸 자리에서
-              <br />
-              <span>선명해집니다.</span>
+              따로 찾지 마세요.
             </h2>
-            <p className="note-description">
-              복잡한 아이디어에서 중요한 것을 뽑아내는 일.
-              <br />
-              PLUCK은 기획, 디자인, 개발의 경계를 넘나들며
-              <br />
-              비즈니스에 필요한 다음 장면을 만듭니다.
+            <p>
+              한 팀이 처음부터 끝까지 맡기 때문에, 업체 사이에서 같은 설명을
+              반복할 일이 없습니다. 아래는 각 분야를 실제로 적용한 프로젝트입니다.
             </p>
           </div>
-          <span className="note-index" aria-hidden="true">
-            Less noise.
-            <br />
-            More purpose.
-          </span>
+          <ul className="service-grid">
+            {services.map((service) => {
+              const example = requireProject(service.example);
+              return (
+                <li className="service-card" key={service.title}>
+                  <h3>{service.title}</h3>
+                  <p className="service-lead">{service.lead}</p>
+                  <p>{service.description}</p>
+                  <ul className="chip-list" aria-label={`${service.title} 결과물`}>
+                    {service.deliverables.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                  <Link
+                    className="service-example"
+                    href={`/work/${example.slug}`}
+                  >
+                    <span className="service-example-thumb">
+                      <Image
+                        src={example.cover.src}
+                        alt=""
+                        fill
+                        sizes="96px"
+                      />
+                    </span>
+                    <span>
+                      적용 사례
+                      <strong>{example.name}</strong>
+                    </span>
+                    <ArrowUpRight size={18} aria-hidden="true" />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </section>
 
-        <section className="work-section" id="showreel">
-          <div className="shell section-heading">
-            <p className="eyebrow">02 / SELECTED WORK</p>
-            <h2>
-              Proof, not promises<span className="blue-period">.</span>
-            </h2>
-            <p>생각이 실제 서비스가 된 기록.</p>
-          </div>
-          <div className="shell project-list">
-            <article className="project project-ndrop" data-scene="project">
-              <div className="project-image ndrop-art">
-                <span className="art-caption">NDrop / DIGITAL CONNECTIONS</span>
-                <div
-                  className="project-parallax ndrop-composition"
-                  aria-hidden="true"
-                >
-                  <div className="ndrop-word">
-                    Hello,
-                    <br />
-                    again.
-                  </div>
-                  <div className="business-card card-back">
-                    <span>NDrop</span>
-                    <div className="card-lines">
-                      <i />
-                      <i />
-                      <i />
+        <section
+          className="featured"
+          id="featured"
+          aria-labelledby="featured-title"
+        >
+          <div className="shell">
+            <div className="section-head">
+              <h2 id="featured-title" className="section-title">
+                시안에서 멈추지 않았습니다.
+              </h2>
+              <p>
+                지금 바로 접속해 볼 수 있는 클라이언트 서비스입니다. 기획부터
+                디자인, 개발, 운영 어드민까지 PLUCK이 맡았습니다.
+              </p>
+            </div>
+            <div className="featured-list">
+              {featured.map(({ slug, detail }) => {
+                const project = requireProject(slug);
+                const inset = project.gallery[detail];
+                return (
+                  <article
+                    className="featured-item"
+                    key={slug}
+                    data-scene="feature"
+                  >
+                    <Link
+                      href={`/work/${slug}`}
+                      className="featured-media"
+                      tabIndex={-1}
+                      aria-hidden="true"
+                    >
+                      <span className="featured-cover">
+                        <Image
+                          src={project.cover.src}
+                          alt=""
+                          fill
+                          sizes="(max-width: 900px) calc(100vw - 40px), 760px"
+                        />
+                      </span>
+                      {inset ? (
+                        <span className="featured-inset">
+                          <Image
+                            src={inset.src}
+                            alt=""
+                            fill
+                            sizes="(max-width: 900px) 50vw, 340px"
+                          />
+                        </span>
+                      ) : null}
+                    </Link>
+                    <div className="featured-copy">
+                      <h3>{project.name}</h3>
+                      <p className="featured-one-liner">
+                        {project.detail.oneLiner}
+                      </p>
+                      <p>{project.detail.solution}</p>
+                      <p className="featured-role">
+                        <span>맡은 일</span>
+                        {project.detail.role.join(" · ")}
+                      </p>
+                      <div className="featured-actions">
+                        <Link
+                          className="button button-primary"
+                          href={`/work/${slug}`}
+                        >
+                          프로젝트 자세히 보기
+                          <span className="sr-only"> — {project.name}</span>
+                        </Link>
+                        {project.url ? (
+                          <a
+                            className="button button-ghost"
+                            href={project.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            사이트 방문{" "}
+                            <ArrowUpRight size={17} aria-hidden="true" />
+                            <span className="sr-only">
+                              {" "}
+                              — {project.name} (새 탭)
+                            </span>
+                          </a>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                  <div className="business-card card-front">
-                    <span className="card-logo">
-                      N<span>↗</span>
-                    </span>
-                    <div>
-                      <small>A new connection starts here.</small>
-                      <strong>
-                        Make your
-                        <br />
-                        first impression last.
-                      </strong>
-                    </div>
-                    <span className="card-footer">
-                      YOUR DIGITAL BUSINESS CARD <span>↗</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="project-caption">
-                <span className="project-number">01</span>
-                <div>
-                  <h3>NDrop</h3>
-                  <p>명함을 넘어, 연결의 시작으로.</p>
-                </div>
-                <span className="project-discipline">
-                  Brand experience / Web platform
-                </span>
-              </div>
-            </article>
-            <article className="project project-dvia" data-scene="project">
-              <a
-                className="project-image dvia-art"
-                href="https://web-daeilsys-v2.vercel.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="DVIA 사이트 방문 (새 탭)"
-              >
-                <span className="art-caption">
-                  DVIA / PRECISION ENGINEERING
-                </span>
-                <div
-                  className="project-parallax dvia-composition"
-                  aria-hidden="true"
-                >
-                  <div className="precision-rings">
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                  </div>
-                  <strong>
-                    Beyond
-                    <br />
-                    <em>the surface.</em>
-                  </strong>
-                  <span className="precision-mark">DVIA</span>
-                </div>
-                <span className="project-circle">
-                  <ExternalArrow />
-                </span>
-              </a>
-              <div className="project-caption">
-                <span className="project-number">02</span>
-                <div>
-                  <h3>DVIA</h3>
-                  <p>정밀 기술을 전달하는 새로운 시선.</p>
-                </div>
-                <span className="project-discipline">
-                  Global website / 3D experience
-                </span>
-              </div>
-            </article>
-            <article className="project project-community" data-scene="project">
-              <a
-                className="project-image community-art"
-                href="https://www.myotgiya.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="몇기야 사이트 방문 (새 탭)"
-              >
-                <span className="art-caption">몇기야 / SHARED CONNECTIONS</span>
-                <div
-                  className="project-parallax community-composition"
-                  aria-hidden="true"
-                >
-                  <span className="community-orbit orbit-one" />
-                  <span className="community-orbit orbit-two" />
-                  <span className="community-orbit orbit-three" />
-                  <span className="community-label label-one">같은 시작</span>
-                  <strong>
-                    우리,
-                    <br />
-                    몇기야?
-                  </strong>
-                  <span className="community-label label-two">
-                    새로운 연결 ↗
-                  </span>
-                </div>
-                <span className="project-circle">
-                  <ExternalArrow />
-                </span>
-              </a>
-              <div className="project-caption">
-                <span className="project-number">03</span>
-                <div>
-                  <h3>몇기야</h3>
-                  <p>함께한 시간을, 새로운 관계로.</p>
-                </div>
-                <span className="project-discipline">
-                  Community / Product development
-                </span>
-              </div>
-            </article>
+                  </article>
+                );
+              })}
+            </div>
           </div>
-          <div className="shell more-work">
-            <span>MORE TO EXPLORE</span>
+        </section>
+
+        <section className="index-section" id="work" aria-labelledby="work-title">
+          <div className="shell">
+            <div className="section-head index-head">
+              <h2 id="work-title" className="section-title">
+                지금까지 만든 {stats.total}개의 프로젝트
+              </h2>
+              <p>
+                클라이언트 작업부터 자체 서비스, 앱, AI 자동화 도구까지.
+                카드를 누르면 문제와 해결 과정을 볼 수 있습니다.
+              </p>
+            </div>
+            <ProjectIndex />
             <a
+              className="github-link"
               href="https://github.com/pluck-dev"
               target="_blank"
               rel="noopener noreferrer"
             >
-              GitHub <ExternalArrow />
+              코드와 오픈소스 작업은 GitHub에서
+              <ArrowUpRight size={17} aria-hidden="true" />
+              <span className="sr-only"> (새 탭)</span>
             </a>
           </div>
         </section>
 
         <section
-          className="index-section"
-          id="index"
-          aria-labelledby="index-title"
+          className="process shell"
+          id="process"
+          aria-labelledby="process-title"
         >
-          <div className="shell">
-            <div className="section-heading index-heading">
-              <p className="eyebrow">03 / INDEX</p>
-              <h2 id="index-title">
-                Everything we’ve made<span className="blue-period">.</span>
-              </h2>
-              <p>클라이언트 작업부터 자체 제품, 앱, 자동화 도구까지.</p>
-            </div>
-            <dl className="index-stats">
-              <div>
-                <dt>Projects</dt>
-                <dd>{stats.total}</dd>
-              </div>
-              <div>
-                <dt>Client work</dt>
-                <dd>{stats.client}</dd>
-              </div>
-              <div>
-                <dt>Live services</dt>
-                <dd>{stats.live}</dd>
-              </div>
-              <div>
-                <dt>Years</dt>
-                <dd>{stats.span}</dd>
-              </div>
-            </dl>
-            <ProjectIndex />
+          <div className="section-head">
+            <h2 id="process-title" className="section-title">
+              진행은 이렇게 합니다.
+            </h2>
+            <p>
+              단계마다 실제 결과물을 함께 보며 결정합니다. 보고서만 쌓이는
+              진행은 하지 않습니다.
+            </p>
           </div>
-        </section>
-
-        <section className="expertise-section" id="services">
-          <div className="shell expertise-grid">
-            <div className="expertise-heading">
-              <p className="eyebrow">04 / OUR EXPERTISE</p>
-              <h2>
-                Different skills.
-                <br />
-                <span>One direction.</span>
-              </h2>
-              <p>
-                한 번의 대화에서 시작해
-                <br />
-                하나의 완성된 경험으로.
-              </p>
-              <a className="text-link" href="#contact">
-                함께할 프로젝트 이야기하기{" "}
-                <ArrowUpRight size={18} aria-hidden="true" />
-              </a>
-            </div>
-            <div className="service-list">
-              {services.map((service) => (
-                <article className="service-row" key={service.number}>
-                  <span className="service-number">/{service.number}</span>
-                  <h3>{service.title}</h3>
-                  <h4>{service.name}</h4>
-                  <p>{service.description}</p>
-                  <small>{service.tags}</small>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="process-section shell" id="process">
-          <div className="section-heading">
-            <p className="eyebrow">05 / IN GOOD COMPANY</p>
-            <h2>과정도, 좋은 경험이 되도록.</h2>
-            <p>함께 보고, 이야기하고, 다음으로 나아갑니다.</p>
-          </div>
-          <div className="process-grid">
-            {[
-              [
-                "01",
-                "Discover",
-                "먼저, 깊이 이해합니다.",
-                "사용자와 비즈니스를 이해하고 지금 필요한 제품의 범위를 정합니다.",
-              ],
-              [
-                "02",
-                "Design",
-                "같은 그림을 그립니다.",
-                "사용자 흐름과 화면을 설계하고 프로토타입으로 방향을 확인합니다.",
-              ],
-              [
-                "03",
-                "Build",
-                "직접 써보며 완성합니다.",
-                "핵심 기능부터 구현하고 실제 결과물을 보며 완성도를 높입니다.",
-              ],
-              [
-                "04",
-                "Beyond",
-                "출시 다음도 생각합니다.",
-                "배포와 안정화를 거쳐 운영 중 필요한 개선을 함께 검토합니다.",
-              ],
-            ].map(([number, title, subtitle, description]) => (
-              <article className="process-step" key={number}>
-                <span>{number} /</span>
-                <h3>{title}</h3>
-                <h4>{subtitle}</h4>
-                <p>{description}</p>
-              </article>
+          <ol className="process-flow">
+            {steps.map((step) => (
+              <li className="process-step" key={step.title}>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+                <p className="process-outcome">{step.outcome}</p>
+              </li>
             ))}
-          </div>
+          </ol>
         </section>
-        <section className="shell faq-section" id="faq">
-          <div>
-            <p className="eyebrow">A FEW THINGS TO KNOW</p>
-            <h2>궁금한 것들.</h2>
+
+        <section className="faq shell" id="faq" aria-labelledby="faq-title">
+          <div className="faq-head">
+            <h2 id="faq-title" className="section-title">
+              자주 묻는 질문
+            </h2>
+            <p>
+              더 궁금한 점은{" "}
+              <a href="mailto:hello@pluck.co.kr">hello@pluck.co.kr</a>로 편하게
+              물어보세요.
+            </p>
           </div>
           <div className="faq-list">
             {faqs.map(([question, answer]) => (

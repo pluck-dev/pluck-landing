@@ -99,7 +99,7 @@ export function ProjectIndex() {
             }}
           >
             {item.label}
-            <sup>{String(item.count).padStart(2, "0")}</sup>
+            <span className="filter-count">{item.count}</span>
           </button>
         ))}
       </div>

@@ -54,5 +54,24 @@
 - eslint-config-next 16 의 react-hooks/set-state-in-effect 규칙: matchMedia 는 useSyncExternalStore 로 구독할 것.
 - 카드 진입 애니메이션은 필터 클릭 후에만(data-animate). 초기 로드에 걸면 풀페이지 캡처/스크롤 시 흐리게 보임.
 - 상태 pill 은 이미지 위가 아니라 카드 메타 행에 둔다 — 디자인 커버 좌상단 캡션과 겹침.
-- 헤더/푸터/CTA 는 components/site-chrome.tsx 공용. 상세 페이지에선 home=false 로 "/#showreel" 등 홈 앵커로 연결.
+- 헤더/푸터/CTA 는 components/site-chrome.tsx 공용. 상세 페이지에선 home=false 로 "/#work" 등 홈 앵커로 연결. 홈 앵커: #work(전체 그리드) #featured #services #process #faq #contact. 상담 메일 링크는 CONTACT_MAIL/contactMail(subject).
 - docs/work-covers 는 Node CJS 스크립트라 eslint globalIgnores 에 추가돼 있음.
+
+# Home 디자인 규칙: 상세페이지 흐름, AI 티 금지(eyebrow·장식 번호·밑줄), 한글 폰트
+
+## 오너 피드백 (2026-10-29, WHY)
+- "AI가 만든 티"를 싫어함: 작은 영문 eyebrow 라벨("03 / INDEX", "SCROLL TO EXPLORE"), 의미 없는 번호(01/02, /01, "02 /"), 장식 밑줄·little-line·행마다 hr, 거대 워터마크 텍스트, 헤드라인 끝 파란 마침표, 아무도 안 읽는 영문 태그라인 → 전부 금지. 숫자는 실제 개수일 때만.
+- 구분은 선(rule) 대신 면(배경 --sage 카드, 둥근 모서리)과 여백으로. 링크는 밑줄+화살표 대신 pill 버튼(.button-primary/.button-ghost/.button-ink).
+- 카피는 한국어 우선. categoryLabels/statusLabels 도 한글(클라이언트/자체 서비스/앱/AI·자동화, 라이브/개발 중/사례/콘셉트).
+
+## 홈 흐름 = 한국 이커머스 상세페이지식 설득 구조
+- 히어로(혜택형 헤드라인 + 실제 스크린샷 콜라주 + 데이터에서 계산한 숫자 + 상담 CTA) → 이런 고민(다크) → 한 팀 4분야(각 분야에 실제 적용 사례 링크) → 라이브 클라이언트 작업 크게(featured) → 전체 그리드 → 진행 방식(번호 없음) → FAQ → 상담 CTA.
+- 2026-10 오너 지시로 'THE WAY WE THINK' 스테이트먼트와 NDrop/DVIA/몇기야 아트카드 섹션 삭제(재추가 금지).
+- 히어로 숫자는 getPortfolioStats 로만. live 는 "지금 접속해 볼 수 있는 서비스"로 표기(THOUSAND 처럼 실주문 없는 라이브가 있어 '운영 실적'처럼 쓰지 않기 위함). 지어낸 지표·후기·로고 금지.
+- featured 는 실제 운영 클라이언트(boryoung, rba, dealer-settlement, dvia). 콜라주는 dvia/rba/thousand/boryoung 커버(components/hero-collage.tsx).
+
+## 폰트/모션 함정
+- Geist 는 한글이 없어 Windows 에서 맑은고딕으로 떨어져 헤드라인이 약해 보였음 → layout.tsx 에 Noto_Sans_KR(preload:false, --font-noto-kr)을 Geist 다음 폴백으로 추가.
+- ScrollExperience 의 --progress 는 이제 모든 data-scene 에 같은 공식(뷰포트 통과율). 예전 hero 전용 핀 공식은 hero 가 고정 높이가 아니면 0→1로 튀어서 제거.
+- 콜라주: 진입은 transform, 부유는 개별 속성 translate, 기울기는 rotate, 패럴랙스는 바깥 .collage-layer transform — 속성을 나눠야 애니메이션끼리 덮어쓰지 않음. reduced-motion 은 globals 의 전역 animation:none 으로 처리.
+- next/image `priority` 는 Next 16 에서 deprecated → `preload` 또는 loading="eager"+fetchPriority.

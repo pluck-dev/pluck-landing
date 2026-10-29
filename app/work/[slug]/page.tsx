@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import {
   ContactSection,
   StudioFooter,
@@ -68,46 +68,45 @@ export default async function WorkPage({ params }: Props) {
       <main id="main" className="work-page">
         <section className="shell work-hero" id="top" aria-labelledby="work-title">
           <nav className="work-crumbs" aria-label="이동 경로">
-            <Link href="/#index">
-              <ArrowLeft size={14} aria-hidden="true" /> 03 / INDEX
+            <Link href="/#work">
+              <ArrowLeft size={16} aria-hidden="true" /> 전체 프로젝트
             </Link>
             <span aria-hidden="true">/</span>
-            <span>{categoryLabels[project.category].toUpperCase()}</span>
+            <span>{categoryLabels[project.category]}</span>
           </nav>
           <div className="work-hero-grid">
             <div className="work-hero-copy">
               <h1 id="work-title">
                 {project.name}
-                <span className="blue-period">.</span>
               </h1>
               <p>{detail.oneLiner}</p>
             </div>
             <dl className="work-meta">
               <div>
-                <dt>Year</dt>
+                <dt>기간</dt>
                 <dd>{formatYears(project.years)}</dd>
               </div>
               <div>
-                <dt>Category</dt>
+                <dt>분야</dt>
                 <dd>{categoryLabels[project.category]}</dd>
               </div>
               <div>
-                <dt>Role</dt>
+                <dt>맡은 일</dt>
                 <dd>{detail.role.join(" / ")}</dd>
               </div>
               <div>
-                <dt>Stack</dt>
+                <dt>기술</dt>
                 <dd>{detail.stack.join(" / ")}</dd>
               </div>
               <div>
-                <dt>Status</dt>
+                <dt>상태</dt>
                 <dd>
                   <StatusPill status={project.status} />
                 </dd>
               </div>
               {project.url ? (
                 <div className="work-meta-link">
-                  <dt className="sr-only">Live</dt>
+                  <dt className="sr-only">사이트</dt>
                   <dd>
                     <a
                       className="work-live"
@@ -131,33 +130,28 @@ export default async function WorkPage({ params }: Props) {
             alt={project.cover.alt}
             width={1600}
             height={1000}
-            priority
+            preload
             sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), 1320px"
           />
         </div>
 
         <section className="shell work-body" aria-label="프로젝트 설명">
-          {sections.map(([label, text], index) => (
+          {sections.map(([label, text]) => (
             <div className="work-block" key={label}>
-              <h2>
-                <span>/0{index + 1}</span>
-                {label}
-              </h2>
+              <h2>{label}</h2>
               <p>{text}</p>
             </div>
           ))}
           <div className="work-block">
-            <h2>
-              <span>/04</span>주요 기능
-            </h2>
-            <ol className="work-features">
-              {detail.features.map((feature, index) => (
+            <h2>주요 기능</h2>
+            <ul className="work-features">
+              {detail.features.map((feature) => (
                 <li key={feature}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <Check size={16} aria-hidden="true" />
                   {feature}
                 </li>
               ))}
-            </ol>
+            </ul>
           </div>
         </section>
 
@@ -166,10 +160,9 @@ export default async function WorkPage({ params }: Props) {
             className="shell work-gallery"
             aria-labelledby="gallery-title"
           >
-            <div className="work-gallery-head">
-              <p className="eyebrow">SCREENS</p>
-              <h2 id="gallery-title">화면 둘러보기</h2>
-            </div>
+            <h2 id="gallery-title" className="work-gallery-title">
+              화면 둘러보기
+            </h2>
             <ul data-count={project.gallery.length}>
               {project.gallery.map((image) => (
                 <li key={image.src}>
