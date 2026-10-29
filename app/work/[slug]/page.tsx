@@ -9,13 +9,28 @@ import {
   StudioHeader,
 } from "@/components/site-chrome";
 import { StatusPill } from "@/components/status-pill";
+import { JsonLd } from "@/components/json-ld";
+import { ProjectCard } from "@/components/project-index";
 import {
   categoryLabels,
   formatYears,
   getAdjacentProjects,
   getProject,
   projects,
+  type PortfolioProject,
+  type ProjectCategory,
 } from "@/lib/portfolio";
+import {
+  absoluteUrl,
+  baseOpenGraph,
+  categoryPages,
+  organizationRef,
+  projectDescription,
+  projectTitle,
+  SITE_NAME,
+  SITE_URL,
+  WEBSITE_ID,
+} from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -29,25 +44,80 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = getProject((await params).slug);
   if (!project) return {};
-  const title = `${project.name} — PLUCK`;
+  const title = projectTitle(project);
+  const description = projectDescription(project);
+  const path = `/work/${project.slug}`;
+  // og:image/twitter:image come from ./opengraph-image.tsx (cover-based, 1200x630).
   return {
     title,
-    description: project.description,
-    alternates: { canonical: `/work/${project.slug}` },
+    description,
+    keywords: [...project.detail.stack.slice(0, 5), categoryPages[project.category].label],
+    alternates: { canonical: path },
     openGraph: {
-      title,
-      description: project.detail.oneLiner,
+      ...baseOpenGraph,
       type: "article",
-      url: `/work/${project.slug}`,
-      images: [
-        {
-          url: project.cover.src,
-          width: 1600,
-          height: 1000,
-          alt: project.cover.alt,
-        },
-      ],
+      url: path,
+      title: `${title} | ${SITE_NAME}`,
+      description,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | ${SITE_NAME}`,
+      description,
+    },
+  };
+}
+
+/** Same category first (display order keeps live work on top), then fill from the rest. */
+function relatedProjects(slug: string, category: ProjectCategory, count = 3) {
+  const others = projects.filter((item) => item.slug !== slug);
+  return [
+    ...others.filter((item) => item.category === category),
+    ...others.filter((item) => item.category !== category),
+  ].slice(0, count);
+}
+
+function projectJsonLd(project: PortfolioProject) {
+  const url = absoluteUrl(`/work/${project.slug}`);
+  const hub = categoryPages[project.category];
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CreativeWork",
+        "@id": `${url}#work`,
+        name: project.name,
+        headline: project.detail.oneLiner,
+        description: project.description,
+        abstract: project.detail.overview,
+        url,
+        image: absoluteUrl(project.cover.src),
+        dateCreated: String(project.years[0]),
+        ...(project.years[1] !== project.years[0]
+          ? { dateModified: String(project.years[1]) }
+          : {}),
+        inLanguage: "ko-KR",
+        genre: hub.label,
+        keywords: [...project.detail.stack, ...project.disciplines].join(", "),
+        creator: organizationRef,
+        publisher: organizationRef,
+        isPartOf: { "@id": WEBSITE_ID },
+        ...(project.url ? { sameAs: project.url } : {}),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "홈", item: SITE_URL },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: `${hub.label} 포트폴리오`,
+            item: absoluteUrl(`/work/category/${project.category}`),
+          },
+          { "@type": "ListItem", position: 3, name: project.name, item: url },
+        ],
+      },
+    ],
   };
 }
 
@@ -56,6 +126,8 @@ export default async function WorkPage({ params }: Props) {
   if (!project) notFound();
   const { detail } = project;
   const { previous, next } = getAdjacentProjects(project.slug);
+  const related = relatedProjects(project.slug, project.category);
+  const hub = categoryPages[project.category];
   const sections = [
     ["개요", detail.overview],
     ["문제", detail.problem],
@@ -64,6 +136,7 @@ export default async function WorkPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={projectJsonLd(project)} />
       <StudioHeader />
       <main id="main" className="work-page">
         <section className="shell work-hero" id="top" aria-labelledby="work-title">
@@ -72,7 +145,9 @@ export default async function WorkPage({ params }: Props) {
               <ArrowLeft size={16} aria-hidden="true" /> 전체 프로젝트
             </Link>
             <span aria-hidden="true">/</span>
-            <span>{categoryLabels[project.category]}</span>
+            <Link href={`/work/category/${project.category}`}>
+              {hub.label} 포트폴리오
+            </Link>
           </nav>
           <div className="work-hero-grid">
             <div className="work-hero-copy">
@@ -178,6 +253,26 @@ export default async function WorkPage({ params }: Props) {
             </ul>
           </section>
         ) : null}
+
+        <section className="shell work-related" aria-labelledby="related-title">
+          <div className="work-related-head">
+            <h2 id="related-title" className="work-gallery-title">
+              함께 보면 좋은 프로젝트
+            </h2>
+            <Link
+              className="button button-ghost"
+              href={`/work/category/${project.category}`}
+            >
+              {hub.label} 포트폴리오 전체 보기
+              <ArrowRight size={17} aria-hidden="true" />
+            </Link>
+          </div>
+          <ul className="work-grid">
+            {related.map((item) => (
+              <ProjectCard key={item.slug} project={item} index={0} />
+            ))}
+          </ul>
+        </section>
 
         <nav className="shell work-pager" aria-label="다른 프로젝트">
           {[

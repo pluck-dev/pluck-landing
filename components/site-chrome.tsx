@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { CONTACT_EMAIL, GITHUB_URL } from "@/lib/site";
 
 /**
  * Header, contact block and footer shared by the home page and /work/[slug].
@@ -9,7 +10,7 @@ function anchor(home: boolean, id: string) {
   return home ? `#${id}` : `/#${id}`;
 }
 
-export const CONTACT_EMAIL = "admin@pluck.co.kr";
+export { CONTACT_EMAIL };
 
 export function contactMail(subject = "PLUCK 프로젝트 문의") {
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
@@ -106,7 +107,7 @@ export function StudioFooter() {
       <span>© {new Date().getFullYear()} PLUCK</span>
       <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
       <a
-        href="https://github.com/pluck-dev"
+        href={GITHUB_URL}
         target="_blank"
         rel="noopener noreferrer"
       >

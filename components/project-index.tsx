@@ -25,15 +25,19 @@ const filters: { id: Filter; label: string; count: number }[] = [
   })),
 ];
 
-/** Cards past the first row are below the fold on every breakpoint. */
-const EAGER_CARDS = 3;
-
-function ProjectCard({
+/**
+ * `eager` only for a first row that sits near the fold (category hubs). On the home
+ * page the grid is far below the hero, so eager cards would emit image preloads
+ * that compete with the LCP headline.
+ */
+export function ProjectCard({
   project,
   index,
+  eager = false,
 }: {
   project: PortfolioProject;
   index: number;
+  eager?: boolean;
 }) {
   return (
     <li
@@ -47,7 +51,7 @@ function ProjectCard({
             alt={project.cover.alt}
             fill
             sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(50vw - 46px), 420px"
-            loading={index < EAGER_CARDS ? "eager" : "lazy"}
+            loading={eager ? "eager" : "lazy"}
             className="work-card-image"
           />
           <span className="work-card-circle" aria-hidden="true">

@@ -1,6 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
+import {
+  baseOpenGraph,
+  BRAND,
+  HOME_DESCRIPTION,
+  HOME_TITLE,
+  SITE_NAME,
+  SITE_URL,
+  THEME_COLOR,
+} from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,17 +32,68 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+/** Search Console / 서치어드바이저 / Bing codes come from env so the owner can add them in Vercel without a code change. */
+const verificationOther: Record<string, string> = {};
+if (process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION) {
+  verificationOther["naver-site-verification"] =
+    process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION;
+}
+if (process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION) {
+  verificationOther["msvalidate.01"] =
+    process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
+}
+
 export const metadata: Metadata = {
-  title: "PLUCK — 본질을 뽑아 제품으로",
-  description:
-    "디자인 · 개발 · AI · 그로스를 한 팀이 처음부터 끝까지. 디지털 프로덕트 스튜디오 PLUCK.",
-  metadataBase: new URL("https://www.pluck.co.kr"),
-  openGraph: {
-    title: "PLUCK — Digital Product Studio",
-    description:
-      "디자인 · 개발 · AI · 그로스. 한 팀이 처음부터 끝까지 책임지는 디지털 프로덕트 스튜디오.",
-    type: "website",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: HOME_TITLE,
+    template: `%s | ${SITE_NAME}`,
   },
+  description: HOME_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "홈페이지 제작",
+    "웹사이트 제작",
+    "앱 개발 외주",
+    "MVP 개발",
+    "AI 자동화",
+    "개발 에이전시",
+  ],
+  authors: [{ name: BRAND, url: SITE_URL }],
+  creator: BRAND,
+  publisher: BRAND,
+  category: "technology",
+  formatDetection: { email: false, address: false, telephone: false },
+  openGraph: {
+    ...baseOpenGraph,
+    type: "website",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    other: verificationOther,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: THEME_COLOR,
 };
 
 export default function RootLayout({

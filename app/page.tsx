@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Plus } from "lucide-react";
@@ -11,7 +12,41 @@ import {
   StudioFooter,
   StudioHeader,
 } from "@/components/site-chrome";
-import { getPortfolioStats, getProject, projects } from "@/lib/portfolio";
+import { JsonLd } from "@/components/json-ld";
+import {
+  categoryOrder,
+  getPortfolioStats,
+  getProject,
+  projects,
+} from "@/lib/portfolio";
+import {
+  absoluteUrl,
+  baseOpenGraph,
+  BRAND,
+  categoryPages,
+  CONTACT_EMAIL,
+  GITHUB_URL,
+  HOME_DESCRIPTION,
+  HOME_TITLE,
+  ORGANIZATION_ID,
+  organizationRef,
+  SITE_NAME,
+  SITE_URL,
+  WEBSITE_ID,
+} from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: { absolute: HOME_TITLE },
+  description: HOME_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    ...baseOpenGraph,
+    type: "website",
+    url: "/",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+  },
+};
 
 const worries = [
   "기획, 디자인, 개발을 각각 다른 곳에 맡겼더니 서로 조율하다 일정이 다 지나갔어요.",
@@ -22,7 +57,9 @@ const worries = [
 
 const services = [
   {
+    id: "planning",
     title: "기획",
+    serviceType: "서비스 기획",
     lead: "무엇을 먼저 만들지부터 정합니다.",
     description:
       "해결하려는 문제와 사용자를 정리하고, 꼭 필요한 기능과 우선순위를 나눠 개발 범위를 구체화합니다.",
@@ -30,7 +67,9 @@ const services = [
     example: "rba",
   },
   {
+    id: "design",
     title: "디자인",
+    serviceType: "UI/UX 디자인",
     lead: "처음 써도 헤매지 않는 화면.",
     description:
       "브랜드의 인상과 사용 흐름을 함께 설계합니다. 고객용 화면부터 운영자가 쓰는 어드민까지 한 톤으로 만듭니다.",
@@ -38,7 +77,9 @@ const services = [
     example: "thousand",
   },
   {
+    id: "development",
     title: "개발",
+    serviceType: "웹·앱 개발",
     lead: "시안이 아니라 운영되는 서비스.",
     description:
       "웹, 앱, 어드민, 정산 같은 실제 업무 기능까지 구현하고 배포합니다. 출시 후 운영에 필요한 구조를 처음부터 고려합니다.",
@@ -46,7 +87,9 @@ const services = [
     example: "dealer-settlement",
   },
   {
+    id: "ai-automation",
     title: "AI 자동화",
+    serviceType: "AI 업무 자동화",
     lead: "반복 업무는 맡기고, 사람은 중요한 일에.",
     description:
       "업무 흐름을 먼저 이해한 뒤 효과가 나는 지점에만 AI와 자동화를 더합니다. 콘텐츠 작성 보조, 데이터 정리, 알림까지.",
@@ -117,6 +160,110 @@ const faqs = [
   ],
 ] as const;
 
+/**
+ * Home structured data. Only facts that are true and visible on the site:
+ * no address/phone (not published), no ratings or reviews.
+ */
+function homeJsonLd() {
+  const logo = {
+    "@type": "ImageObject",
+    url: absoluteUrl("/brand/pluck-logo-512.png"),
+    width: 512,
+    height: 512,
+  };
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": ORGANIZATION_ID,
+        name: BRAND,
+        alternateName: ["플럭", SITE_NAME],
+        url: SITE_URL,
+        logo,
+        image: absoluteUrl("/brand/pluck-symbol.svg"),
+        email: CONTACT_EMAIL,
+        sameAs: [GITHUB_URL],
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: CONTACT_EMAIL,
+          availableLanguage: ["Korean"],
+        },
+      },
+      {
+        "@type": "WebSite",
+        "@id": WEBSITE_ID,
+        name: SITE_NAME,
+        alternateName: BRAND,
+        url: SITE_URL,
+        inLanguage: "ko-KR",
+        publisher: organizationRef,
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": `${SITE_URL}/#studio`,
+        name: SITE_NAME,
+        url: SITE_URL,
+        description: HOME_DESCRIPTION,
+        image: absoluteUrl("/brand/pluck-logo-512.png"),
+        logo,
+        email: CONTACT_EMAIL,
+        parentOrganization: organizationRef,
+        areaServed: { "@type": "Country", name: "KR" },
+        knowsLanguage: "ko",
+        serviceType: [
+          "홈페이지 제작",
+          "웹사이트 개발",
+          "앱 개발",
+          "MVP 개발",
+          "운영 어드민 개발",
+          "AI 업무 자동화",
+        ],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "PLUCK 서비스",
+          itemListElement: services.map((service) => ({
+            "@type": "Offer",
+            itemOffered: { "@id": `${SITE_URL}/#service-${service.id}` },
+          })),
+        },
+      },
+      ...services.map((service) => ({
+        "@type": "Service",
+        "@id": `${SITE_URL}/#service-${service.id}`,
+        name: service.title,
+        serviceType: service.serviceType,
+        description: service.description,
+        provider: organizationRef,
+        areaServed: { "@type": "Country", name: "KR" },
+        url: absoluteUrl("/#services"),
+      })),
+      {
+        "@type": "FAQPage",
+        "@id": `${SITE_URL}/#faq`,
+        mainEntity: faqs.map(([question, answer]) => ({
+          "@type": "Question",
+          name: question,
+          acceptedAnswer: { "@type": "Answer", text: answer },
+        })),
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${SITE_URL}/#work`,
+        name: "PLUCK 포트폴리오",
+        numberOfItems: projects.length,
+        itemListElement: projects.map((project, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: absoluteUrl(`/work/${project.slug}`),
+          name: project.name,
+        })),
+      },
+    ],
+  };
+}
+
 function requireProject(slug: string) {
   const project = getProject(slug);
   if (!project) throw new Error(`Unknown portfolio slug: ${slug}`);
@@ -127,6 +274,7 @@ export default function Home() {
   const stats = getPortfolioStats(projects);
   return (
     <ScrollExperience>
+      <JsonLd data={homeJsonLd()} />
       <StudioHeader home />
       <main id="main">
         <Hero3D contactHref={CONTACT_MAIL} />
@@ -192,8 +340,10 @@ export default function Home() {
               따로 찾지 마세요.
             </h2>
             <p>
-              한 팀이 처음부터 끝까지 맡기 때문에, 업체 사이에서 같은 설명을
-              반복할 일이 없습니다. 아래는 각 분야를 실제로 적용한 프로젝트입니다.
+              홈페이지·웹사이트 제작, 앱 개발, 스타트업 MVP 개발, 운영 어드민과
+              AI 업무 자동화까지 한 팀이 처음부터 끝까지 맡기 때문에, 업체 사이에서
+              같은 설명을 반복할 일이 없습니다. 아래는 각 분야를 실제로 적용한
+              프로젝트입니다.
             </p>
           </div>
           <ul className="service-grid">
@@ -337,6 +487,13 @@ export default function Home() {
               </p>
             </div>
             <ProjectIndex />
+            <nav className="hub-nav index-hubs" aria-label="분야별 포트폴리오">
+              {categoryOrder.map((id) => (
+                <Link key={id} href={`/work/category/${id}`}>
+                  {categoryPages[id].label} 포트폴리오
+                </Link>
+              ))}
+            </nav>
             <a
               className="github-link"
               href="https://github.com/pluck-dev"
@@ -382,7 +539,7 @@ export default function Home() {
             </h2>
             <p>
               더 궁금한 점은{" "}
-              <a href="mailto:admin@pluck.co.kr">admin@pluck.co.kr</a>로 편하게
+              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>로 편하게
               물어보세요.
             </p>
           </div>

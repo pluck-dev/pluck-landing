@@ -176,12 +176,17 @@ export function Hero3D({ contactHref }: Props) {
         />
         <canvas ref={canvasRef} className="hero3d-canvas" aria-hidden="true" />
         <div className="shell hero3d-copy">
-          <h1 id="hero-title" className="hero3d-title">
-            <span>아이디어를 뽑아,</span> <span className="hero3d-accent">제품으로.</span>
+          {/* One h1 = visual headline + the service line, so the page's main heading
+              names what PLUCK does (홈페이지 제작·앱 개발·AI 자동화) without hidden text. */}
+          <h1 id="hero-title" className="hero3d-heading">
+            <span className="hero3d-title">
+              <span>아이디어를 뽑아,</span> <span className="hero3d-accent">제품으로.</span>
+            </span>{" "}
+            <span className="hero3d-lead">
+              홈페이지 제작·앱 개발·AI 자동화까지, 한 팀이 처음부터 끝까지
+              맡습니다.
+            </span>
           </h1>
-          <p className="hero3d-lead">
-            기획·디자인·개발·AI 자동화까지, 한 팀이 처음부터 끝까지 맡습니다.
-          </p>
           <div className="hero3d-actions">
             <a className="button button-primary button-xl" href={contactHref}>
               프로젝트 상담하기 <ArrowRight size={20} aria-hidden="true" />

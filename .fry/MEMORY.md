@@ -91,3 +91,20 @@
 - reduced-motion 정적 레이아웃에서 `translate: none`(또는 0 0)을 `transform: none` 옆에 두면 Next 16 CSS 미니파이어가 translate 를 날려버림 → 중앙정렬 translate 를 reduce 블록에서 리셋하지 말 것.
 - 숫자 밴드의 CountUp 은 SSR 에 실제 값, 화면 밖에서 마운트될 때만 0부터 카운트(크롤러·캡처에 0 노출 방지).
 - html 의 scroll-behavior:smooth 때문에 Playwright 캡처 시 scrollTo({behavior:"instant"}) 필수. 수렴 프레임은 p 위치로 스크롤 후 ~1.6s 대기(스크롤 p 를 씬이 smoothP 로 따라감).
+
+# SEO: lib/site.ts, metadata 병합 함정, OG 폰트/webp, JSON-LD 사실만, 허브 페이지
+
+## 규칙 (2026-10-29, feat/seo, docs/seo.md 참고)
+- 사이트 상수·카피(HOME_TITLE/DESCRIPTION, categoryPages 허브 카피, projectTitle/Description)는 lib/site.ts 한 곳. canonical 호스트는 www.
+- JSON-LD 는 화면에 있는 사실만: 주소·전화·평점·후기 없음(공개 정보 아님). FAQPage 는 app/page.tsx 의 faqs 배열을 그대로 써서 화면과 항상 일치. 주소가 공개되면 그때 ProfessionalService 에 추가.
+- "서울"은 예전 푸터(components/sections/footer.tsx 'Seoul, KR')를 근거로 홈 description 에만 사용 — 오너 확인 대기.
+- 홈 h1 = 비주얼 헤드라인 + 서비스 줄(.hero3d-lead 가 h1 안의 span). 키워드용 숨김 텍스트(display:none, sr-only 키워드) 금지. .hero3d-copy > * 가 setCopyRect 대상이라 h1 하나가 헤드라인+리드 박스.
+- 검증 코드는 env(NEXT_PUBLIC_GOOGLE/NAVER/BING_SITE_VERIFICATION)로만. 코드에 하드코딩 X.
+
+## 함정
+- Metadata 는 세그먼트 간 얕은 병합: 페이지가 openGraph/twitter 를 쓰면 layout 의 openGraph 전체가 교체됨 → baseOpenGraph(locale, siteName) 스프레드 필수. canonical 은 layout 에 두면 모든 하위 페이지로 상속되므로 페이지별로만 둔다.
+- 루트 app/opengraph-image 는 openGraph 를 직접 쓴 하위 페이지(허브)엔 안 붙음 → 허브는 defaultOgImage(/opengraph-image)를 명시.
+- Satori(next/og)는 webp 디코딩 불가 → 프로젝트 OG 는 sharp 로 cover.webp→jpeg 변환(sharp 를 dependencies 에 명시). 가변 폰트도 불가 → assets/fonts 의 Noto Sans KR 정적 서브셋(KS X 1001 2350자 + portfolio.ts 문자). 새 카피에 희귀 글자가 생기면 python docs/seo/subset-og-font.py 재실행. 한글 줄바꿈은 wordBreak:"keep-all".
+- 프로젝트 OG 라우트(/work/[slug]/opengraph-image/cover)는 빌드 때 프리렌더되지 않고 요청 시 렌더 → next.config.ts outputFileTracingIncludes 로 폰트·cover·lockup 을 함수 번들에 포함.
+- next/image loading="eager" 는 Next 16 에서 <link rel=preload> 를 만든다. 홈 그리드는 폴드 한참 아래라 전부 lazy(ProjectCard eager 기본 false, 허브 첫 줄만 eager).
+- sitemap lastModified 는 git log(포트폴리오 데이터/이미지 폴더). Vercel 얕은 클론에서 실패하면 빌드 시각으로 폴백.

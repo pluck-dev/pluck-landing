@@ -260,7 +260,12 @@ summary:focus-visible {
 .hero3d[data-phase="logo"] .hero3d-copy {
   visibility: hidden;
 }
+.hero3d-heading {
+  font-weight: inherit;
+  word-break: keep-all;
+}
 .hero3d-title {
+  display: block;
   font-size: clamp(46px, min(6.4vw, 11svh), 108px);
   font-weight: 800;
   line-height: 1.04;
@@ -274,6 +279,7 @@ summary:focus-visible {
   color: var(--blue);
 }
 .hero3d-lead {
+  display: block;
   max-width: 24em;
   margin-top: clamp(16px, 2.6svh, 26px);
   font-size: clamp(17px, 1.4vw, 21px);
@@ -1652,5 +1658,98 @@ summary:focus-visible {
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* Category hubs, related projects, 404 (SEO pages share the work-page look). */
+.hub-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 40px;
+}
+.hub-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 18px;
+  border: 1px solid #c6cdc0;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    background 0.25s,
+    color 0.25s,
+    border-color 0.25s;
+}
+.hub-nav a:hover {
+  border-color: var(--ink);
+}
+.hub-nav a[aria-current="page"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.hub-nav a[aria-current="page"] .filter-count {
+  color: #c8d2c0;
+}
+.hub-copy {
+  margin-top: 48px;
+}
+.hub-copy p {
+  max-width: 720px;
+}
+.hub-list {
+  padding-block: 24px 120px;
+}
+.index-hubs {
+  margin-top: 56px;
+}
+.work-related {
+  padding-block: 90px 0;
+}
+.work-related-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: 32px;
+}
+.work-related-head .work-gallery-title {
+  margin-bottom: 0;
+}
+.not-found {
+  padding-block: 120px 140px;
+}
+.not-found h1 {
+  font-size: clamp(36px, 4.6vw, 64px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1.15;
+  word-break: keep-all;
+}
+.not-found p {
+  margin-top: 24px;
+  max-width: 540px;
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 36px;
+}
+@media (max-width: 700px) {
+  .work-related {
+    padding-block: 60px 0;
+  }
+  .hub-list {
+    padding-block: 8px 80px;
+  }
+  .not-found {
+    padding-block: 72px 96px;
   }
 }

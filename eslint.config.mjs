@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     "docs/work-covers/**",
     // Offline brand asset generators (symbol SVGs, 3D still render).
     "docs/brand/**",
+    // Offline SEO asset generators (icons, OG font subset).
+    "docs/seo/**",
   ]),
 ]);
 
