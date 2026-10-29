@@ -1,7 +1,15 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useSyncExternalStore } from "react";
 import { ReactLenis } from "lenis/react";
+
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
+function subscribeReducedMotion(onChange: () => void) {
+  const mq = window.matchMedia(REDUCED_MOTION);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
 
 /**
  * SmoothScroll — Lenis 관성(momentum) 스크롤 프로바이더.
@@ -9,15 +17,11 @@ import { ReactLenis } from "lenis/react";
  * 접근성: prefers-reduced-motion 사용자는 네이티브 스크롤로 우회한다.
  */
 export function SmoothScroll({ children }: { children: ReactNode }) {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
+  const reduced = useSyncExternalStore(
+    subscribeReducedMotion,
+    () => window.matchMedia(REDUCED_MOTION).matches,
+    () => false,
+  );
 
   if (reduced) return <>{children}</>;
 

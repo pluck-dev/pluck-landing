@@ -3,6 +3,8 @@ import {
   PluckSculpture,
   ScrollExperience,
 } from "@/components/scroll-experience";
+import { ProjectIndex } from "@/components/project-index";
+import { getPortfolioStats, projects } from "@/lib/portfolio";
 
 const services = [
   {
@@ -54,6 +56,7 @@ function ExternalArrow() {
 }
 
 export default function Home() {
+  const stats = getPortfolioStats(projects);
   return (
     <ScrollExperience>
       <a className="skip-link" href="#main">
@@ -309,13 +312,6 @@ export default function Home() {
           <div className="shell more-work">
             <span>MORE TO EXPLORE</span>
             <a
-              href="https://admin-pando.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              FitGenie <ExternalArrow />
-            </a>
-            <a
               href="https://draw.pluck.co.kr/"
               target="_blank"
               rel="noopener noreferrer"
@@ -332,10 +328,45 @@ export default function Home() {
           </div>
         </section>
 
+        <section
+          className="index-section"
+          id="index"
+          aria-labelledby="index-title"
+        >
+          <div className="shell">
+            <div className="section-heading index-heading">
+              <p className="eyebrow">03 / INDEX</p>
+              <h2 id="index-title">
+                Everything we’ve made<span className="blue-period">.</span>
+              </h2>
+              <p>클라이언트 작업부터 자체 제품, 앱, 자동화 도구까지.</p>
+            </div>
+            <dl className="index-stats">
+              <div>
+                <dt>Projects</dt>
+                <dd>{stats.total}</dd>
+              </div>
+              <div>
+                <dt>Client work</dt>
+                <dd>{stats.client}</dd>
+              </div>
+              <div>
+                <dt>Live services</dt>
+                <dd>{stats.live}</dd>
+              </div>
+              <div>
+                <dt>Years</dt>
+                <dd>{stats.span}</dd>
+              </div>
+            </dl>
+            <ProjectIndex />
+          </div>
+        </section>
+
         <section className="expertise-section" id="services">
           <div className="shell expertise-grid">
             <div className="expertise-heading">
-              <p className="eyebrow">03 / OUR EXPERTISE</p>
+              <p className="eyebrow">04 / OUR EXPERTISE</p>
               <h2>
                 Different skills.
                 <br />
@@ -367,7 +398,7 @@ export default function Home() {
 
         <section className="process-section shell" id="process">
           <div className="section-heading">
-            <p className="eyebrow">04 / IN GOOD COMPANY</p>
+            <p className="eyebrow">05 / IN GOOD COMPANY</p>
             <h2>과정도, 좋은 경험이 되도록.</h2>
             <p>함께 보고, 이야기하고, 다음으로 나아갑니다.</p>
           </div>
