@@ -9,7 +9,7 @@ function anchor(home: boolean, id: string) {
   return home ? `#${id}` : `/#${id}`;
 }
 
-export const CONTACT_EMAIL = "hello@pluck.co.kr";
+export const CONTACT_EMAIL = "admin@pluck.co.kr";
 
 export function contactMail(subject = "PLUCK 프로젝트 문의") {
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;

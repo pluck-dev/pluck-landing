@@ -382,7 +382,7 @@ export default function Home() {
             </h2>
             <p>
               더 궁금한 점은{" "}
-              <a href="mailto:hello@pluck.co.kr">hello@pluck.co.kr</a>로 편하게
+              <a href="mailto:admin@pluck.co.kr">admin@pluck.co.kr</a>로 편하게
               물어보세요.
             </p>
           </div>

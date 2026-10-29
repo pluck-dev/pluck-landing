@@ -104,10 +104,10 @@ export function Footer() {
           <ul className="space-y-2 text-sm text-foreground/80">
             <li>
               <a
-                href="mailto:hello@pluck.co.kr"
+                href="mailto:admin@pluck.co.kr"
                 className="transition hover:text-fuchsia-300"
               >
-                hello@pluck.co.kr
+                admin@pluck.co.kr
               </a>
             </li>
             <li>
