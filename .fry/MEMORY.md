@@ -5,7 +5,10 @@
 - 연도는 각 레포 git log 첫/마지막 커밋 연도. 지표·고객사·성과·사용자 수를 지어내지 않는다. stats 스트립은 데이터에서 계산.
   - 기획 문서의 목표 수치(정푸드 매출·거래처 수 등), 로컬 시드 값(더빙고 "만들어진 버전 0")은 카피에 쓰지 않는다. 클라이언트 자사 사이트에 공개된 문구(보령 "23년 업력")만 예외.
 - 미공개/권한 불확실 클라이언트는 일반명으로 기재 (자동차보험 딜러 정산 플랫폼 = clients/caryoung, 홈헬스케어 통합 플랫폼 = clients/bayada, AI 의사결정 시스템 제안서 = clients/nousbo).
-- THOUSAND 는 실존 브랜드(thousandpie.com)를 소재로 한 비공식 컨셉 → status "concept", 클라이언트 작업처럼 쓰지 말 것.
+- caryoung 은 2026-10 오너 지시로 live + url(client-roan-six.vercel.app) 공개. 링크 타이틀에 브랜드 '카영'이 보이므로 브랜드 노출은 허용됐지만 카드 이름은 일반명 유지. 레포 루트의 dealer-lookup/dashboard-staff 캡처는 실명·전화번호 실데이터라 사용 금지 → 비로그인 '샘플 데이터' 프리뷰(홍길동/12가1234)만 캡처.
+- THOUSAND 는 오너 확인 결과 실제 클라이언트 작업(develop-thousand/web) → category client, live. 단 라이브 푸터가 'Design concept·실제 주문/결제 없음'이라 카피에 '결제 없이 구매 흐름 시연' 명시, 주문·매출 실적처럼 쓰지 말 것.
+- 노출 금지 링크: brochure-wine(타이틀에 '누보' 고객명), admin-farm-theta(타이틀에 개인명 '심재&오유마켓', 로그인만). 엔트리는 유지·무링크.
+- adrock-driving: 운전면허 PLUS(Play, com.adrock.driverlicense300) 저장소 android.drive 에는 오너 커밋이 없음(leemj/이미지/jdk). 오너 커밋은 web.dororo(보일러플레이트·웹뷰 통신)뿐 → role 은 그 범위로만 기재. Play 스토어 스크린샷 중 '1000만이 선택', '1,601,032,242건' 등 수치 이미지는 사용 금지.
 - Figma MCP 는 gethopp/figma-mcp-bridge 포크(우리 작업 = 정밀 추출 커밋) → "포크/확장"으로 표기.
 - webtoon-voice 슬러그의 서비스명은 최신 코드(D:\dev\pluck\webtoon) 기준 "더빙고" → name "더빙고 · Voice Webtoon".
 
@@ -17,6 +20,11 @@
 - ndrop.kr, draw.pluck.co.kr: DNS NXDOMAIN (피처드 카드/MORE TO EXPLORE 링크 죽어 있음, 오너 결정 대기).
 - admin-pando.vercel.app (FitGenie): 404 → MORE TO EXPLORE 에서 제거.
 - KakaoWork exporter(tools/kakaowork/upstream): 외부 작성자(kangjung) 레포라 제외.
+
+## 제외 레포 판단 (2026-10-29, 재검토 방지)
+- pluck-dev/ad = 개인 마케팅 학습 노트, securities-cs-knowledge-base = 개인 학습 문서, simjae-fn12/hirebest = Webflow 템플릿(heavn-one) 미러, pluck-dev/ordering = '발주모아 클론', exercises-dataset = 포크, info-admin = 하루짜리 스캐폴드, clients/marketting(ALPHA 랜딩) = 하루 작업·미배포·고객 불명, maengrov-landing = README 없음(레퍼런스 클론).
+- 사주 앱: 소스는 이 PC/접근 가능 GitHub 에 없음. env-collection-20260630/app-manse(구 Mac 경로 personal/app-manse)에 env 이름만 존재. 사주 기능은 pluck-dev/omen(OMEN, 기존 사주 리포트 파이프라인 재활용)에 포함 → OMEN 엔트리로 대체.
+- D2C(dev-gwedo) 배포는 Vercel 로그인 보호(해시 URL만) → 디자인 커버. d2c.vercel.app 등은 타인 사이트.
 
 # Portfolio 이미지: public/work/<slug>/ 규격, 소싱 순서, 개인정보 규칙
 
@@ -30,14 +38,19 @@
 - caryoung/bayada/nousbo 는 브랜드명·로고·고유 통계(예: 50년/33,000+/22개국)·견적 금액이 보이면 안 됨. homecare 캡처는 로고 숨김+텍스트 치환으로 찍었고 빨간 브랜드 컬러는 남아 있음(더 강한 익명성 필요하면 디자인 커버로 교체).
 - farm-sales 서비스명에 개인 실명이 들어 있어 전 이미지에서 블러. seoul-home 공고의 사업자 개인명 블러. webtoon 푸터(사업자 정보) 크롭.
 - setflow 라이브 캡처는 실사용자 작성자명이 보여 미사용 → build/shots 데모 데이터 캡처 사용.
+- v8-cal-lab(hptunermap) 데스크톱 헤더의 'CALL 010-…' 사업장 번호는 블러(1800px 캡처 기준 x1100,y12,205x54). 푸터·CTA 프레임은 번호가 보여 미사용.
+- gender-reveal 라이브는 로그인 벽 → 레포 복사본을 env 없이 로컬 실행(localStorage 데모 모드)해 캡처.
+- knife-sharpening(web-kal) 이미지는 레포 public/figma 의 Figma 시안 → alt 에 'Figma 시안' 명시.
 
 ## 디자인 커버 (실화면이 없거나 노출 불가한 프로젝트)
-- 대상: discord-bridge, voxcli, thumbnail, figma-mcp, contest-watch(커버만), dealer-settlement(커버+상태 다이어그램), jeongfood.
+- 대상: discord-bridge, voxcli, thumbnail, figma-mcp, contest-watch(커버만), dealer-settlement(상태 다이어그램만, 커버는 실화면), jeongfood, lulla, d2c-store, omen, care-helper, jarvis, programmatic-seo, seller-sourcing, browser-bridge(모두 커버만).
+- render.js 실행: docs/work-covers 에서 `NODE_PATH=C:/Users/SIMJAE/AppData/Local/Temp/pwtool/node_modules node render.js a.html out.webp ...` (compose.js 의 sharp 해석용).
 - 소스: docs/work-covers/*.html (사이트 아트카드 톤 클래스 tone-blue/forest/lime/ink/stone) + panel.js(spec-*.json → 설명 패널) + render.js(Playwright→compose.js). 실행 시 playwright/sharp 가 설치된 위치에서 require 경로 맞춰 쓸 것.
 - 디자인 커버 안의 UI 목업에 구체 수치(건수·사용자 수)를 넣지 않는다 — 실제 지표처럼 읽힘. 막대/스파크라인으로 대체.
 - alt 텍스트에 "디자인 커버"/"다이어그램"이라고 명시해 실제 화면과 구분.
 
 ## 함정
+- 그리드 순서: lib/portfolio.ts 의 projectList 작성 순서가 아니라 `projects` = 카테고리 순 → status(live>development>case>concept) 안정 정렬. 상세 이전/다음도 이 순서. categoryOrder 는 projects 계산 전에 선언돼야 함(TDZ).
 - eslint-config-next 16 의 react-hooks/set-state-in-effect 규칙: matchMedia 는 useSyncExternalStore 로 구독할 것.
 - 카드 진입 애니메이션은 필터 클릭 후에만(data-animate). 초기 로드에 걸면 풀페이지 캡처/스크롤 시 흐리게 보임.
 - 상태 pill 은 이미지 위가 아니라 카드 메타 행에 둔다 — 디자인 커버 좌상단 캡션과 겹침.

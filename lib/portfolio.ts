@@ -56,7 +56,14 @@ export const statusLabels: Record<ProjectStatus, string> = {
   concept: "Concept",
 };
 
-export const projects: readonly PortfolioProject[] = [
+export const categoryOrder: readonly ProjectCategory[] = [
+  "client",
+  "product",
+  "app",
+  "ai",
+];
+
+const projectList: readonly PortfolioProject[] = [
   // Client work
   {
     slug: "rba",
@@ -261,13 +268,15 @@ export const projects: readonly PortfolioProject[] = [
     category: "client",
     years: [2026, 2026],
     description:
-      "딜러의 계약·추천·수수료 정산을 다루는 딜러 웹과 운영 어드민. 비공개 운영 중.",
+      "딜러의 계약·추천·수수료 정산을 다루는 딜러 모바일 웹과 운영 어드민. 실서비스 운영 중.",
     disciplines: ["Dealer web", "Admin", "Settlement"],
-    status: "case",
-    cover: { src: "/work/dealer-settlement/cover.webp", alt: "정산 관리 어드민 화면과 추천인 트리를 추상화한 디자인 커버" },
+    status: "live",
+    url: "https://client-roan-six.vercel.app/",
+    cover: { src: "/work/dealer-settlement/cover.webp", alt: "딜러 웹 데스크톱 화면 - 소개 수수료 등급표와 추천 코드 카드 옆에 샘플 데이터로 채운 모바일 대시보드 미리보기" },
     gallery: [
-      { src: "/work/dealer-settlement/01.webp", alt: "딜러 모바일 웹의 내 계약 목록, 상태·정산 필터 바텀시트, 갱신 예정월 필터 화면 (테스트 데이터)" },
-      { src: "/work/dealer-settlement/02.webp", alt: "정산대기, 월말정산, 지급보류·미지급, 정산완료로 이어지는 정산 상태 모델 다이어그램" },
+      { src: "/work/dealer-settlement/01.webp", alt: "딜러 모바일 웹 3장 - 추천 수수료 온보딩, 샘플 데이터 홈 대시보드, 딜러 등록 신청 양식" },
+      { src: "/work/dealer-settlement/02.webp", alt: "딜러 모바일 웹의 내 계약 목록, 상태·정산 필터 바텀시트, 갱신 예정월 필터 화면 (테스트 데이터)" },
+      { src: "/work/dealer-settlement/03.webp", alt: "정산대기, 월말정산, 지급보류·미지급, 정산완료로 이어지는 정산 상태 모델 다이어그램" },
     ],
     detail: {
       oneLiner: "딜러 계약·추천·수수료 정산을 한 곳에서",
@@ -289,7 +298,7 @@ export const projects: readonly PortfolioProject[] = [
         "Tailwind CSS",
       ],
       overview:
-        "자동차보험 딜러가 자신의 계약·추천 실적·수수료를 확인하는 모바일 딜러 웹과, 운영팀이 딜러·계약·정산을 관리하는 어드민으로 구성된 정산 플랫폼입니다. 운영 중인 서비스로 현업 수정요청을 반영하며 고도화하고 있습니다.",
+        "자동차보험 딜러가 자신의 계약·추천 실적·수수료를 확인하는 모바일 딜러 웹과, 운영팀이 딜러·계약·정산을 관리하는 어드민, 소개 랜딩으로 구성된 정산 플랫폼입니다. 로그인 전에는 샘플 데이터로 화면을 미리 볼 수 있고, 운영 중인 서비스로 현업 수정요청을 반영하며 고도화하고 있습니다.",
       problem:
         "엑셀로 관리되던 대량의 계약과 딜러별 수수료·추천 수당을 사람이 대조해야 해 누락과 불일치가 생기기 쉬웠습니다.",
       solution:
@@ -347,6 +356,288 @@ export const projects: readonly PortfolioProject[] = [
         "홈헬스케어 용품 쇼핑몰",
         "직군별 교육 과정·수료 관리(LMS)",
         "다국어(i18n) 라우팅",
+      ],
+    },
+  },
+  {
+    slug: "thousand",
+    name: "THOUSAND",
+    category: "client",
+    years: [2026, 2026],
+    description:
+      "서울의 파이 하우스 THOUSAND의 브랜드 쇼핑몰. 진열장 위 파이 하나하나가 반응하는 구매 경험.",
+    disciplines: ["Brand site", "E-commerce", "Interaction"],
+    status: "live",
+    url: "https://web-lilac-rho-78.vercel.app/",
+    cover: { src: "/work/thousand/cover.webp", alt: "따뜻한 조명의 유리 진열장 안에 파이 네 종이 놓이고 하단에 선택한 파이와 담기 버튼이 보이는 THOUSAND 메인 화면" },
+    gallery: [
+      { src: "/work/thousand/01.webp", alt: "진열장 배경을 흐리게 두고 치즈 블루베리 파이 정보와 한 조각 담기 버튼을 띄운 상품 미리보기 창" },
+      { src: "/work/thousand/02.webp", alt: "In the mood for pie 헤드라인 아래 카테고리 필터와 파이 상품 카드가 4열로 놓인 쇼핑 목록 화면" },
+      { src: "/work/thousand/03.webp", alt: "바나나 크림 파이 큰 이미지 옆에 가격, 수량, 장바구니 담기, 픽업 안내가 있는 상품 상세 화면" },
+      { src: "/work/thousand/04.webp", alt: "모바일 진열장 메인, 쇼핑 목록, 상품 상세를 나란히 배치한 모바일 화면 3장" },
+    ],
+    detail: {
+      oneLiner: "진열장 위 파이 하나하나가 반응하는 브랜드 쇼핑몰",
+      role: [
+        "UI 디자인",
+        "인터랙션",
+        "프론트엔드",
+        "AI 이미지",
+        "배포",
+      ],
+      stack: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Supabase",
+        "CSS 모션",
+        "Playwright",
+      ],
+      overview:
+        "서울의 파이 하우스 THOUSAND를 위한 브랜드 쇼핑몰입니다. 매장의 실제 파이 사진을 참고해 만든 투명 파이 이미지 8종과 빈 진열장 이미지를 HTML 요소로 조합해, 진열장 자체를 상품 탐색 화면으로 만들었습니다. 현재 배포본은 결제 없이 구매 흐름을 시연하는 버전입니다.",
+      problem:
+        "사진 한 장에 핫스폿을 얹는 방식으로는 파이마다 독립된 반응을 주기 어렵고, 모바일·키보드 사용성도 떨어졌습니다.",
+      solution:
+        "파이를 개별 요소로 분리해 호버·포커스 시 해당 파이만 확대되고 주변이 물러나도록 설계했습니다. 상품 목록, 상세, 장바구니, 픽업 주문까지 구매 흐름 전체를 구현하고 데스크톱·모바일 Playwright 테스트로 검증했습니다.",
+      features: [
+        "진열장 파이별 호버·포커스 집중 모션",
+        "방향키 탐색과 터치 선택 지원",
+        "카테고리 필터·가격 정렬 쇼핑 목록",
+        "장바구니와 픽업 주문 흐름",
+        "한글·영문 이름과 재료 통합 검색",
+        "reduced-motion 대응 반응형 화면",
+      ],
+    },
+  },
+  {
+    slug: "abroadnbroad",
+    name: "ABROAD&BROAD",
+    category: "client",
+    years: [2026, 2026],
+    description:
+      "해외 거주 한인을 위한 글로벌 지역 커뮤니티. 국가·도시별 게시판, 토론, 모임, 지역 정보를 한 웹에.",
+    disciplines: ["Community", "Web app", "Supabase"],
+    status: "live",
+    url: "https://abroadnbroad.vercel.app/",
+    cover: { src: "/work/abroadnbroad/cover.webp", alt: "ABROAD&BROAD 메인 - 지역 선택 헤더와 자유토론장·커뮤니티·구인구직·부동산 탭, 뜨거운 토론과 행사 캘린더 섹션" },
+    gallery: [
+      { src: "/work/abroadnbroad/01.webp", alt: "글로벌 커뮤니티 게시글 카드 목록과 지역 기반 만남 모임 카드 섹션" },
+      { src: "/work/abroadnbroad/02.webp", alt: "지역 명소 카드와 로컬 업체 카드 목록, 하단 운영 정책 링크가 있는 푸터" },
+    ],
+    detail: {
+      oneLiner: "국가·도시 단위로 이어지는 해외 한인 커뮤니티",
+      role: [
+        "프론트엔드",
+        "백엔드 협업",
+        "DB 설계",
+        "어드민",
+        "E2E 테스트",
+      ],
+      stack: [
+        "React",
+        "Vite",
+        "TypeScript",
+        "Supabase",
+        "PostgreSQL",
+        "Playwright",
+      ],
+      overview:
+        "해외에 사는 사람들이 국가·도시 단위로 정보를 나누는 글로벌 지역 커뮤니티입니다. 자유토론장, 커뮤니티, 구인구직, 벼룩시장, 부동산, 모임, 로컬 업체, 관광 명소, 행사 게시판을 지역 필터 하나로 묶었습니다.",
+      problem:
+        "해외 생활 정보는 나라·도시마다 흩어진 단톡방과 카페에 나뉘어 있어, 내 지역의 글만 골라 보거나 모임·행사를 찾기 어려웠습니다.",
+      solution:
+        "지역 선택을 공통 레이아웃으로 끌어올려 모든 게시판이 같은 지역 기준으로 필터링되게 했고, 게시판 탭·토론방·모임·행사를 각각의 데이터 모델과 어드민(신고·격리·번역·지역 관리)으로 운영할 수 있게 만들었습니다. 자동 번역은 Qwen 또는 Google Cloud Translation 중 선택해 쓸 수 있습니다.",
+      features: [
+        "국가·도시 지역 필터와 지도 모달",
+        "게시판 탭·글쓰기·댓글·추천",
+        "토론방과 자유토론 게시판",
+        "모임·행사 등록과 캘린더",
+        "자동 번역과 언어 선택",
+        "신고·격리·공지 관리 어드민",
+      ],
+    },
+  },
+  {
+    slug: "v8-cal-lab",
+    name: "V8 Cal Lab",
+    category: "client",
+    years: [2026, 2026],
+    description:
+      "카마로 ECU·TCU 맵핑 튜닝 숍의 브랜드 사이트와 예약·작업이력 관리 서비스.",
+    disciplines: ["Brand site", "Reservation", "Admin"],
+    status: "live",
+    url: "https://hptunermap.vercel.app/",
+    cover: { src: "/work/v8-cal-lab/cover.webp", alt: "어두운 엔진룸 사진 위에 'V8, 그대로.' 붉은 헤드라인과 예약 버튼이 있는 V8 Cal Lab 메인 히어로" },
+    gallery: [
+      { src: "/work/v8-cal-lab/01.webp", alt: "엔진 사진 배경의 '흐름을 다듬다' 캘리브레이션 섹션" },
+      { src: "/work/v8-cal-lab/02.webp", alt: "카마로 4기통 삭제 맵, ECU 맵핑, TCU 맵핑, HP Tuners 기반 튜닝 서비스 카드 목록" },
+      { src: "/work/v8-cal-lab/03.webp", alt: "주행 기록 앱 D2R 다운로드 페이지 - 버전 안내와 앱 화면 미리보기" },
+      { src: "/work/v8-cal-lab/04.webp", alt: "모바일 화면 3장 - 메인 히어로, 튜닝 서비스 목록, D2R 다운로드" },
+    ],
+    detail: {
+      oneLiner: "튜닝 숍의 예약부터 작업일지까지",
+      role: [
+        "UI 디자인",
+        "프론트엔드",
+        "백엔드",
+        "어드민",
+        "보안",
+      ],
+      stack: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Supabase",
+        "Tailwind CSS",
+        "Vercel Blob",
+      ],
+      overview:
+        "HP Tuners로 카마로 ECU·TCU를 맵핑하는 튜닝 숍의 웹 서비스입니다. 브랜드 사이트와 서비스 소개, 회원·비회원 예약과 예약 조회, 커뮤니티, 주행 기록 앱(D2R) 다운로드, 관리자 예약·회원·작업일지 화면을 하나의 Next.js 앱으로 구성했습니다.",
+      problem:
+        "예약은 전화와 메신저로 받고 차량별 작업 이력은 따로 기록하다 보니, 예약 확인과 재방문 차량의 이전 작업을 찾는 데 시간이 걸렸습니다.",
+      solution:
+        "비회원도 휴대폰 인증으로 예약하고 예약번호로 조회하게 했고, 관리자 화면에서 예약별 작업일지를 남기도록 연결했습니다. 예약·인증 API에는 rate limit을 두고, 운영자 알림에는 이름·연락처·차량번호를 담지 않도록 설계했습니다.",
+      features: [
+        "회원·비회원 예약과 휴대폰 인증",
+        "예약번호 기반 비회원 예약 조회",
+        "튜닝 서비스 소개와 상세 페이지",
+        "관리자 예약·회원·작업일지",
+        "D2R 앱 최신 버전 다운로드 연결",
+        "예약·인증 API rate limit",
+      ],
+    },
+  },
+  {
+    slug: "lulla",
+    name: "Lulla · AI 동화책",
+    category: "client",
+    years: [2026, 2026],
+    description:
+      "짧은 음성 녹음으로 부모의 목소리를 복제해 동화를 읽어주는 AI 동화책 앱.",
+    disciplines: ["Mobile app", "Voice AI", "Backend"],
+    status: "development",
+    cover: { src: "/work/lulla/cover.webp", alt: "동화 재생 화면과 음성 녹음 카드를 표현한 Lulla 디자인 커버" },
+    gallery: [],
+    detail: {
+      oneLiner: "부모의 목소리로 읽어주는 AI 동화",
+      role: [
+        "아키텍처 설계",
+        "모바일 앱",
+        "백엔드",
+        "음성 AI",
+        "인프라",
+      ],
+      stack: [
+        "Flutter",
+        "Riverpod",
+        "Rust FFI",
+        "FastAPI",
+        "Celery",
+        "PostgreSQL",
+        "Qwen3-TTS",
+      ],
+      overview:
+        "부모가 짧게 녹음한 목소리로 음성을 합성해, 아이에게 동화를 부모 목소리로 읽어주는 모바일 서비스입니다. Flutter 앱과 인증·콘텐츠·구독·프로모션·TTS 서비스로 나눈 백엔드를 하나의 저장소에서 설계했습니다.",
+      problem:
+        "매일 밤 동화를 읽어주고 싶어도 시간이 부족한 부모가 많고, 일반 TTS 동화는 아이에게 낯선 목소리라는 한계가 있었습니다.",
+      solution:
+        "제로샷 음성 복제 모델(Qwen3-TTS)을 GPU 서버의 TTS 서비스로 분리하고, 앱에서는 녹음·라이브러리·플레이어 흐름에 집중했습니다. 오디오 처리와 암호화는 Rust FFI로 분리해 성능과 보안을 챙겼습니다.",
+      features: [
+        "부모 음성 녹음과 음성 복제",
+        "연령·주제별 동화 라이브러리",
+        "동화 플레이어와 스트리밍",
+        "카메라로 실물 동화책 스캔(로드맵)",
+        "구독·프로모션 서비스",
+        "서비스별로 나눈 백엔드 구조",
+      ],
+    },
+  },
+  {
+    slug: "d2c-store",
+    name: "자동차용품 자사몰",
+    category: "client",
+    years: [2026, 2026],
+    description:
+      "자동차 튜닝 파츠 브랜드의 자사몰. 차종 적합성 기반 스토어프론트와 주문·재고 관리자를 한 코드베이스로.",
+    disciplines: ["E-commerce", "Admin", "PostgreSQL"],
+    status: "development",
+    cover: { src: "/work/d2c-store/cover.webp", alt: "차종 필터가 있는 파츠 상품 그리드와 주문·재고 관리자 패널을 표현한 디자인 커버" },
+    gallery: [],
+    detail: {
+      oneLiner: "차종에 맞는 파츠를 파는 자체 개발 쇼핑몰",
+      role: [
+        "기획",
+        "프론트엔드",
+        "백엔드",
+        "어드민",
+        "DB 설계",
+      ],
+      stack: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "PostgreSQL",
+        "Redis",
+        "Stripe",
+        "Docker Compose",
+      ],
+      overview:
+        "바디킷·윙·립 같은 자동차 튜닝 파츠를 판매하는 자사몰입니다. 고객용 스토어프론트, 자체 API, 관리자 화면을 하나의 Next.js 프로젝트에서 시작하고, PostgreSQL과 Redis를 포함한 로컬 환경을 Docker Compose 한 줄로 띄울 수 있게 구성했습니다.",
+      problem:
+        "오픈마켓에서는 차종·연식별 장착 가능 여부를 정확히 보여주기 어렵고, 수수료와 고객 데이터를 플랫폼에 의존해야 했습니다.",
+      solution:
+        "상품마다 장착 가능 차종(fitment)을 데이터로 관리해 스토어에서 걸러 보여주고, 주문·재고·반품·쿠폰·정산·고객 문의를 관리자 메뉴로 나눠 직접 운영할 수 있게 설계했습니다.",
+      features: [
+        "차종 적합성(fitment) 기반 상품 탐색",
+        "장바구니·위시리스트·주문 조회",
+        "결제와 주문 상태 관리",
+        "재고·반품·쿠폰 관리",
+        "매출·정산과 분석 대시보드",
+        "Docker Compose 원클릭 로컬 실행",
+      ],
+    },
+  },
+  {
+    slug: "knife-sharpening",
+    name: "칼갈이 수거·배송 서비스",
+    category: "client",
+    years: [2025, 2025],
+    description:
+      "칼갈이 신청부터 수거·배송, 구독, 쿠폰까지 담은 모바일 웹 서비스.",
+    disciplines: ["Mobile web", "Supabase", "Subscription"],
+    status: "case",
+    cover: { src: "/work/knife-sharpening/cover.webp", alt: "Figma 시안 화면 3장 - 내 정보 메인과 칼갈이 신청 배너, 보유 쿠폰 목록, 약관 동의 시트" },
+    gallery: [],
+    detail: {
+      oneLiner: "칼갈이를 앱으로 신청하고 문 앞에서 받는다",
+      role: [
+        "프론트엔드",
+        "백엔드",
+        "인증",
+        "어드민",
+      ],
+      stack: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Supabase",
+        "TanStack Query",
+        "Zustand",
+        "Tailwind CSS",
+      ],
+      overview:
+        "칼을 맡기면 수거해 연마한 뒤 다시 배송해 주는 칼갈이 서비스의 모바일 웹입니다. Figma 시안을 바탕으로 신청, 가격표, 이용 가이드, 이용내역, 알림, 구독, 쿠폰, 주소 설정, 고객센터 화면을 구현했습니다.",
+      problem:
+        "칼갈이는 매장에 직접 가야 하는 경우가 많아 번거롭고, 정기적으로 맡기는 고객을 관리할 방법도 마땅치 않았습니다.",
+      solution:
+        "휴대폰 문자 인증 가입과 주소 설정을 거쳐 몇 단계 만에 수거를 신청하게 하고, 정기 구독과 쿠폰으로 재이용을 유도하도록 화면과 데이터 흐름을 설계했습니다.",
+      features: [
+        "칼갈이 신청과 수거·배송 주소 관리",
+        "휴대폰 문자 인증 회원가입",
+        "가격표와 이용 가이드",
+        "이용내역과 알림",
+        "정기 구독과 쿠폰함",
+        "공지사항·고객센터",
       ],
     },
   },
@@ -453,12 +744,15 @@ export const projects: readonly PortfolioProject[] = [
     description:
       "수집, 키워드 발굴, AI 콘텐츠 생성, 멀티채널 발행, 성과 분석을 한 관리자에서 운영하는 콘텐츠 자동화 엔진.",
     disciplines: ["Content automation", "Admin", "AI"],
-    status: "development",
+    status: "live",
+    url: "https://seo-engine-web-two.vercel.app/",
     cover: { src: "/work/seo-engine/cover.webp", alt: "SEO 엔진 관리자 블로그 대시보드 - 수집 소스·신규 키워드·검토대기·발행완료·추정 수익 KPI와 인기 글 TOP 5" },
     gallery: [
       { src: "/work/seo-engine/01.webp", alt: "주제 큐 화면 - 트렌드·정보·제휴 탭과 주제별 콘텐츠 생성·카드뉴스 생성 버튼 카드" },
       { src: "/work/seo-engine/02.webp", alt: "콘텐츠 관리 목록 - 카테고리, 발행 상태, 품질 점수, 채널 변환본 수, 조회수 테이블" },
       { src: "/work/seo-engine/03.webp", alt: "AI로 자동 생성된 카드뉴스 샘플 3장 - 표지, 요약 표, 계산 예시" },
+      { src: "/work/seo-engine/04.webp", alt: "공개 정보 블로그 '플럭로그' 메인 - 금융·정책·복지·생활·청약 카테고리와 오늘의 픽 공고 카드" },
+      { src: "/work/seo-engine/05.webp", alt: "플럭로그 모바일 화면 3장 - 메인 히어로, 카테고리와 지금 주목 카드, 최신 공고 글 목록" },
     ],
     detail: {
       oneLiner: "수집부터 발행·수익까지 자동화한 SEO 엔진",
@@ -492,6 +786,7 @@ export const projects: readonly PortfolioProject[] = [
         "채널별 변환본과 멀티채널 발행",
         "품질 점수·검토 워크플로우",
         "성과·수익 대시보드",
+        "발행 채널인 공개 블로그 '플럭로그'",
       ],
     },
   },
@@ -705,11 +1000,13 @@ export const projects: readonly PortfolioProject[] = [
     description:
       "입주민 차량과 방문 차량 등록, 주차 알림을 다루는 공동주택 주차 관리 PWA.",
     disciplines: ["PWA", "Web push"],
-    status: "development",
+    status: "live",
+    url: "https://house-parking.vercel.app/",
     cover: { src: "/work/villa-parking/cover.webp", alt: "빌라 3D 일러스트와 출차하기 버튼이 있는 홈, 차량 위치가 표시된 주차장 평면, 자리 상세 시트를 담은 모바일 화면 3장" },
     gallery: [
       { src: "/work/villa-parking/01.webp", alt: "왼쪽 주차 구역의 빈자리 표시, 내 차량 등록·차종 선택, 방문 차량 등록 화면을 나란히 놓은 모바일 화면 3장" },
       { src: "/work/villa-parking/02.webp", alt: "출차 완료 알림과 되돌리기, 주차장 확대 보기, 외부차량 신고 양식을 담은 모바일 화면 3장" },
+      { src: "/work/villa-parking/03.webp", alt: "라이브 배포 화면 3장 - 빌라 3D 일러스트 홈, 지상 1층 주차장 평면과 구역 목록, 입주민 로그인 시트" },
     ],
     detail: {
       oneLiner: "빌라 주차장을 한눈에 보는 입주민 주차 앱",
@@ -741,6 +1038,52 @@ export const projects: readonly PortfolioProject[] = [
         "내 차량·방문 차량 분리 등록",
         "외부차량 신고와 공지사항",
         "입주 승인·관리자 화면",
+      ],
+    },
+  },
+  {
+    slug: "gender-reveal",
+    name: "젠더리빌 파티",
+    category: "product",
+    years: [2026, 2026],
+    description:
+      "의사가 성별을 봉인하고 공개일에 다 함께 여는 젠더리빌 이벤트 페이지. 카카오톡 공유와 RSVP까지.",
+    disciplines: ["Event page", "Mobile web", "Supabase"],
+    status: "live",
+    url: "https://gender-reveal-eta-wheat.vercel.app/",
+    cover: { src: "/work/gender-reveal/cover.webp", alt: "데모 모드 모바일 화면 3장 - 태명 입력, 의사 전용 성별 선택, 카운트다운이 있는 이벤트 페이지" },
+    gallery: [
+      { src: "/work/gender-reveal/01.webp", alt: "데모 모드 모바일 화면 3장 - 성별 확인 요청 완료, 봉인 완료, IT'S A GIRL 공개 화면" },
+    ],
+    detail: {
+      oneLiner: "부모도 모르는 성별을, 파티에서 다 함께",
+      role: [
+        "기획",
+        "UI 디자인",
+        "프론트엔드",
+        "백엔드",
+      ],
+      stack: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Supabase",
+        "Supabase Auth",
+        "Vercel",
+      ],
+      overview:
+        "태명을 입력하면 의사 선생님이 성별을 비밀로 봉인하고, 공개일까지 잠가 두었다가 파티에서 함께 여는 젠더리빌 이벤트 페이지입니다. 카운트다운, 공개 버튼, 파티 정보, 참석 신청, 방명록, 카카오톡 공유 미리보기를 한 페이지에 담았습니다.",
+      problem:
+        "젠더리빌은 성별을 아는 사람이 따로 준비해야 하고, 부모가 결과를 미리 보지 않게 하면서 초대·참석 확인까지 챙기기 번거롭습니다.",
+      solution:
+        "의사 전용 봉인 화면을 QR 링크로 분리하고, 공개 시각 이전에는 서버 RPC가 결과를 돌려주지 않도록 했습니다. 이벤트마다 RLS로 데이터를 격리하고, 환경변수가 없으면 localStorage 데모 모드로 동작하게 만들었습니다.",
+      features: [
+        "의사 전용 성별 봉인 화면",
+        "공개 시각 전 잠금과 카운트다운",
+        "공개 연출과 다시 보기",
+        "참석 신청(RSVP)과 방명록",
+        "카카오톡·OG 공유 미리보기",
+        "부모 공동 소유와 배우자 초대",
       ],
     },
   },
@@ -933,6 +1276,139 @@ export const projects: readonly PortfolioProject[] = [
         "능력치 기반 카드 대결 화면",
         "카드·봉인팩 거래 마켓 화면",
         "역사 리서치 기반 카드 마스터 데이터",
+      ],
+    },
+  },
+  {
+    slug: "adrock-driving",
+    name: "운전면허 PLUS · 도로로",
+    category: "app",
+    years: [2024, 2025],
+    description:
+      "애드락의 운전면허 필기 학습 앱 운전면허 PLUS와, 면허 취득·연수 서비스 도로로의 앱 웹뷰 프론트엔드.",
+    disciplines: ["Android", "Webview", "Next.js"],
+    status: "live",
+    url: "https://play.google.com/store/apps/details?id=com.adrock.driverlicense300",
+    cover: { src: "/work/adrock-driving/cover.webp", alt: "Google Play 스토어 스크린샷 3장 - 모의고사, 유형별 학습하기, 속성암기 화면" },
+    gallery: [
+      { src: "/work/adrock-driving/01.webp", alt: "Google Play 스토어 스크린샷 2장 - 오답노트·즐겨찾기 복습하기, 운전면허 학원찾기 화면" },
+    ],
+    detail: {
+      oneLiner: "운전면허 학습 앱과 연수 서비스 웹뷰",
+      role: [
+        "프론트엔드",
+        "앱-웹뷰 연동",
+        "보일러플레이트",
+      ],
+      stack: [
+        "Android",
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "shadcn/ui",
+      ],
+      overview:
+        "애드락(Adrock)에서 참여한 운전면허 서비스입니다. 운전면허 PLUS는 필기시험 모의고사·유형별 학습·오답노트·학원찾기를 제공하는 Android 앱으로 Google Play에 배포돼 있고, 도로로는 면허 취득부터 연수까지를 다루는 서비스의 앱 내 웹뷰 화면입니다.",
+      problem:
+        "네이티브 앱 안에서 자주 바뀌는 프로그램·분석 화면을 매번 앱 업데이트로 배포하기는 부담이 컸습니다.",
+      solution:
+        "Next.js 14·Tailwind·shadcn/ui·Pretendard로 사내 프론트엔드 보일러플레이트를 세우고, 앱과 웹뷰가 메시지를 주고받는 통신 훅을 만들어 웹 화면에서 선택한 항목이 앱으로 전달되게 했습니다.",
+      features: [
+        "필기시험 모의고사와 유형별 학습(앱)",
+        "오답노트·즐겨찾기 복습(앱)",
+        "운전면허 학원찾기(앱)",
+        "도로로 프로그램·그룹 상세 웹뷰",
+        "앱-웹뷰 양방향 통신 훅",
+        "Next.js 사내 보일러플레이트",
+      ],
+    },
+  },
+  {
+    slug: "omen",
+    name: "OMEN",
+    category: "app",
+    years: [2026, 2026],
+    description:
+      "사주·타로·점성술·수비학·AI 손금과 관상을 한 앱에 담은 글로벌 영성 웰니스 앱.",
+    disciplines: ["Mobile app", "LLM", "Vision AI"],
+    status: "development",
+    cover: { src: "/work/omen/cover.webp", alt: "사주 네 기둥과 사주·타로·점성술·손금 메뉴 타일, 타로 카드를 표현한 OMEN 디자인 커버" },
+    gallery: [],
+    detail: {
+      oneLiner: "한국의 사주를 글로벌 웰니스 앱으로",
+      role: [
+        "제품 기획",
+        "모바일 앱",
+        "백엔드",
+        "LLM 파이프라인",
+        "인프라",
+      ],
+      stack: [
+        "Flutter",
+        "Riverpod",
+        "FastAPI",
+        "PostgreSQL",
+        "Claude API",
+        "Firebase",
+        "RevenueCat",
+      ],
+      overview:
+        "한국의 사주 해석을 서양 점성술, 타로, 수비학, 자미두수, AI 관상·손금과 함께 제공하는 영어권 대상 영성 웰니스 앱입니다. 기존 사주 리포트용 LLM 파이프라인을 재활용해 Flutter 앱과 Python API 서버로 확장했습니다.",
+      problem:
+        "해외 점성술 앱은 대부분 생년월일 텍스트 입력에 머물러 있고, 사주처럼 계산이 복잡한 동양 명리 콘텐츠는 영어로 쉽게 접하기 어려웠습니다.",
+      solution:
+        "만세력·천문력 계산(음력 변환, kerykeion)으로 정확한 원국을 먼저 만들고 LLM이 해석을 쓰도록 단계를 나눴습니다. 카메라 기반 관상·손금은 얼굴 인식과 비전 모델로 처리하고, 구독·광고·푸시를 붙여 서비스 형태로 설계했습니다.",
+      features: [
+        "사주·자미두수 원국 계산과 해석",
+        "서양 점성술·수비학·궁합",
+        "타로와 오미쿠지",
+        "카메라 AI 관상·손금",
+        "오늘의 운세와 기록",
+        "구독 결제와 푸시 알림",
+      ],
+    },
+  },
+  {
+    slug: "care-helper",
+    name: "케어헬퍼",
+    category: "app",
+    years: [2026, 2026],
+    description:
+      "요양보호사와 어르신의 대화를 음성 인식으로 받아 건강 기록과 리포트로 정리하는 앱.",
+    disciplines: ["Mobile app", "Speech", "RAG"],
+    status: "development",
+    cover: { src: "/work/care-helper/cover.webp", alt: "음성 녹음 버튼과 대화 말풍선, 혈압·혈당·통증 기록 카드를 표현한 케어헬퍼 디자인 커버" },
+    gallery: [],
+    detail: {
+      oneLiner: "말로 하는 건강 체크를 기록으로",
+      role: [
+        "기획",
+        "모바일 앱",
+        "음성 인식",
+        "AI 파이프라인",
+      ],
+      stack: [
+        "Flutter",
+        "speech_to_text",
+        "Gemini API",
+        "SQLite",
+        "벡터 검색",
+        "PDF",
+      ],
+      overview:
+        "방문 요양 현장에서 요양보호사가 어르신과 나누는 건강 체크 대화를 음성으로 인식해, 혈압·혈당·통증·수면 같은 항목으로 정리하는 Flutter 앱입니다. 환자별 기록과 녹음, PDF 리포트를 앱 안에서 관리합니다.",
+      problem:
+        "현장 기록은 대화를 마친 뒤 손으로 다시 적어야 하고, '쑤셔', '결려'처럼 다양한 표현과 음성 인식 오류 때문에 정리가 일정하지 않았습니다.",
+      solution:
+        "의료 표현 보정 맵과 노이즈 필터로 인식 결과를 다듬고, Gemini가 대화를 항목별로 구조화하게 했습니다. 과거 기록을 임베딩해 검색하는 RAG로 '지난번 혈압' 같은 질문과 이전 대비 변화를 확인할 수 있게 했습니다.",
+      features: [
+        "대화 음성 인식과 녹음",
+        "의료 표현 보정·노이즈 필터",
+        "AI 건강 항목 구조화",
+        "환자별 기록과 추세",
+        "과거 기록 RAG 검색",
+        "PDF 리포트 출력",
       ],
     },
   },
@@ -1264,14 +1740,193 @@ export const projects: readonly PortfolioProject[] = [
       ],
     },
   },
+  {
+    slug: "jarvis",
+    name: "JARVIS 음성 비서",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "말로 부르면 말로 답하고 PC 작업까지 수행하는 로컬 AI 음성 비서. API 키 대신 CLI 구독 인증을 사용.",
+    disciplines: ["Voice agent", "Local STT", "HUD"],
+    status: "case",
+    cover: { src: "/work/jarvis/cover.webp", alt: "음성 입력부터 HUD 반응까지 4단계 흐름과 아크 리액터 형태의 원형 HUD를 표현한 디자인 커버" },
+    gallery: [],
+    detail: {
+      oneLiner: "API 키 없이 돌아가는 로컬 음성 비서",
+      role: [
+        "기획",
+        "음성 파이프라인",
+        "백엔드",
+        "HUD 프론트엔드",
+      ],
+      stack: [
+        "Python",
+        "faster-whisper",
+        "Claude Code CLI",
+        "Codex CLI",
+        "edge-tts",
+        "React",
+        "Three.js",
+      ],
+      overview:
+        "웨이크워드로 부르면 음성을 로컬에서 받아쓰고, Claude Code나 Codex CLI가 두뇌가 되어 답하거나 PC 작업·웹 검색을 수행한 뒤 음성으로 응답하는 AI 비서입니다. 웹 풀스크린 HUD가 상태와 자막, 파형에 맞춰 실시간으로 반응합니다.",
+      problem:
+        "음성 비서를 직접 만들면 STT·LLM·TTS마다 API 과금이 쌓이고, 실제 파일·셸 작업까지 맡기려면 도구 연동을 따로 만들어야 했습니다.",
+      solution:
+        "STT는 로컬 faster-whisper, TTS는 키가 필요 없는 edge-tts로 두고, 두뇌는 이미 설치된 CLI의 구독 인증을 그대로 쓰도록 설계했습니다. 백엔드와 HUD는 로컬 WebSocket으로 연결하고, 원클릭 실행 스크립트와 마이크 진단 도구를 함께 만들었습니다.",
+      features: [
+        "웨이크워드와 로컬 음성 인식",
+        "CLI 두뇌의 도구 실행",
+        "한국어 음성 응답",
+        "Three.js 아크 리액터 HUD",
+        "텍스트 모드와 원클릭 실행",
+        "macOS·Windows·Linux 지원",
+      ],
+    },
+  },
+  {
+    slug: "programmatic-seo",
+    name: "블로그 양산 엔진",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "템플릿과 데이터로 정보형 글을 대량 생성·검수·발행하는 프로그래매틱 SEO 도구.",
+    disciplines: ["Programmatic SEO", "Worker", "Admin"],
+    status: "case",
+    cover: { src: "/work/programmatic-seo/cover.webp", alt: "변수 템플릿이 워커와 검수 큐를 거쳐 여러 장의 글 페이지로 만들어지는 흐름을 표현한 디자인 커버" },
+    gallery: [],
+    detail: {
+      oneLiner: "템플릿 하나로 글 수백 편의 뼈대를",
+      role: [
+        "기획",
+        "백엔드",
+        "어드민",
+        "콘텐츠 전략",
+      ],
+      stack: [
+        "NestJS",
+        "Next.js",
+        "TypeScript",
+        "SQLite",
+        "Docker",
+      ],
+      overview:
+        "지역·조건·주제 같은 데이터와 글 템플릿을 조합해 정보형 블로그 글을 대량으로 만들고, 관리자에서 검수한 뒤 공개 사이트로 내보내는 프로그래매틱 SEO 도구입니다. NestJS API와 워커, Next.js 관리자, 공개 사이트용 연동 키트로 구성했습니다.",
+      problem:
+        "검색 수요가 있는 정보형 글은 형식이 비슷한데도 한 편씩 손으로 써야 해 양을 늘리기 어려웠습니다.",
+      solution:
+        "글 생성을 API 워커로 분리해 백그라운드에서 돌리고, 관리자 JSON API와 검수 화면을 두어 사람이 확인한 글만 발행되게 했습니다. 공개 사이트는 Next.js 커뮤니티 키트로 /api/v1 콘텐츠를 받아 렌더링합니다.",
+      features: [
+        "템플릿×데이터 기반 대량 생성",
+        "백그라운드 생성 워커",
+        "관리자 검수와 발행",
+        "공개 사이트 연동 키트",
+        "SEO·프롬프트·이미지 전략 문서",
+        "영상 렌더러 모듈",
+      ],
+    },
+  },
+  {
+    slug: "seller-sourcing",
+    name: "셀러 소싱 분석기",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "쿠팡·테무·알리익스프레스·1688 상품을 수집해 마진을 계산하고 진입 여부를 추천하는 셀러 도구.",
+    disciplines: ["Crawler", "Margin calc", "Automation"],
+    status: "case",
+    cover: { src: "/work/seller-sourcing/cover.webp", alt: "원가·배송비·관세·수수료 막대와 예상 마진, 플랫폼별 수집 상태를 표현한 디자인 커버" },
+    gallery: [],
+    detail: {
+      oneLiner: "팔 만한 상품인지 숫자로 먼저 본다",
+      role: [
+        "기획",
+        "크롤러",
+        "백엔드",
+        "웹 UI",
+      ],
+      stack: [
+        "Python",
+        "Playwright",
+        "Selenium",
+        "Flask",
+        "pandas",
+      ],
+      overview:
+        "쿠팡 셀러가 중국 소싱 상품을 고를 때 쓰는 분석 도구입니다. 쿠팡 검색·트렌딩·특가 상품과 테무, 알리익스프레스, 1688 상품을 수집하고, 환율·배송비·관세·쿠팡 수수료를 반영한 마진을 계산합니다.",
+      problem:
+        "소싱 후보마다 판매가와 원가를 여러 사이트에서 찾아 수수료와 관세까지 손으로 계산하다 보니 비교할 수 있는 상품 수가 적었습니다.",
+      solution:
+        "플랫폼별 크롤러를 Playwright·Selenium으로 만들고 수집 결과를 한 형식으로 맞춘 뒤, 비용 항목을 자동 반영한 마진율로 진입 추천을 보여주는 웹 화면을 붙였습니다.",
+      features: [
+        "쿠팡 키워드·트렌딩·특가 수집",
+        "테무·알리익스프레스·1688 수집",
+        "환율·배송비·관세 반영 원가",
+        "쿠팡 수수료 반영 마진 계산",
+        "마진율 기반 진입 추천",
+        "로컬 웹 대시보드",
+      ],
+    },
+  },
+  {
+    slug: "browser-bridge",
+    name: "Browser Bridge",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "터미널과 LLM 에이전트가 실제 Chrome을 제어하도록 잇는 브라우저 브리지. DOM 분석과 데이터 추출용.",
+    disciplines: ["Chrome extension", "WebSocket", "Dev tool"],
+    status: "case",
+    cover: { src: "/work/browser-bridge/cover.webp", alt: "터미널 명령이 브라우저 창의 DOM 요소를 선택해 데이터를 추출하는 흐름을 표현한 디자인 커버" },
+    gallery: [],
+    detail: {
+      oneLiner: "CLI에서 실제 브라우저를 조종한다",
+      role: [
+        "설계",
+        "Chrome 확장",
+        "서버",
+      ],
+      stack: [
+        "Node.js",
+        "WebSocket",
+        "Chrome Extension",
+        "Docker",
+      ],
+      overview:
+        "CLI와 LLM 에이전트가 사용자의 Chrome 브라우저를 실시간으로 제어하도록 만든 범용 개발 도구입니다. 로컬 서버와 Chrome 확장이 WebSocket으로 연결되어, 웹사이트의 DOM 구조 분석과 크롤링 구조 파악, 데이터 추출에 쓰입니다.",
+      problem:
+        "헤드리스 브라우저로는 로그인 상태나 실제 렌더링 결과를 그대로 다루기 어려워, 크롤링 구조를 파악할 때마다 수동으로 개발자 도구를 열어야 했습니다.",
+      solution:
+        "이미 열려 있는 Chrome에 확장을 설치해 서버와 WebSocket으로 잇고, CLI 명령으로 페이지 이동·DOM 조회·추출을 요청하게 했습니다. 서버는 Docker로도 띄울 수 있습니다.",
+      features: [
+        "CLI에서 실제 Chrome 제어",
+        "DOM 구조 조회와 분석",
+        "크롤링 구조 파악",
+        "데이터 추출",
+        "WebSocket 브리지 서버",
+        "Docker 실행 지원",
+      ],
+    },
+  },
 ];
 
-export const categoryOrder: readonly ProjectCategory[] = [
-  "client",
-  "product",
-  "app",
-  "ai",
-];
+const statusRank: Record<ProjectStatus, number> = {
+  live: 0,
+  development: 1,
+  case: 2,
+  concept: 3,
+};
+
+/**
+ * Display order: category order first, then live work, then the authored order.
+ * Array.prototype.sort is stable, so entries keep their written order within a status.
+ */
+export const projects: readonly PortfolioProject[] = [...projectList].sort(
+  (a, b) =>
+    categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category) ||
+    statusRank[a.status] - statusRank[b.status],
+);
+
 
 export function formatYears([start, end]: readonly [number, number]) {
   return start === end ? String(start) : `${start}—${String(end).slice(2)}`;

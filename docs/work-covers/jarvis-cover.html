@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+.word { position: absolute; left: 72px; bottom: 110px; font-size: 210px; color: #eef0e9; }
+.core { position:absolute; left: 860px; top: 150px; width: 560px; height: 560px; border-radius:50%; border: 2px solid rgba(110,160,255,.5); }
+.core::before { content:""; position:absolute; inset: 70px; border-radius:50%; border: 10px dashed rgba(110,160,255,.55); }
+.core::after { content:""; position:absolute; inset: 190px; border-radius:50%; background: radial-gradient(circle,#d9e5ff 0%,#5b86ff 45%,rgba(35,77,218,0) 72%); }
+.sub { left: 820px; top: 770px; width: 640px; background:#2f3632; color:#eef0e9; padding: 22px 26px; font-size: 22px; border-radius: 18px; }
+.sub small { display:block; font-size:13px; letter-spacing:2px; color:#9aa39a; margin-bottom:8px; }
+.chain { position:absolute; left:72px; top:190px; display:grid; gap:14px; }
+.chain div { font-family:"Geist Mono",monospace; font-size:18px; padding:12px 18px; border-radius:12px; border:1.5px solid #3c4642; color:#cfd6cc; width:330px; }
+.chain div b { color:#d9eba7; font-weight:500; }
+</style></head>
+<body><div class="art tone-forest">
+<span class="caption">JARVIS / AI voice assistant</span>
+<div class="chain"><div><b>01</b> 마이크 → STT</div><div><b>02</b> CLI 두뇌 · 도구 실행</div><div><b>03</b> TTS 음성 응답</div><div><b>04</b> HUD 실시간 반응</div></div>
+<div class="core"></div>
+<div class="panel sub"><small>LISTENING</small>“자비스, 오늘 할 일 정리해줘”</div>
+<div class="word">Jarvis<span class="blue">.</span></div>
+</div></body></html>
