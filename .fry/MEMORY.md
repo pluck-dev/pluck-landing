@@ -65,13 +65,26 @@
 - 카피는 한국어 우선. categoryLabels/statusLabels 도 한글(클라이언트/자체 서비스/앱/AI·자동화, 라이브/개발 중/사례/콘셉트).
 
 ## 홈 흐름 = 한국 이커머스 상세페이지식 설득 구조
-- 히어로(혜택형 헤드라인 + 실제 스크린샷 콜라주 + 데이터에서 계산한 숫자 + 상담 CTA) → 이런 고민(다크) → 한 팀 4분야(각 분야에 실제 적용 사례 링크) → 라이브 클라이언트 작업 크게(featured) → 전체 그리드 → 진행 방식(번호 없음) → FAQ → 상담 CTA.
+- 히어로 핀 씬(거대 헤드라인 + CTA, 실제 화면 쇼케이스) → 숫자 밴드(블루 풀블리드, getPortfolioStats) → 이런 고민(다크) → 한 팀 4분야(각 분야에 실제 적용 사례 링크) → 라이브 클라이언트 작업 크게(featured) → 전체 그리드 → 진행 방식(번호 없음) → FAQ → 상담 CTA.
 - 2026-10 오너 지시로 'THE WAY WE THINK' 스테이트먼트와 NDrop/DVIA/몇기야 아트카드 섹션 삭제(재추가 금지).
 - 히어로 숫자는 getPortfolioStats 로만. live 는 "지금 접속해 볼 수 있는 서비스"로 표기(THOUSAND 처럼 실주문 없는 라이브가 있어 '운영 실적'처럼 쓰지 않기 위함). 지어낸 지표·후기·로고 금지.
-- featured 는 실제 운영 클라이언트(boryoung, rba, dealer-settlement, dvia). 콜라주는 dvia/rba/thousand/boryoung 커버(components/hero-collage.tsx).
+- featured 는 실제 운영 클라이언트(boryoung, rba, dealer-settlement, dvia). 콜라주(hero-collage)는 2026-10 "히어로가 얌전하다(toss.im 참고)" 피드백으로 삭제 → components/hero-reel.tsx.
 
 ## 폰트/모션 함정
 - Geist 는 한글이 없어 Windows 에서 맑은고딕으로 떨어져 헤드라인이 약해 보였음 → layout.tsx 에 Noto_Sans_KR(preload:false, --font-noto-kr)을 Geist 다음 폴백으로 추가.
 - ScrollExperience 의 --progress 는 이제 모든 data-scene 에 같은 공식(뷰포트 통과율). 예전 hero 전용 핀 공식은 hero 가 고정 높이가 아니면 0→1로 튀어서 제거.
-- 콜라주: 진입은 transform, 부유는 개별 속성 translate, 기울기는 rotate, 패럴랙스는 바깥 .collage-layer transform — 속성을 나눠야 애니메이션끼리 덮어쓰지 않음. reduced-motion 은 globals 의 전역 animation:none 으로 처리.
 - next/image `priority` 는 Next 16 에서 deprecated → `preload` 또는 loading="eager"+fetchPriority.
+
+# Hero reel: 핀 씬 스크롤 타임라인, toss 레퍼런스, 폰 크롭(public/reel), 함정
+
+## 구조와 WHY (2026-10-29, feat/hero-bold)
+- 오너 "히어로가 얌전하다, toss.im 봐라" → docs/reference-toss.md 실측(80px/700 헤드라인, 3~9.5 뷰포트 sticky 씬, 풀블리드↔카드 스케일). PLUCK 방식: 종이 바탕 거대 헤드라인(clamp(56px,min(9vw,14.6svh),140px), 800) + 하단에서 엿보이는 실제 화면(dvia) → 풀블리드 → 다크에서 카드로 비켜나며 "기획부터/디자인/개발/AI 자동화까지" 문장 교체(각각 rba/thousand/dealer-settlement/boryoung 화면) → 폰이 날아옴 → "한 팀이, 처음부터 끝까지." 펼침.
+- 진행도 p = (scrollY - trackTop + header)/(track 높이 - stage 높이). 키프레임 [p,x,y,scale,rot,opacity] 를 JS가 rAF에서 transform/opacity로만 기록. 문장 구간은 0.28~0.86 균등 분할(steps 수에 따라 자동).
+- CSS 기본값 = p=0 상태(프레임 peek 위치를 calc 로 JS 공식과 동일하게: 데스크톱 0.24h+fh/2, 모바일 0.22h+fh/2). 바꾸면 양쪽(hero-reel.tsx peekY 와 globals .reel-frame transform)을 같이 바꿔야 하이드레이션 점프가 없다.
+- sticky stage top = 헤더 높이(--head, JS가 실측. CSS 기본 81px / 모바일 105px).
+- 숫자 밴드의 CountUp 은 SSR 에 실제 값, 화면 밖에서 마운트될 때만 0부터 카운트(크롤러·캡처에 0 노출 방지).
+
+## 함정
+- reduced-motion 정적 레이아웃에서 `translate: none`(또는 0 0)을 `transform: none` 옆에 두면 Next 16 CSS 미니파이어가 translate 를 날려버림 → 중앙정렬 translate 는 `@media (prefers-reduced-motion: no-preference)` 안에만 둔다.
+- public/reel/*.webp 는 public/work 의 390 폰 합성 이미지(compose.js 슬롯 x=156/599/1042, y=90, 404x850)에서 한 대씩 크롭한 것. dealer-mobile 은 카영 브랜드가 보이지만 이미 갤러리 공개 이미지(오너 허용 범위). 등록 폼 크롭은 미사용.
+- html 의 scroll-behavior:smooth 때문에 Playwright 캡처 시 scrollTo({behavior:"instant"}) 필수.

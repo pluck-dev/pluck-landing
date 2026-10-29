@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
-import { HeroCollage } from "@/components/hero-collage";
+import { ArrowUpRight, Plus } from "lucide-react";
+import { CountUp } from "@/components/count-up";
+import { HeroReel } from "@/components/hero-reel";
 import { ProjectIndex } from "@/components/project-index";
 import { ScrollExperience } from "@/components/scroll-experience";
 import {
@@ -122,66 +123,87 @@ function requireProject(slug: string) {
   return project;
 }
 
+/** Opening scene: each statement swaps the framed screen to a real project. */
+const reelSteps = [
+  { statement: "기획부터", slug: "rba" },
+  { statement: "디자인", slug: "thousand" },
+  { statement: "개발", slug: "dealer-settlement" },
+  { statement: "AI 자동화까지", slug: "boryoung" },
+] as const;
+
+/** Single phones cropped from the 390px composites (public/reel). */
+const reelPhones = [
+  { src: "/reel/setflow-home.webp", alt: "Setflow 오늘 운동 홈 모바일 화면" },
+  { src: "/reel/dealer-mobile.webp", alt: "딜러 정산 플랫폼 모바일 소개 화면" },
+  { src: "/reel/naengkeep-fridge.webp", alt: "냉킵 나의 작은 냉장고 모바일 화면" },
+  { src: "/reel/setflow-dark.webp", alt: "Setflow 다크 모드 함께 운동 화면" },
+];
+
+function reelScreen(slug: string) {
+  const project = requireProject(slug);
+  return { src: project.cover.src, alt: project.cover.alt, name: project.name };
+}
+
 export default function Home() {
   const stats = getPortfolioStats(projects);
   return (
     <ScrollExperience>
       <StudioHeader home />
       <main id="main">
-        <section
-          className="hero"
-          id="top"
-          data-scene="hero"
-          aria-labelledby="hero-title"
-        >
-          <div className="shell hero-grid">
-            <div className="hero-copy">
-              <h1 id="hero-title" className="hero-title">
-                아이디어만 가져오세요.
-                <br />
-                <span>운영되는 서비스</span>로
-                <br />
-                만들어 드립니다.
-              </h1>
-              <p className="hero-lead">
-                기획·디자인·개발·AI 자동화를 한 팀이 처음부터 끝까지.{" "}
-                <br className="desktop-break" />
-                업체 여러 곳을 오가며 조율할 필요 없이, 실제로 쓰이는
-                서비스까지 만듭니다.
-              </p>
-              <div className="hero-actions">
-                <a className="button button-primary" href={CONTACT_MAIL}>
-                  프로젝트 상담하기 <ArrowRight size={18} aria-hidden="true" />
-                </a>
-                <a className="button button-ghost" href="#work">
-                  포트폴리오 보기
-                </a>
+        <section className="hero-reel" aria-labelledby="hero-title">
+          <HeroReel
+            title={
+              <>
+                <span>아이디어만 가져오세요.</span>{" "}
+                <span className="reel-title-accent">운영되는 서비스로</span>{" "}
+                <span>만들어 드립니다.</span>
+              </>
+            }
+            lead="기획·디자인·개발·AI 자동화까지, 한 팀이 처음부터 끝까지 맡습니다."
+            contactHref={CONTACT_MAIL}
+            opening={reelScreen("dvia")}
+            steps={reelSteps.map(({ statement, slug }) => {
+              const project = requireProject(slug);
+              return {
+                statement,
+                detail: project.detail.oneLiner,
+                screen: reelScreen(slug),
+              };
+            })}
+            phones={reelPhones}
+            extras={[reelScreen("v8-cal-lab"), reelScreen("myotgiya")]}
+            closing="한 팀이, 처음부터 끝까지."
+          />
+        </section>
+
+        <section className="proof-band" aria-labelledby="proof-title">
+          <div className="shell">
+            <h2 id="proof-title" className="proof-title">
+              말보다 결과물로 보여드립니다.
+            </h2>
+            <dl className="proof-grid">
+              <div>
+                <dt>지금 접속해 볼 수 있는 서비스</dt>
+                <dd>
+                  <CountUp value={stats.live} />
+                  <small>개</small>
+                </dd>
               </div>
-              <dl className="hero-proof">
-                <div>
-                  <dt>지금 접속해 볼 수 있는 서비스</dt>
-                  <dd>
-                    {stats.live}
-                    <small>개</small>
-                  </dd>
-                </div>
-                <div>
-                  <dt>클라이언트 프로젝트</dt>
-                  <dd>
-                    {stats.client}
-                    <small>건</small>
-                  </dd>
-                </div>
-                <div>
-                  <dt>지금까지 만든 프로젝트</dt>
-                  <dd>
-                    {stats.total}
-                    <small>개</small>
-                  </dd>
-                </div>
-              </dl>
-            </div>
-            <HeroCollage />
+              <div>
+                <dt>클라이언트 프로젝트</dt>
+                <dd>
+                  <CountUp value={stats.client} />
+                  <small>건</small>
+                </dd>
+              </div>
+              <div>
+                <dt>지금까지 만든 프로젝트</dt>
+                <dd>
+                  <CountUp value={stats.total} />
+                  <small>개</small>
+                </dd>
+              </div>
+            </dl>
           </div>
         </section>
 

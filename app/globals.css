@@ -200,181 +200,261 @@ summary:focus-visible {
   color: var(--text-2);
 }
 
-/* Hero: headline + proof (real numbers, real screens) above the fold */
-.hero {
-  --progress: 0.5;
-  overflow-x: clip;
-  padding-block: 64px 88px;
+/* Opening scene: pinned stage. Hero copy on paper, a real screen peeks from below,
+   grows to full bleed, then steps aside on dark while statements swap (components/hero-reel.tsx).
+   JS writes transform/opacity only; the CSS below is the progress-0 state. */
+.reel {
+  --head: 81px;
+  position: relative;
+  height: 560svh;
 }
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  gap: 48px;
-  align-items: center;
-  min-height: min(760px, calc(100svh - 81px - 152px));
+.reel-stage {
+  position: sticky;
+  top: var(--head);
+  height: calc(100svh - var(--head));
+  overflow: hidden;
 }
-.hero-title {
-  font-size: clamp(40px, 4.4vw, 66px);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.05em;
+.reel-dark {
+  position: absolute;
+  inset: 0;
+  background: #0f1211;
+  opacity: 0;
+}
+.reel-intro {
+  position: relative;
+  z-index: 3;
+  padding-top: clamp(24px, 6svh, 64px);
+  will-change: transform, opacity;
+}
+[data-phase="reel"] .reel-intro,
+[data-phase="end"] .reel-intro {
+  visibility: hidden;
+}
+.reel-title {
+  font-size: clamp(56px, min(9vw, 14.6svh), 140px);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.058em;
   word-break: keep-all;
 }
-.hero-title span {
+.reel-title > span {
+  display: block;
+}
+.reel-title-accent {
   color: var(--blue);
 }
-.hero-lead {
-  margin-top: 28px;
-  max-width: 33em;
-  font-size: 18px;
-  line-height: 1.8;
+.reel-intro-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px 40px;
+  margin-top: clamp(20px, 4.4svh, 44px);
+}
+.reel-lead {
+  max-width: 24em;
+  font-size: clamp(17px, 1.5vw, 22px);
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.02em;
   color: var(--text-2);
 }
-.hero-actions {
+.reel-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 38px;
 }
-.hero-proof {
-  display: flex;
-  gap: 44px;
-  margin: 48px 0 0;
-}
-.hero-proof > div {
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 6px;
-}
-.hero-proof dt {
-  word-break: keep-all;
-  font-size: 14px;
-  color: var(--text-3);
-}
-.hero-proof dd {
-  margin: 0;
-  font-size: 44px;
+.button-xl {
+  min-height: 64px;
+  padding-inline: 34px;
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  font-variant-numeric: tabular-nums;
 }
-.hero-proof dd small {
-  margin-left: 3px;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 0;
-}
-.hero-proof > div:first-child dd {
-  color: var(--blue);
-}
-.hero-collage {
-  position: relative;
-  aspect-ratio: 1 / 0.92;
-}
-.collage-layer {
+.reel-objects {
   position: absolute;
-  --rot: 0deg;
-  --depth: 0px;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
 }
-[data-motion="true"] .collage-layer {
-  transform: translateY(calc((var(--progress) - 0.5) * var(--depth)));
-}
-.frame-back {
+.reel-frame,
+.reel-phone,
+.reel-extra {
+  position: absolute;
   top: 0;
-  right: -3%;
-  width: 64%;
-  --rot: 4deg;
-  --depth: -150px;
+  left: 0;
+  margin: 0;
+  will-change: transform, opacity;
 }
-.frame-left {
-  top: 9%;
-  left: -2%;
-  width: 54%;
-  --rot: -5deg;
-  --depth: -60px;
+/* Centering lives here (not reset in the reduce block): the CSS minifier drops a
+   `translate` reset that sits next to `transform: none`. */
+@media (prefers-reduced-motion: no-preference) {
+  .reel-frame,
+  .reel-phone,
+  .reel-extra {
+    translate: -50% -50%;
+  }
 }
-.frame-low {
-  bottom: 0;
-  right: -1%;
-  width: 52%;
-  --rot: 3.5deg;
-  --depth: 90px;
-}
-.frame-main {
-  top: 31%;
-  left: 9%;
-  width: 70%;
-  --rot: -1.5deg;
-  --depth: 20px;
-}
-.collage-frame {
-  display: block;
+.reel-frame {
+  width: 62vw;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: 22px;
   background: #fff;
-  rotate: var(--rot);
   box-shadow:
-    0 0 0 1px #20252312,
-    0 34px 60px -24px #1b2a2459,
-    0 12px 22px -12px #1b2a2433;
-  animation:
-    collage-in 1s cubic-bezier(0.2, 0.7, 0.2, 1) both,
-    collage-float 9s ease-in-out infinite;
-  animation-delay:
-    calc(var(--i) * 110ms),
-    calc(var(--i) * -2.3s);
-  transition: scale 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+    0 0 0 1px #20252314,
+    0 60px 120px -40px #0b100e80,
+    0 20px 40px -20px #0b100e40;
+  transform: translate3d(
+    0,
+    calc(0.24 * (100svh - var(--head)) + 19.375vw + 15px),
+    0
+  );
 }
-.collage-frame:hover {
-  scale: 1.025;
-}
-.collage-frame:focus-visible {
-  outline: 3px solid var(--blue);
-  outline-offset: 4px;
-}
-.collage-bar {
+.reel-bar {
   display: flex;
   align-items: center;
-  gap: 5px;
-  height: 28px;
-  padding-inline: 12px;
-  background: #f1f2ee;
+  gap: 6px;
+  height: 30px;
+  padding-inline: 14px;
+  background: #eef0eb;
 }
-.collage-bar i {
-  width: 7px;
-  height: 7px;
+.reel-bar i {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #d2d6ce;
+  background: #cdd2c8;
 }
-.collage-bar span {
-  margin-left: 8px;
-  overflow: hidden;
-  font-size: 11.5px;
-  font-weight: 500;
-  color: var(--text-3);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.collage-shot {
+.reel-screen {
   position: relative;
   display: block;
   aspect-ratio: 16 / 10;
 }
-.collage-shot img {
+.reel-shot {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.reel-shot:first-child {
+  opacity: 1;
+}
+.reel-shot img,
+.reel-extra img {
   object-fit: cover;
   object-position: top center;
 }
-@keyframes collage-in {
-  from {
-    opacity: 0;
-    transform: translateY(36px);
-  }
+.reel-phone {
+  width: clamp(150px, 13.5vw, 224px);
+  aspect-ratio: 400 / 846;
+  overflow: hidden;
+  border-radius: 11% / 5.2%;
+  background: #1b1f1d;
+  box-shadow:
+    0 0 0 6px #1b1f1d,
+    0 0 0 7px #ffffff26,
+    0 50px 90px -30px #000c;
+  opacity: 0;
 }
-@keyframes collage-float {
-  50% {
-    translate: 0 -9px;
-  }
+.reel-extra {
+  width: 30vw;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 40px 80px -30px #000c;
+  opacity: 0;
+}
+.reel-lines {
+  position: absolute;
+  top: 50%;
+  left: max(56px, calc((100vw - 1320px) / 2));
+  z-index: 3;
+  display: grid;
+  width: 40vw;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  translate: 0 -50%;
+}
+.reel-line {
+  grid-area: 1 / 1;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.reel-statement {
+  font-size: clamp(52px, 5.6vw, 100px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.058em;
+  color: #fff;
+}
+.reel-detail {
+  max-width: 22em;
+  margin-top: 28px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #a3aba5;
+}
+.reel-detail strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: #fff;
+}
+.reel-closing {
+  position: absolute;
+  top: clamp(24px, 7svh, 72px);
+  right: 24px;
+  left: 24px;
+  z-index: 3;
+  font-size: clamp(44px, 5.4vw, 92px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.055em;
+  text-align: center;
+  color: #fff;
+  opacity: 0;
+  word-break: keep-all;
+}
+
+/* Real numbers from lib/portfolio.ts, shown big */
+.proof-band {
+  padding-block: clamp(96px, 15svh, 168px);
+  background: var(--blue);
+  color: #fff;
+}
+.proof-title {
+  font-size: clamp(30px, 3.4vw, 52px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.045em;
+}
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin: clamp(48px, 8svh, 88px) 0 0;
+}
+.proof-grid > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 18px;
+}
+.proof-grid dt {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffffd0;
+  word-break: keep-all;
+}
+.proof-grid dd {
+  margin: 0;
+  font-size: clamp(96px, 13vw, 212px);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.065em;
+  font-variant-numeric: tabular-nums;
+}
+.proof-grid dd small {
+  margin-left: 0.1em;
+  font-size: 0.24em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 /* Pain points */
@@ -1372,12 +1452,6 @@ summary:focus-visible {
   .desktop-nav {
     gap: 28px;
   }
-  .hero-proof {
-    gap: 32px;
-  }
-  .hero-proof dd {
-    font-size: 38px;
-  }
   .process-flow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1389,18 +1463,6 @@ summary:focus-visible {
   }
 }
 @media (max-width: 900px) {
-  .hero {
-    padding-block: 40px 72px;
-  }
-  .hero-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 48px;
-    min-height: 0;
-  }
-  .hero-collage {
-    width: min(100%, 620px);
-    margin-inline: auto;
-  }
   .section-head {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
@@ -1452,66 +1514,6 @@ summary:focus-visible {
   }
   .desktop-break {
     display: none;
-  }
-  .hero {
-    padding-block: 32px 56px;
-  }
-  .hero-grid {
-    gap: 36px;
-  }
-  .hero-title {
-    font-size: clamp(30px, 8.6vw, 44px);
-    line-height: 1.24;
-  }
-  .hero-lead {
-    margin-top: 16px;
-    font-size: 15.5px;
-    line-height: 1.7;
-  }
-  .hero-actions {
-    display: grid;
-    grid-template-columns: 1.25fr 1fr;
-    gap: 8px;
-    margin-top: 24px;
-  }
-  .hero-actions .button {
-    min-height: 52px;
-    padding-inline: 12px;
-    font-size: 15px;
-  }
-  .hero-actions .button svg {
-    display: none;
-  }
-  .hero-proof {
-    justify-content: space-between;
-    gap: 12px;
-    margin-top: 28px;
-  }
-  .hero-proof dt {
-    font-size: 12px;
-    line-height: 1.4;
-  }
-  .hero-proof dd {
-    font-size: 30px;
-  }
-  .hero-proof dd small {
-    font-size: 15px;
-  }
-  .collage-bar {
-    height: 18px;
-    gap: 3px;
-    padding-inline: 8px;
-  }
-  .collage-bar i {
-    width: 5px;
-    height: 5px;
-  }
-  .collage-bar span {
-    margin-left: 4px;
-    font-size: 8.5px;
-  }
-  .collage-frame {
-    border-radius: 9px;
   }
   .section-title {
     font-size: clamp(27px, 7.4vw, 34px);
@@ -1661,6 +1663,166 @@ summary:focus-visible {
     gap: 14px 22px;
     font-size: 12px;
     padding-block: 28px;
+  }
+}
+@media (max-width: 760px) {
+  .reel {
+    --head: 105px;
+    height: 480svh;
+  }
+  .reel-intro {
+    padding-top: 22px;
+  }
+  .reel-title {
+    font-size: clamp(44px, 14vw, 64px);
+    line-height: 1.08;
+  }
+  .reel-intro-row {
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 18px;
+  }
+  .reel-lead {
+    font-size: 16px;
+  }
+  .reel-actions {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 8px;
+  }
+  .button-xl {
+    min-height: 54px;
+    padding-inline: 12px;
+    font-size: 15.5px;
+  }
+  .button-xl svg {
+    display: none;
+  }
+  .reel-frame {
+    width: calc(100vw - 40px);
+    border-radius: 14px;
+    transform: translate3d(
+      0,
+      calc(0.22 * (100svh - var(--head)) + (100vw - 40px) * 0.3125 + 10px),
+      0
+    );
+  }
+  .reel-bar {
+    height: 20px;
+    gap: 4px;
+    padding-inline: 10px;
+  }
+  .reel-bar i {
+    width: 6px;
+    height: 6px;
+  }
+  .reel-phone {
+    width: 33vw;
+    box-shadow:
+      0 0 0 4px #1b1f1d,
+      0 0 0 5px #ffffff26,
+      0 30px 50px -20px #000c;
+  }
+  .reel-extra {
+    width: 62vw;
+    border-radius: 12px;
+  }
+  .reel-lines {
+    top: 7%;
+    right: 20px;
+    left: 20px;
+    width: auto;
+    translate: none;
+  }
+  .reel-statement {
+    font-size: clamp(44px, 13vw, 60px);
+  }
+  .reel-detail {
+    margin-top: 14px;
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .reel-closing {
+    top: 8%;
+    font-size: clamp(38px, 11.5vw, 52px);
+  }
+  .proof-band {
+    padding-block: 88px;
+  }
+  .proof-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px;
+  }
+  .proof-grid dd {
+    font-size: clamp(88px, 30vw, 132px);
+  }
+  .proof-grid dt {
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reel {
+    height: auto;
+  }
+  .reel-stage {
+    position: relative;
+    top: auto;
+    height: auto;
+    padding-bottom: 96px;
+    overflow: visible;
+  }
+  .reel-dark,
+  .reel-extra,
+  .reel-closing {
+    display: none;
+  }
+  .reel-objects {
+    position: relative;
+    top: auto;
+    left: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: min(1320px, calc(100% - 40px));
+    margin: 56px auto 0;
+  }
+  .reel-frame,
+  .reel-phone {
+    position: relative;
+    transform: none;
+    opacity: 1;
+  }
+  .reel-frame {
+    width: 100%;
+  }
+  .reel-phone {
+    width: min(200px, 40%);
+  }
+  .reel-lines {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    width: min(1320px, calc(100% - 40px));
+    margin: 56px auto 0;
+    translate: 0 0;
+  }
+  .reel-line {
+    grid-area: auto;
+    opacity: 1;
+  }
+  .reel-statement {
+    font-size: clamp(32px, 3.4vw, 48px);
+    color: var(--ink);
+  }
+  .reel-detail {
+    color: var(--text-2);
+  }
+  .reel-detail strong {
+    color: var(--ink);
   }
 }
 @media (prefers-reduced-motion: reduce) {
