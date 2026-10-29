@@ -149,13 +149,7 @@ export default function Home() {
           </div>
           <div className="shell project-list">
             <article className="project project-ndrop" data-scene="project">
-              <a
-                className="project-image ndrop-art"
-                href="https://www.ndrop.kr/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="NDrop 사이트 방문 (새 탭)"
-              >
+              <div className="project-image ndrop-art">
                 <span className="art-caption">NDrop / DIGITAL CONNECTIONS</span>
                 <div
                   className="project-parallax ndrop-composition"
@@ -191,10 +185,7 @@ export default function Home() {
                     </span>
                   </div>
                 </div>
-                <span className="project-circle">
-                  <ExternalArrow />
-                </span>
-              </a>
+              </div>
               <div className="project-caption">
                 <span className="project-number">01</span>
                 <div>
@@ -293,13 +284,6 @@ export default function Home() {
           </div>
           <div className="shell more-work">
             <span>MORE TO EXPLORE</span>
-            <a
-              href="https://draw.pluck.co.kr/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              플럭 드로우 <ExternalArrow />
-            </a>
             <a
               href="https://github.com/pluck-dev"
               target="_blank"

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+.word { position: absolute; left: 72px; bottom: 110px; font-size: 230px; color: #374730; letter-spacing: -0.07em; }
+.apps { position: absolute; left: 600px; top: 130px; width: 930px; height: 740px; }
+.card { position: absolute; background: #f7f7f2; border-radius: 28px; box-shadow: 0 60px 120px -60px rgba(23,39,61,.45); padding: 30px 32px; }
+.card small { display: block; font-size: 15px; letter-spacing: 2.5px; text-transform: uppercase; color: #6b7668; }
+.card h4 { margin-top: 10px; font-size: 28px; font-weight: 600; letter-spacing: -0.8px; color: #202523; }
+.web { left: 0; top: 0; width: 560px; height: 430px; }
+.svc { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 22px; }
+.svc span { border: 1.5px solid #d9ddd5; border-radius: 16px; padding: 18px; font-size: 18px; color: #202523; display: flex; align-items: center; gap: 10px; }
+.svc i { width: 14px; height: 14px; border-radius: 50%; background: #335aeb; flex: none; }
+.svc span:nth-child(2) i { background: #9cbf3a; } .svc span:nth-child(3) i { background: #202523; } .svc span:nth-child(4) i { background: #9aa594; }
+.lms { left: 380px; top: 300px; width: 550px; height: 330px; background: #202523; }
+.lms small { color: #9aa594; } .lms h4 { color: #f7f7f2; }
+.course { margin-top: 20px; display: grid; gap: 14px; }
+.course div { display: grid; grid-template-columns: 1fr 210px 60px; align-items: center; gap: 14px; font-size: 17px; color: #c9cec6; }
+.track { height: 10px; border-radius: 5px; background: #3a413d; position: relative; overflow: hidden; }
+.track b { position: absolute; inset: 0 auto 0 0; background: #9cbf3a; border-radius: 5px; }
+.pct { font-family: "Geist Mono", monospace; font-size: 15px; text-align: right; color: #f7f7f2; }
+.admin { left: 0; top: 470px; width: 340px; height: 270px; }
+.kpi { margin-top: 18px; display: flex; align-items: flex-end; gap: 8px; height: 120px; }
+.kpi i { flex: 1; background: #335aeb; border-radius: 6px; opacity: .85; }
+.flow { position: absolute; left: 110px; top: 230px; display: flex; gap: 18px; align-items: center; }
+.flow span { width: 86px; height: 86px; border-radius: 50%; border: 3px solid #374730; display: grid; place-items: center; font-size: 19px; color: #374730; font-weight: 600; }
+.flow span.on { background: #335aeb; border-color: #335aeb; color: #fff; }
+.flow em { width: 26px; height: 3px; background: #374730; }
+</style></head>
+<body><div class="art tone-lime">
+<span class="caption">홈헬스케어 통합 플랫폼 / Client work</span>
+<div class="flow"><span class="on">상담</span><em></em><span>평가</span><em></em><span>플랜</span></div>
+<div class="apps">
+  <div class="card web"><small>Web</small><h4>맞춤 돌봄 서비스 찾기</h4>
+    <div class="svc"><span><i></i>방문 간호</span><span><i></i>요양 돌봄</span><span><i></i>호스피스</span><span><i></i>방문 운동</span></div>
+  </div>
+  <div class="card lms"><small>Academy · LMS</small><h4>직군별 교육 과정</h4>
+    <div class="course">
+      <div>요양보호 기초<span class="track"><b style="width:86%"></b></span><span class="pct">86%</span></div>
+      <div>방문 간호 실무<span class="track"><b style="width:62%"></b></span><span class="pct">62%</span></div>
+      <div>안전·감염 관리<span class="track"><b style="width:100%"></b></span><span class="pct">100%</span></div>
+    </div>
+  </div>
+  <div class="card admin"><small>Admin</small><h4>상담 접수 현황</h4>
+    <div class="kpi"><i style="height:45%"></i><i style="height:70%"></i><i style="height:55%"></i><i style="height:85%"></i><i style="height:65%"></i><i style="height:95%"></i></div>
+  </div>
+</div>
+<div class="word">돌봄<span class="blue">.</span></div>
+</div></body></html>

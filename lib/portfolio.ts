@@ -313,13 +313,8 @@ export const projects: readonly PortfolioProject[] = [
       "방문간호·돌봄 기업을 위한 고객 웹사이트, 교육 플랫폼, 통합 관리자를 잇는 플랫폼.",
     disciplines: ["Website", "LMS", "Admin"],
     status: "development",
-    cover: { src: "/work/homecare-platform/cover.webp", alt: "홈헬스케어 서비스 소개 페이지 - 대표 서비스(전문 방문 간호)와 요양·호스피스·장기요양·방문 운동 서비스 카드" },
-    gallery: [
-      { src: "/work/homecare-platform/01.webp", alt: "홈헬스케어 쇼핑몰 페이지 - 의료기기·건강관리 용품·재활보조기구 등 카테고리 카드" },
-      { src: "/work/homecare-platform/02.webp", alt: "센터 찾기 페이지의 연령대 맞춤 서비스 찾기 - 노인·성인·소아 케어 탭과 서비스 카드" },
-      { src: "/work/homecare-platform/03.webp", alt: "서비스 이용 4단계 프로세스 - 상담, 평가, 플랜, 시작" },
-      { src: "/work/homecare-platform/04.webp", alt: "모바일 화면 3종 - 대표 서비스 상세, 멤버십 혜택, 파트너 쇼핑몰" },
-    ],
+    cover: { src: "/work/homecare-platform/cover.webp", alt: "상담·평가·플랜 흐름과 서비스 찾기 웹, 교육 과정 LMS, 상담 접수 어드민 카드를 표현한 디자인 커버" },
+    gallery: [],
     detail: {
       oneLiner: "방문간호·돌봄 기업의 웹·교육·관리를 하나로",
       role: [
@@ -795,54 +790,6 @@ export const projects: readonly PortfolioProject[] = [
         "시즌 진입·피크 품목 캘린더",
         "수익 시뮬레이터와 정산 화면",
         "자동화 파이프라인 관리",
-      ],
-    },
-  },
-  {
-    slug: "thousand",
-    name: "THOUSAND",
-    category: "product",
-    years: [2026, 2026],
-    description:
-      "서울의 파이 하우스를 상상한 브랜드 쇼핑몰 컨셉. 진열장 위 파이 하나하나가 반응하는 인터랙션.",
-    disciplines: ["Brand site", "Interaction"],
-    status: "concept",
-    cover: { src: "/work/thousand/cover.webp", alt: "따뜻한 조명의 유리 진열장 안에 파이 네 종이 놓이고 하단에 선택한 파이와 담기 버튼이 보이는 THOUSAND 메인 화면" },
-    gallery: [
-      { src: "/work/thousand/01.webp", alt: "진열장 배경을 흐리게 두고 치즈 블루베리 파이 정보와 한 조각 담기 버튼을 띄운 상품 미리보기 창" },
-      { src: "/work/thousand/02.webp", alt: "In the mood for pie 헤드라인 아래 카테고리 필터와 파이 상품 카드가 4열로 놓인 쇼핑 목록 화면" },
-      { src: "/work/thousand/03.webp", alt: "바나나 크림 파이 큰 이미지 옆에 가격, 수량, 장바구니 담기, 픽업 안내가 있는 상품 상세 화면" },
-      { src: "/work/thousand/04.webp", alt: "모바일 진열장 메인, 쇼핑 목록, 상품 상세를 나란히 배치한 모바일 화면 3장" },
-    ],
-    detail: {
-      oneLiner: "진열장 위 파이 하나하나가 반응하는 브랜드 쇼핑몰",
-      role: [
-        "컨셉 기획",
-        "UI 디자인",
-        "인터랙션",
-        "프론트엔드",
-        "AI 이미지",
-      ],
-      stack: [
-        "Next.js",
-        "React",
-        "TypeScript",
-        "CSS 모션",
-        "Playwright",
-      ],
-      overview:
-        "서울의 파이 하우스를 모티브로 한 브랜드 쇼핑몰 디자인 컨셉입니다. 빈 진열장 이미지와 배경이 분리된 투명 파이 이미지 8종을 HTML 요소로 조합해, 진열장 자체를 상품 탐색 화면으로 만들었습니다.",
-      problem:
-        "사진 한 장에 핫스폿을 얹는 방식으로는 파이마다 독립된 반응을 주기 어렵고, 모바일·키보드 사용성도 떨어졌습니다.",
-      solution:
-        "파이를 개별 요소로 분리해 호버·포커스 시 해당 파이만 확대되고 주변이 물러나도록 설계했습니다. 상품 목록, 상세, 장바구니, 데모 픽업 주문까지 구매 흐름 전체를 프런트엔드로 구현했고 실제 결제나 개인정보 수집은 하지 않습니다.",
-      features: [
-        "진열장 파이별 호버·포커스 집중 모션",
-        "방향키 탐색과 터치 선택 지원",
-        "카테고리 필터·가격 정렬 쇼핑 목록",
-        "로컬 저장 장바구니와 데모 픽업 주문",
-        "한글·영문 이름과 재료 통합 검색",
-        "reduced-motion 대응 반응형 화면",
       ],
     },
   },
