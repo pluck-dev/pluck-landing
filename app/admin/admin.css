@@ -304,7 +304,8 @@ textarea.adm-input {
   gap: 6px;
   margin-bottom: 14px;
 }
-.adm-tabs a {
+.adm-tabs a,
+.adm-tabs button {
   padding: 6px 12px;
   border: 1px solid #cdd3c8;
   border-radius: 999px;
@@ -312,10 +313,17 @@ textarea.adm-input {
   font-size: 13px;
   font-weight: 500;
 }
-.adm-tabs a:hover {
+.adm-tabs button {
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+.adm-tabs a:hover,
+.adm-tabs button:hover {
   border-color: var(--ink);
 }
-.adm-tabs a[aria-current="page"] {
+.adm-tabs a[aria-current="page"],
+.adm-tabs button[aria-current="page"] {
   border-color: var(--ink);
   background: var(--ink);
   color: var(--paper);
@@ -757,6 +765,201 @@ a.adm-kpi:hover {
   font-size: 13px;
 }
 
+/* Realtime client UI (_app/*) */
+.adm-count {
+  margin-left: 2px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+.adm-search-input {
+  width: 300px;
+}
+.adm-table-dense td {
+  padding-block: 7px;
+}
+.adm-table tbody tr.is-new td:first-child {
+  box-shadow: inset 3px 0 0 var(--blue);
+}
+.adm-sort {
+  display: inline-flex;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.adm-num .adm-sort {
+  justify-content: flex-end;
+}
+.adm-sort:hover {
+  color: var(--ink);
+}
+.adm-status-select {
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: var(--sage);
+  color: inherit;
+  cursor: pointer;
+}
+.adm-card > .adm-status-select {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.adm-skel {
+  display: block;
+  height: 12px;
+  width: 70%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #eceee8 0%, #f6f7f3 50%, #eceee8 100%);
+  background-size: 200% 100%;
+  animation: adm-skel 1.1s linear infinite;
+}
+.adm-skel-kpi {
+  height: 22px;
+  width: 60%;
+  margin-top: 6px;
+}
+.adm-skel-block {
+  height: 120px;
+  width: 100%;
+}
+@keyframes adm-skel {
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adm-skel {
+    animation: none;
+  }
+}
+.adm-pipeline {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0 18px;
+}
+.adm-pipeline > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.adm-pipeline > div > .adm-muted {
+  width: 56px;
+  font-size: 12.5px;
+}
+.adm-pipe {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 0 #dfe3da;
+  font-size: 12.5px;
+}
+.adm-pipe b {
+  margin-left: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.adm-pipe:hover {
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.adm-nav-count {
+  margin-left: auto;
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--lime);
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+.adm-nav-count.is-pulse {
+  animation: adm-pulse 1.2s ease-in-out infinite;
+}
+@keyframes adm-pulse {
+  50% {
+    box-shadow: 0 0 0 4px #dbeaab66;
+  }
+}
+.adm-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #aab3a5;
+}
+.adm-live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7d857a;
+}
+.adm-live.is-live {
+  color: #e9ece5;
+}
+.adm-live.is-live i {
+  background: #4ade80;
+  box-shadow: 0 0 0 3px #4ade8033;
+}
+.adm-live.is-connecting i {
+  background: #facc15;
+}
+.adm-keys {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #8f988b;
+}
+.adm-keys kbd {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: #ffffff14;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10.5px;
+  color: #d5dbd0;
+}
+.adm-toasts {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 50;
+  display: grid;
+  gap: 8px;
+  width: min(360px, calc(100vw - 36px));
+}
+.adm-toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 10px 10px 14px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: #f1f2ec;
+  box-shadow: 0 8px 24px #0002;
+  font-size: 13px;
+}
+.adm-toast a {
+  text-decoration: underline;
+}
+.adm-toast.is-new {
+  background: var(--lime);
+  color: var(--ink);
+  font-weight: 600;
+}
+.adm-toast.is-error {
+  background: #b91c1c;
+}
+.adm-toast .adm-icon-btn {
+  color: inherit;
+}
+
 @media (max-width: 1200px) {
   .adm-kpis {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -824,8 +1027,12 @@ a.adm-kpi:hover {
   .adm-search {
     width: 100%;
   }
-  .adm-search .adm-input {
+  .adm-search .adm-input,
+  .adm-search-input {
     width: 100%;
+  }
+  .adm-keys {
+    display: none;
   }
   .adm-activity li {
     grid-template-columns: 84px minmax(0, 1fr);

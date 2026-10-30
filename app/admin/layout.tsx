@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import "./admin.css";
 
+/** Admin is a private tool: noindex, and no inherited SEO/OG/Twitter metadata. */
 export const metadata: Metadata = {
-  title: { default: "관리자", template: "%s | PLUCK 관리자" },
+  title: { absolute: "PLUCK 관리자" },
+  description: null,
+  keywords: null,
+  openGraph: null,
+  twitter: null,
   robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
 };
 

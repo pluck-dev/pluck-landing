@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { createServiceClient } from "@/lib/supabase/admin";
@@ -13,10 +14,11 @@ export type AdminSession =
  * Real authorization check (proxy.ts is only optimistic). An admin must be
  * signed in, listed in ADMIN_EMAILS, and present in public.admins — the last
  * one is what RLS enforces, so the UI never shows a session that can't read data.
+ *
+ * getClaims() verifies the JWT locally against the project's ES256 JWKS (no Auth
+ * round trip); is_admin() is the one network call. Memoized per request.
  */
-export async function getAdmin(
-  client?: SessionClient,
-): Promise<AdminSession | null> {
+async function checkAdmin(client?: SessionClient): Promise<AdminSession | null> {
   // Always per-request: never prerender an admin decision at build time.
   await connection();
   if (isCrmFixture()) {
@@ -24,14 +26,19 @@ export async function getAdmin(
   }
   const supabase = client ?? (await createSessionClient());
   if (!supabase) return null;
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const email = user?.email?.toLowerCase();
+  const { data } = await supabase.auth.getClaims();
+  const email = (data?.claims.email as string | undefined)?.toLowerCase();
   if (!email || !adminEmails().includes(email)) return null;
   const { data: isAdmin, error } = await supabase.rpc("is_admin");
   if (error || !isAdmin) return null;
   return { email, fixture: false, supabase };
+}
+
+const getAdminForRequest = cache(() => checkAdmin());
+
+export function getAdmin(client?: SessionClient): Promise<AdminSession | null> {
+  // A freshly signed-in client (login actions) must not reuse a cached "null".
+  return client ? checkAdmin(client) : getAdminForRequest();
 }
 
 export async function requireAdmin(): Promise<AdminSession> {

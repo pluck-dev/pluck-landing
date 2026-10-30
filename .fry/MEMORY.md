@@ -109,14 +109,14 @@
 - next/image loading="eager" 는 Next 16 에서 <link rel=preload> 를 만든다. 홈 그리드는 폴드 한참 아래라 전부 lazy(ProjectCard eager 기본 false, 허브 첫 줄만 eager).
 - sitemap lastModified 는 git log(포트폴리오 데이터/이미지 폴더). Vercel 얕은 클론에서 실패하면 빌드 시각으로 폴백.
 
-# CRM/문의: Supabase(shfdmlraappxyedacmok), RLS 모델, /contact 서버 액션, /admin 인증, env 목록
+# CRM/문의: Supabase(gpxbvtiyxgfquaiowspz, 서울), RLS 모델, /contact 서버 액션, /admin 인증, env 목록
 
 ## 구조와 WHY (2026-10-30, feat/supabase-crm)
 - 스키마는 supabase/migrations/0001_crm.sql 한 파일(idempotent, SQL Editor 에 붙여넣기). lib/supabase/types.ts 는 손으로 맞춘 타입 → SQL 바꾸면 둘 다 수정. 적용·Auth 설정·env 는 supabase/README.md.
 - RLS: 모든 테이블 on, anon 은 테이블 권한 자체 revoke. 공개 폼은 서버 액션(app/contact/actions.ts)이 service role 로 insert(그래서 anon insert 정책 없음). authenticated 는 public.is_admin()(JWT email ∈ admins, SECURITY DEFINER) 일 때만 전체 접근.
 - 관리자 = ADMIN_EMAILS(env, 기본 admin@pluck.co.kr) **와** public.admins 둘 다 있어야 함. admins 테이블은 RLS 가 실제로 강제하는 쪽이라, env 만 있고 테이블에 없으면 로그인돼도 데이터가 안 보이므로 UI 진입부터 막는다(lib/crm/auth.ts getAdmin). 로그인 폼은 허용 주소에만 매직링크를 보내지만 응답은 항상 같음(주소 탐지 방지).
-- proxy.ts(Next 16 의 middleware 대체)는 /admin/* 세션 갱신+미로그인 리다이렉트만 하는 낙관적 체크. 진짜 권한 검사는 (protected)/layout 의 requireAdmin + 모든 서버 액션의 writer().
-- 관리자 쓰기는 세션 클라이언트(RLS 적용)로만, 매번 activity_log 기록. projects.paid_amount 는 project_payments 트리거가 재계산 → 코드에서 직접 쓰지 말 것.
+- proxy.ts(Next 16 의 middleware 대체)는 /admin/* 세션 갱신+미로그인 리다이렉트만 하는 낙관적 체크(getClaims = ES256 JWKS 로컬 검증, Auth 왕복 없음). 화면 진입 검사는 (protected)/layout 의 requireAdmin(React cache 로 요청당 1회, is_admin() RPC 1회). **데이터의 진짜 보호는 RLS** — 쓰기도 브라우저에서 바로 하므로 서버 액션 검사는 더 이상 없다.
+- 관리자 쓰기는 브라우저 세션 클라이언트(RLS 적용)로만, 매번 activity_log 기록(_app/mutations.ts). projects.paid_amount 는 project_payments 트리거가 재계산 → 코드에서 직접 쓰지 말 것(낙관적 표시만 paidAmountOf 로 흉내).
 - 문의 폼: zod 검증, honeypot(name=website), ip 해시(IP_HASH_SALT) 기준 시간당 5건, 첨부는 서버가 signed upload URL 발급 → 브라우저가 Storage 직접 업로드(pending/YYYY-MM/uuid/파일) → 제출 시 실제 존재하는 파일만 저장. 유입 경로는 components/source-tracker.tsx 가 pluck_src 쿠키(첫 랜딩·외부 referrer·UTM, 새 UTM 이 덮어씀)에 기록. Discord 웹훅·activity_log 는 after() 로 응답 후 실행.
 
 ## 함정
@@ -127,3 +127,19 @@
 - 칩(chip)은 투명 radio 가 칩 위에 덮인 구조 → Playwright 에선 getByText 클릭 대신 check("input[name=project_type][value=…]").
 - 개인정보처리방침(app/privacy) 회사 정보는 상단 상수로 채우는 자리. 보유기간 1년은 purge_expired_inquiries() 와 맞춰져 있음.
 - 검증: `npm run verify:supabase`(.env.local 읽음) — 테이블 7개, admins seed, private 버킷, anon 차단, 테스트 문의 insert→delete.
+
+# Admin 실시간 클라이언트 구조: 단일 셸 + pushState 라우터, TanStack Query 캐시, Realtime, icn1 리전
+
+## 구조와 WHY (2026-10-30, perf/admin-realtime)
+- 오너 요청: "어드민은 SEO 불필요, 최대한 빠르게·데이터 중심·실시간 느낌". 기존 서버 렌더는 Vercel iad1(미국)→Supabase 서울 왕복이 탭마다 여러 번이라 탭 전환 중앙값 ~2.3–2.9s 였다.
+- vercel.json `regions: ["icn1"]` — 함수 전체(공개 사이트 서버 액션 포함)를 서울로. Hobby 는 리전 1개만.
+- /admin/* 는 전부 `app/admin/(protected)/[[...slug]]/page.tsx` 한 페이지. `_app/shell.tsx` 의 AdminRoutes 가 usePathname 으로 뷰를 고르고, 앱 내 링크(AdminLink)는 `history.pushState` → Next 가 usePathname 만 동기화하고 **서버 요청 0**. next/link 를 쓰면 RSC 왕복이 생기니 admin 안에선 쓰지 말 것.
+- 데이터: inquiries/projects/clients/project_tasks/project_payments **테이블 전체**(limit 2000)를 셸 마운트 직후 병렬 prefetch, 모든 화면(대시보드 집계·상태별 카운트·검색·정렬)은 lib/crm/derive.ts 로 클라이언트 계산. 상세의 activity_log·첨부 signed URL 만 개별 쿼리(호버 시 prefetch). 데이터가 수천 건을 넘으면 페이지네이션 재검토.
+- Realtime: postgres_changes 로 위 5개 테이블 캐시 패치 + activity_log INSERT 시 activity 쿼리 무효화. RLS 가 구독자별로 적용돼 admin 만 수신. 재연결 시 전체 refetch. 실시간이 끊긴 동안의 쓰기는 touches 테이블을 invalidate. **publication 등록(0002_realtime.sql)이 안 돼 있어도 채널은 SUBSCRIBED("실시간" 표시)라 이벤트만 안 온다** — 실시간이 안 되면 먼저 publication 확인.
+- 쓰기: 브라우저에서 crypto.randomUUID() 로 id 를 만들어 insert → 캐시에 즉시 반영/즉시 상세로 이동, 실패 시 스냅샷 롤백 + 에러 토스트. 문의→프로젝트 전환도 클라이언트(같은 이메일 고객 재사용 판단은 캐시 기준).
+- CRM_FIXTURE=1 dev 모드: layout 이 fixture 데이터를 seed 로 넘겨 캐시에 심고 fetch/realtime/쓰기를 끈다. proxy 는 fixture 모드면 통과(env 가 있을 때 login↔/admin 무한 리다이렉트 방지).
+
+## 함정
+- Next dev(Turbopack) 는 라우트 파일을 지운 직후 HMR 패닉→무한 새로고침이 날 수 있음 → dev 서버 끄고 `.next/dev` 삭제 후 재시작.
+- 폼은 defaultValue 를 쓰므로 원격 변경 시 반영되도록 form key 에 행 값들을 넣어 리마운트한다.
+- 성능 측정/실시간 e2e 스크립트(Playwright)는 레포 밖 임시 폴더에서 돌렸다. 테스트 문의는 email `e2e-test@pluck.co.kr` 로 넣고 activity_log 와 함께 지운다.

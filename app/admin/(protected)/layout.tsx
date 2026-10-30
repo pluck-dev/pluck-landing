@@ -1,31 +1,28 @@
 import { requireAdmin } from "@/lib/crm/auth";
-import { signOut } from "../login/actions";
-import { AdminNav } from "./nav";
+import { AdminShell } from "./_app/shell";
+import type { Seed } from "./_app/store";
 
+/**
+ * Rendered once per hard load: verifies the admin (local JWT check + is_admin()),
+ * then hands off to the client shell, which fetches data straight from Supabase.
+ */
 export default async function AdminAppLayout({ children }: { children: React.ReactNode }) {
   const admin = await requireAdmin();
+  let fixture: Seed | null = null;
+  if (admin.fixture) {
+    const f = await import("@/lib/crm/fixture");
+    fixture = {
+      inquiries: f.fixtureInquiries,
+      clients: f.fixtureClients,
+      projects: f.fixtureProjects,
+      tasks: f.fixtureTasks,
+      payments: f.fixturePayments,
+      activity: f.fixtureActivity,
+    };
+  }
   return (
-    <div className="adm-app">
-      <aside className="adm-side">
-        <a className="adm-brand" href="/admin">
-          pluck<span>®</span>
-          <small>관리자</small>
-        </a>
-        <AdminNav />
-        <div className="adm-side-foot">
-          <span className="adm-user" title={admin.email}>
-            {admin.email}
-          </span>
-          {admin.fixture ? (
-            <span className="adm-badge adm-badge-warn">데모 데이터</span>
-          ) : (
-            <form action={signOut}>
-              <button className="adm-link-btn">로그아웃</button>
-            </form>
-          )}
-        </div>
-      </aside>
-      <div className="adm-main">{children}</div>
-    </div>
+    <AdminShell email={admin.email} fixture={fixture}>
+      {children}
+    </AdminShell>
   );
 }
