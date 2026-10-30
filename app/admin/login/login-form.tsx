@@ -1,13 +1,14 @@
 "use client";
 
 import { useActionState } from "react";
-import { sendMagicLink, verifyLoginCode, type LoginState } from "./actions";
+import { sendMagicLink, signInWithPassword, verifyLoginCode, type LoginState } from "./actions";
 
 const idle: LoginState = { status: "idle" };
 
 export function LoginForm({ next }: { next: string }) {
   const [sent, sendAction, sending] = useActionState(sendMagicLink, idle);
   const [verified, verifyAction, verifying] = useActionState(verifyLoginCode, idle);
+  const [pw, pwAction, pwPending] = useActionState(signInWithPassword, idle);
   const email = sent.status === "sent" ? sent.email : verified.status === "error" ? verified.email : undefined;
   const showCode = sent.status === "sent" || (verified.status === "error" && verified.email);
 
@@ -55,28 +56,67 @@ export function LoginForm({ next }: { next: string }) {
   }
 
   return (
-    <form action={sendAction} className="adm-stack">
-      <input type="hidden" name="next" value={next} />
-      <label className="adm-label" htmlFor="email">
-        이메일
-      </label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        className="adm-input"
-        autoComplete="email"
-        defaultValue={sent.status === "error" ? sent.email : undefined}
-        required
-      />
-      {sent.status === "error" && (
-        <p className="adm-error" role="alert">
-          {sent.message}
-        </p>
-      )}
-      <button className="adm-btn adm-btn-primary" disabled={sending}>
-        {sending ? "보내는 중…" : "로그인 링크 받기"}
-      </button>
-    </form>
+    <div className="adm-stack">
+      <form action={pwAction} className="adm-stack">
+        <input type="hidden" name="next" value={next} />
+        <label className="adm-label" htmlFor="pw-email">
+          이메일
+        </label>
+        <input
+          id="pw-email"
+          name="email"
+          type="email"
+          className="adm-input"
+          autoComplete="username"
+          defaultValue={pw.status === "error" ? pw.email : undefined}
+          required
+        />
+        <label className="adm-label" htmlFor="password">
+          비밀번호
+        </label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          className="adm-input"
+          autoComplete="current-password"
+          required
+        />
+        {pw.status === "error" && (
+          <p className="adm-error" role="alert">
+            {pw.message}
+          </p>
+        )}
+        <button className="adm-btn adm-btn-primary" disabled={pwPending}>
+          {pwPending ? "확인 중…" : "로그인"}
+        </button>
+      </form>
+      <details className="adm-stack">
+        <summary className="adm-muted">비밀번호 없이 메일 링크로 로그인</summary>
+        <form action={sendAction} className="adm-stack">
+          <input type="hidden" name="next" value={next} />
+          <label className="adm-label" htmlFor="email">
+            이메일
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            className="adm-input"
+            autoComplete="email"
+            defaultValue={sent.status === "error" ? sent.email : undefined}
+            required
+          />
+          {sent.status === "error" && (
+            <p className="adm-error" role="alert">
+              {sent.message}
+            </p>
+          )}
+          <button className="adm-btn adm-btn-ghost" disabled={sending}>
+            {sending ? "보내는 중…" : "로그인 링크 받기"}
+          </button>
+        </form>
+      </details>
+    </div>
   );
 }

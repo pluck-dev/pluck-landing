@@ -32,7 +32,7 @@ export default async function AdminLoginPage({
         </p>
         <h1>관리자 로그인</h1>
         <p className="adm-muted">
-          등록된 관리자 이메일로 로그인 링크를 보내드려요. 비밀번호는 없어요.
+          관리자 이메일과 비밀번호로 로그인하세요. 메일 링크로도 로그인할 수 있어요.
         </p>
         {error && (
           <p className="adm-alert" role="alert">

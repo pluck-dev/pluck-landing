@@ -4,6 +4,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getAdmin, isAllowedAdminEmail } from "@/lib/crm/auth";
+import { createClient } from "@supabase/supabase-js";
+import { supabaseAnonKey, supabaseUrl } from "@/lib/supabase/env";
 import { createSessionClient } from "@/lib/supabase/server";
 import { SITE_URL } from "@/lib/site";
 
@@ -34,11 +36,17 @@ export async function sendMagicLink(
   if (await isAllowedAdminEmail(email)) {
     const origin = (await headers()).get("origin") || SITE_URL;
     const next = safeNext(formData.get("next"));
-    const { error } = await supabase.auth.signInWithOtp({
+    // Implicit flow (not PKCE): the link carries the session in the URL hash, so it
+    // works even when opened in another browser/device (e.g. the Gmail app).
+    // /admin/auth/confirm reads the hash in the browser and stores the cookie session.
+    const implicit = createClient(supabaseUrl(), supabaseAnonKey(), {
+      auth: { flowType: "implicit", persistSession: false, autoRefreshToken: false },
+    });
+    const { error } = await implicit.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${origin}/admin/auth/callback?next=${encodeURIComponent(next)}`,
-        shouldCreateUser: true,
+        emailRedirectTo: `${origin}/admin/auth/confirm?next=${encodeURIComponent(next)}`,
+        shouldCreateUser: false,
       },
     });
     if (error) {
@@ -68,6 +76,24 @@ export async function verifyLoginCode(
   if (error) {
     return { status: "error", message: "코드가 맞지 않거나 만료됐어요.", email };
   }
+  if (!(await getAdmin(supabase))) {
+    await supabase.auth.signOut();
+    redirect("/admin/login?error=forbidden");
+  }
+  redirect(safeNext(formData.get("next")));
+}
+
+export async function signInWithPassword(
+  _prev: LoginState,
+  formData: FormData,
+): Promise<LoginState> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const password = String(formData.get("password") ?? "");
+  if (!email || !password) return { status: "error", message: "이메일과 비밀번호를 입력해 주세요.", email };
+  const supabase = await createSessionClient();
+  if (!supabase) return { status: "error", message: NOT_CONFIGURED, email };
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return { status: "error", message: "이메일 또는 비밀번호가 맞지 않아요.", email };
   if (!(await getAdmin(supabase))) {
     await supabase.auth.signOut();
     redirect("/admin/login?error=forbidden");
