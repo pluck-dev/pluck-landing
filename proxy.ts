@@ -19,10 +19,13 @@ export async function proxy(request: NextRequest) {
     (path) => pathname === path || pathname.startsWith(`${path}/`),
   );
 
+  // Dev-only demo data: no session needed (and avoids a login ↔ /admin loop).
+  if (isCrmFixture()) return NextResponse.next();
+
   const url = supabaseUrl();
   const key = supabaseAnonKey();
   if (!url || !key) {
-    if (isPublic || isCrmFixture()) return NextResponse.next();
+    if (isPublic) return NextResponse.next();
     return redirectToLogin(request);
   }
 
@@ -47,11 +50,11 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Local ES256 verification against the cached JWKS (refreshes the session
+  // first when it is about to expire) — no Auth server round trip per request.
+  const { data } = await supabase.auth.getClaims();
 
-  if (!user && !isPublic) {
+  if (!data?.claims && !isPublic) {
     const redirect = redirectToLogin(request);
     response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
     return redirect;

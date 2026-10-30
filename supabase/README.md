@@ -1,12 +1,14 @@
 # Supabase: 문의 접수 + 관리자 CRM
 
-Project ref `shfdmlraappxyedacmok` · URL `https://shfdmlraappxyedacmok.supabase.co`
+Project ref `gpxbvtiyxgfquaiowspz` (Seoul, ap-northeast-2) · URL `https://gpxbvtiyxgfquaiowspz.supabase.co`
 
 ## 1. 스키마 적용 (SQL Editor)
 
 1. Supabase 대시보드 → SQL Editor → New query
 2. `supabase/migrations/0001_crm.sql` 전체를 붙여넣고 Run
-3. 여러 번 실행해도 안전함(idempotent). 스키마를 바꿀 땐 이 파일과 `lib/supabase/types.ts` 를 같이 고친다.
+3. 이어서 `supabase/migrations/0002_realtime.sql` 도 Run — /admin 실시간 갱신용으로 CRM 테이블을
+   `supabase_realtime` publication 에 추가한다. 빠지면 관리자 화면은 동작하지만 새 문의가 새로고침 전까지 안 보인다.
+4. 여러 번 실행해도 안전함(idempotent). 스키마를 바꿀 땐 이 파일과 `lib/supabase/types.ts` 를 같이 고친다.
 
 만들어지는 것: `admins`(seed `admin@pluck.co.kr`), `inquiries`, `clients`, `projects`,
 `project_tasks`, `project_payments`, `activity_log`, `is_admin()`, 입금 합계 트리거,

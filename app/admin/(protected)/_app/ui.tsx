@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { navigate, usePrefetch } from "./store";
 import {
   inquiryStatusLabels,
   projectStatusLabels,
@@ -72,35 +74,115 @@ export function Empty({ children }: { children: React.ReactNode }) {
   return <p className="adm-empty">{children}</p>;
 }
 
-export function FilterTabs({
-  base,
+/** Status filter chips with live counts; state lives in the URL (?status=). */
+export function FilterTabs<T extends string>({
   current,
   options,
-  extra,
+  counts,
+  total,
+  onChange,
 }: {
-  base: string;
-  current?: string;
-  options: [string, string][];
-  extra?: Record<string, string | undefined>;
+  current?: T;
+  options: readonly (readonly [T, string])[];
+  counts: Partial<Record<T, number>>;
+  total: number;
+  onChange: (value?: T) => void;
 }) {
-  const href = (value?: string) => {
-    const params = new URLSearchParams();
-    if (value) params.set("status", value);
-    for (const [key, v] of Object.entries(extra ?? {})) if (v) params.set(key, v);
-    const qs = params.toString();
-    return qs ? `${base}?${qs}` : base;
-  };
   return (
     <nav className="adm-tabs" aria-label="상태 필터">
-      <Link href={href()} aria-current={!current ? "page" : undefined}>
-        전체
-      </Link>
+      <button type="button" aria-current={!current ? "page" : undefined} onClick={() => onChange()}>
+        전체 <span className="adm-count">{total}</span>
+      </button>
       {options.map(([value, label]) => (
-        <Link key={value} href={href(value)} aria-current={current === value ? "page" : undefined}>
-          {label}
-        </Link>
+        <button
+          type="button"
+          key={value}
+          aria-current={current === value ? "page" : undefined}
+          onClick={() => onChange(value)}
+        >
+          {label} <span className="adm-count">{counts[value] ?? 0}</span>
+        </button>
       ))}
     </nav>
+  );
+}
+
+/**
+ * In-app link: plain <a> (cmd/ctrl-click and middle-click still open a tab), but a
+ * normal click is a client-side history push — no server round trip. Hover
+ * prefetches the detail's activity/attachments.
+ */
+export function AdminLink({
+  href,
+  children,
+  className,
+  ...rest
+}: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+  const prefetch = usePrefetch();
+  return (
+    <a
+      {...rest}
+      href={href}
+      className={className}
+      onMouseEnter={() => prefetch(href)}
+      onFocus={() => prefetch(href)}
+      onClick={(e) => {
+        rest.onClick?.(e);
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        navigate(href);
+      }}
+    >
+      {children}
+    </a>
+  );
+}
+
+export function SortTh<K extends string>({
+  label,
+  k,
+  sort,
+  onSort,
+  className,
+}: {
+  label: string;
+  k: K;
+  sort: { key: K; dir: 1 | -1 };
+  onSort: (key: K) => void;
+  className?: string;
+}) {
+  const active = sort.key === k;
+  return (
+    <th
+      scope="col"
+      className={className}
+      aria-sort={active ? (sort.dir === 1 ? "ascending" : "descending") : undefined}
+    >
+      <button type="button" className="adm-sort" onClick={() => onSort(k)}>
+        {label}
+        <span aria-hidden="true">{active ? (sort.dir === 1 ? "↑" : "↓") : ""}</span>
+      </button>
+    </th>
+  );
+}
+
+export function SkeletonRows({ rows = 8, cols = 5 }: { rows?: number; cols?: number }) {
+  return (
+    <div className="adm-table-wrap" aria-busy="true" aria-label="불러오는 중">
+      <table className="adm-table">
+        <tbody>
+          {Array.from({ length: rows }, (_, r) => (
+            <tr key={r}>
+              {Array.from({ length: cols }, (_, c) => (
+                <td key={c}>
+                  <span className="adm-skel" />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -144,7 +226,8 @@ function describe(entry: ActivityLogRow) {
   return parts.join(" · ");
 }
 
-export function ActivityList({ entries }: { entries: ActivityLogRow[] }) {
+export function ActivityList({ entries }: { entries?: ActivityLogRow[] }) {
+  if (!entries) return <span className="adm-skel adm-skel-block" aria-label="불러오는 중" />;
   if (!entries.length) return <Empty>기록이 아직 없어요.</Empty>;
   return (
     <ol className="adm-activity">
