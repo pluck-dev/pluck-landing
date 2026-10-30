@@ -40,6 +40,7 @@
 - setflow 라이브 캡처는 실사용자 작성자명이 보여 미사용 → build/shots 데모 데이터 캡처 사용.
 - v8-cal-lab(hptunermap) 데스크톱 헤더의 'CALL 010-…' 사업장 번호는 블러(1800px 캡처 기준 x1100,y12,205x54). 푸터·CTA 프레임은 번호가 보여 미사용.
 - gender-reveal 라이브는 로그인 벽 → 레포 복사본을 env 없이 로컬 실행(localStorage 데모 모드)해 캡처.
+- ai-dj(D:\dev\ai-dj-navigation, Tkinter): 레포 밖 하네스(C:\Temp\djcap\cap.py)로 App 을 library.sqlite3 **복사본** 데이터 폴더로 띄워 창 클라이언트 영역 1600x1000 을 PIL ImageGrab. .venv 는 _ctypes 없음 → .venv-package 사용, 하네스는 `if __name__=='__main__'` 필수(오디오 엔진 multiprocessing spawn 이 스크립트를 재실행). 재생 버튼은 누르지 않고 GUIDE 모드 transport 위치만 옮겨 전환 구간을 찍음(소리 없음). 덱 로드 후 PERFORM 패널을 열면 행이 걸려서 04 는 빈 덱 상태 캡처. 카피: 개발 중·규칙 기반(학습 모델 아님) 명시.
 - knife-sharpening(web-kal) 이미지는 레포 public/figma 의 Figma 시안 → alt 에 'Figma 시안' 명시.
 
 ## 디자인 커버 (실화면이 없거나 노출 불가한 프로젝트)

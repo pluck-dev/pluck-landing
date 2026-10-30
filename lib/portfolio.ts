@@ -1280,6 +1280,56 @@ const projectList: readonly PortfolioProject[] = [
     },
   },
   {
+    slug: "ai-dj",
+    name: "AI DJ Navigation",
+    category: "app",
+    years: [2026, 2026],
+    description:
+      "턴테이블·믹서·A/B 파형을 한 화면에 담은 Windows DJ 작업실. 규칙 기반 자동 믹싱과 외부 장비용 DJ 프롬프터를 실험 중.",
+    disciplines: ["Desktop app", "Audio DSP", "AI"],
+    status: "development",
+    cover: { src: "/work/ai-dj/cover.webp", alt: "AI DJ Navigation 실행 화면 - 두 덱 턴테이블과 믹서, A/B 파형 위로 프롬프터가 '저음 자리 교체'를 안내하는 전환 구간" },
+    gallery: [
+      { src: "/work/ai-dj/01.webp", alt: "두 덱에 무료 라이선스 곡을 불러온 DJ 작업실 - 실제 오디오 파형과 BPM·키 분석 라이브러리" },
+      { src: "/work/ai-dj/02.webp", alt: "믹싱 큐 - BPM·키·에너지 기준 로컬 선곡 순서 추천과 곡별 전환 방식" },
+      { src: "/work/ai-dj/03.webp", alt: "온라인 음원 - ccMixter 앱 내 검색 결과와 라이선스 표기, 가져오기 버튼" },
+      { src: "/work/ai-dj/04.webp", alt: "퍼포먼스 패널 - 4덱 로드, 키락·템포·EQ·필터·에코, 슬라이서·샘플러, 4스템 볼륨" },
+    ],
+    detail: {
+      oneLiner: "턴테이블과 믹서, 전환 안내를 한 화면에 담은 Windows DJ 작업실",
+      role: [
+        "기획",
+        "UI 디자인",
+        "데스크톱 앱 개발",
+        "오디오 엔진·DSP",
+      ],
+      stack: [
+        "Python",
+        "Tkinter",
+        "NumPy",
+        "SciPy",
+        "sounddevice",
+        "soundfile",
+        "SQLite",
+        "PyInstaller",
+      ],
+      overview:
+        "Windows에서 실행하는 DJ 작업실 앱입니다. 좌우 턴테이블과 중앙 믹서, 상단의 A/B 파형을 한 화면에 두고, 별도 오디오 프로세스에서 두 덱을 믹싱합니다. 아직 개발 중이며 완성된 전문가용 제품은 아닙니다.",
+      problem:
+        "DJ 전환을 연습하려면 언제 어떤 노브와 페이더를 움직일지 박자 단위로 알아야 하지만, 일반 DJ 소프트웨어는 조작 화면만 보여 줄 뿐 다음 동작을 안내하지 않습니다.",
+      solution:
+        "곡의 BPM과 첫 박 CUE를 기준으로 8가지 전환 템플릿(롱 페이드, 저음 교체, EQ 블렌드, 비트 컷, 드롭 교체, 필터·에코 아웃, 루프 연결)의 타임라인을 만들고, 프롬프터가 남은 박자와 함께 다음 조작을 보여 줍니다. AI 자동 믹싱 모드는 같은 계획을 샘플 단위 자동화로 앱의 오디오 엔진에 직접 적용합니다. 학습된 모델이 아니라 규칙 기반 자동 시연입니다.",
+      features: [
+        "두 덱 턴테이블·믹서와 실제 오디오 파형",
+        "8가지 전환 템플릿 기반 DJ 프롬프터",
+        "규칙 기반 AI 자동 믹싱(샘플 단위 자동화)",
+        "BPM·키·에너지 분석과 믹싱 큐 추천",
+        "ccMixter·Wikimedia·Internet Archive 무료 음원 검색과 해시 검증 가져오기",
+        "4덱·키락·스템·샘플러 퍼포먼스 패널",
+      ],
+    },
+  },
+  {
     slug: "adrock-driving",
     name: "운전면허 PLUS · 도로로",
     category: "app",
