@@ -12,7 +12,25 @@ export type ProjectImage = {
   src: string;
   /** Korean alt text describing the screen. */
   alt: string;
+  /**
+   * Brand-style explanation panel rendered by scripts/render-brand-covers.mjs
+   * (title may contain "
+"). `flow` joins the items as consecutive steps.
+   */
+  diagram?: {
+    title: string;
+    flow?: boolean;
+    items: readonly { title: string; text?: string }[];
+  };
 };
+
+/**
+ * "screenshot" = real product capture. "brand" = the unified PLUCK thumbnail
+ * generated from this data by scripts/render-brand-covers.mjs (no fake UI).
+ */
+export type CoverKind = "brand" | "screenshot";
+/** Line glyph on a brand cover. Defaults per category in the generator. */
+export type CoverMotif = "browser" | "phone" | "window" | "terminal" | "flow";
 
 export type ProjectDetail = {
   oneLiner: string;
@@ -36,7 +54,9 @@ export type PortfolioProject = {
   disciplines: readonly string[];
   status: ProjectStatus;
   url?: string;
-  /** Real screenshot when one exists; otherwise a designed cover (see MEMORY). */
+  coverKind: CoverKind;
+  coverMotif?: CoverMotif;
+  /** Real screenshot when one exists; otherwise a generated brand cover (see MEMORY). */
   cover: ProjectImage;
   gallery: readonly ProjectImage[];
   detail: ProjectDetail;
@@ -75,6 +95,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Web platform", "Admin", "Supabase"],
     status: "live",
     url: "https://rba-client.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/rba/cover.webp", alt: "ROTC 비즈니스 연합회 회원 웹 메인 히어로와 활동 지표" },
     gallery: [
       { src: "/work/rba/01.webp", alt: "회원 디렉토리·커뮤니티·행사 등 서비스를 모은 벤토 그리드" },
@@ -125,6 +146,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Website", "Commerce admin"],
     status: "live",
     url: "https://www.boryoung.co.kr/",
+    coverKind: "screenshot",
     cover: { src: "/work/boryoung/cover.webp", alt: "보령항공여행사 메인 - 계절별 골프여행 히어로 캐러셀" },
     gallery: [
       { src: "/work/boryoung/01.webp", alt: "여행상품 목록 - 목적지 검색, 카테고리·가격 필터와 상품 카드 그리드" },
@@ -175,6 +197,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Global website", "3D experience"],
     status: "live",
     url: "https://web-daeilsys-v2.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/dvia/cover.webp", alt: "대일시스템 메인 - 진동 파형 파티클 히어로" },
     gallery: [
       { src: "/work/dvia/01.webp", alt: "DVIA-MLP1000 제품 페이지 히어로 - 써모피셔 SEM 전용 액티브 제진 시스템" },
@@ -225,9 +248,14 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Operations", "Admin", "Messaging"],
     status: "live",
     url: "https://jeongfood.vercel.app/",
-    cover: { src: "/work/jeongfood/cover.webp", alt: "분류별 재고 막대와 거래처 단가 배지, 안내 문자 발송 완료 카드를 표현한 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/jeongfood/cover.webp", alt: "정푸드 관리 시스템 PLUCK 브랜드 썸네일 — 식자재 유통사의 재고·단가·안내 문자 운영 시스템" },
     gallery: [
-      { src: "/work/jeongfood/01.webp", alt: "재고, 거래처 단가, 안내 문자, 권한·동의 업무가 하나의 어드민으로 모인 구조를 정리한 표" },
+      {
+        src: "/work/jeongfood/01.webp",
+        alt: "흩어진 CSV와 수작업 문자를 재고·거래처 단가·안내 문자·권한 네 가지 업무로 묶은 구조 설명 패널",
+        diagram: {"title": "흩어진 CSV와 수작업 문자를\n하나의 어드민으로", "items": [{"title": "재고", "text": "CSV 수동 관리에서 대·중분류 상품·재고 DB로"}, {"title": "거래처 단가", "text": "거래처마다 다른 단가를 시스템에서 관리"}, {"title": "안내 문자", "text": "단가표 문자를 발송하고 이력으로 기록"}, {"title": "권한·동의", "text": "역할 기반 관리자 권한과 수신 동의 절차"}]},
+      },
     ],
     detail: {
       oneLiner: "식자재 유통사의 재고·단가·안내 문자 운영 시스템",
@@ -272,11 +300,16 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Dealer web", "Admin", "Settlement"],
     status: "live",
     url: "https://client-roan-six.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/dealer-settlement/cover.webp", alt: "딜러 웹 데스크톱 화면 - 소개 수수료 등급표와 추천 코드 카드 옆에 샘플 데이터로 채운 모바일 대시보드 미리보기" },
     gallery: [
       { src: "/work/dealer-settlement/01.webp", alt: "딜러 모바일 웹 3장 - 추천 수수료 온보딩, 샘플 데이터 홈 대시보드, 딜러 등록 신청 양식" },
       { src: "/work/dealer-settlement/02.webp", alt: "딜러 모바일 웹의 내 계약 목록, 상태·정산 필터 바텀시트, 갱신 예정월 필터 화면 (테스트 데이터)" },
-      { src: "/work/dealer-settlement/03.webp", alt: "정산대기, 월말정산, 지급보류·미지급, 정산완료로 이어지는 정산 상태 모델 다이어그램" },
+      {
+        src: "/work/dealer-settlement/03.webp",
+        alt: "정산대기, 월말정산, 지급보류·미지급, 정산완료로 이어지는 정산 상태 모델 설명 패널",
+        diagram: {"title": "정산 상태를\n데이터로 정의하다", "flow": true, "items": [{"title": "정산대기", "text": "계약이 등록되면 수수료 정산 대상"}, {"title": "월말정산", "text": "월 단위로 모아 한 번에 처리"}, {"title": "지급보류·미지급", "text": "확인이 필요한 건은 따로 분리"}, {"title": "정산완료", "text": "지급이 끝난 건은 이력으로 남음"}]},
+      },
     ],
     detail: {
       oneLiner: "딜러 계약·추천·수수료 정산을 한 곳에서",
@@ -322,7 +355,8 @@ const projectList: readonly PortfolioProject[] = [
       "방문간호·돌봄 기업을 위한 고객 웹사이트, 교육 플랫폼, 통합 관리자를 잇는 플랫폼.",
     disciplines: ["Website", "LMS", "Admin"],
     status: "development",
-    cover: { src: "/work/homecare-platform/cover.webp", alt: "상담·평가·플랜 흐름과 서비스 찾기 웹, 교육 과정 LMS, 상담 접수 어드민 카드를 표현한 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/homecare-platform/cover.webp", alt: "홈헬스케어 통합 플랫폼 PLUCK 브랜드 썸네일 — 방문간호·돌봄 기업의 웹·교육·관리를 하나로" },
     gallery: [],
     detail: {
       oneLiner: "방문간호·돌봄 기업의 웹·교육·관리를 하나로",
@@ -369,6 +403,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Brand site", "E-commerce", "Interaction"],
     status: "live",
     url: "https://web-lilac-rho-78.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/thousand/cover.webp", alt: "따뜻한 조명의 유리 진열장 안에 파이 네 종이 놓이고 하단에 선택한 파이와 담기 버튼이 보이는 THOUSAND 메인 화면" },
     gallery: [
       { src: "/work/thousand/01.webp", alt: "진열장 배경을 흐리게 두고 치즈 블루베리 파이 정보와 한 조각 담기 버튼을 띄운 상품 미리보기 창" },
@@ -419,6 +454,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Community", "Web app", "Supabase"],
     status: "live",
     url: "https://abroadnbroad.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/abroadnbroad/cover.webp", alt: "ABROAD&BROAD 메인 - 지역 선택 헤더와 자유토론장·커뮤니티·구인구직·부동산 탭, 뜨거운 토론과 행사 캘린더 섹션" },
     gallery: [
       { src: "/work/abroadnbroad/01.webp", alt: "글로벌 커뮤니티 게시글 카드 목록과 지역 기반 만남 모임 카드 섹션" },
@@ -467,6 +503,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Brand site", "Reservation", "Admin"],
     status: "live",
     url: "https://hptunermap.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/v8-cal-lab/cover.webp", alt: "어두운 엔진룸 사진 위에 'V8, 그대로.' 붉은 헤드라인과 예약 버튼이 있는 V8 Cal Lab 메인 히어로" },
     gallery: [
       { src: "/work/v8-cal-lab/01.webp", alt: "엔진 사진 배경의 '흐름을 다듬다' 캘리브레이션 섹션" },
@@ -516,7 +553,9 @@ const projectList: readonly PortfolioProject[] = [
       "짧은 음성 녹음으로 부모의 목소리를 복제해 동화를 읽어주는 AI 동화책 앱.",
     disciplines: ["Mobile app", "Voice AI", "Backend"],
     status: "development",
-    cover: { src: "/work/lulla/cover.webp", alt: "동화 재생 화면과 음성 녹음 카드를 표현한 Lulla 디자인 커버" },
+    coverKind: "brand",
+    coverMotif: "phone",
+    cover: { src: "/work/lulla/cover.webp", alt: "Lulla · AI 동화책 PLUCK 브랜드 썸네일 — 부모의 목소리로 읽어주는 AI 동화" },
     gallery: [],
     detail: {
       oneLiner: "부모의 목소리로 읽어주는 AI 동화",
@@ -561,7 +600,8 @@ const projectList: readonly PortfolioProject[] = [
       "자동차 튜닝 파츠 브랜드의 자사몰. 차종 적합성 기반 스토어프론트와 주문·재고 관리자를 한 코드베이스로.",
     disciplines: ["E-commerce", "Admin", "PostgreSQL"],
     status: "development",
-    cover: { src: "/work/d2c-store/cover.webp", alt: "차종 필터가 있는 파츠 상품 그리드와 주문·재고 관리자 패널을 표현한 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/d2c-store/cover.webp", alt: "자동차용품 자사몰 PLUCK 브랜드 썸네일 — 차종에 맞는 파츠를 파는 자체 개발 쇼핑몰" },
     gallery: [],
     detail: {
       oneLiner: "차종에 맞는 파츠를 파는 자체 개발 쇼핑몰",
@@ -606,6 +646,7 @@ const projectList: readonly PortfolioProject[] = [
       "칼갈이 신청부터 수거·배송, 구독, 쿠폰까지 담은 모바일 웹 서비스.",
     disciplines: ["Mobile web", "Supabase", "Subscription"],
     status: "case",
+    coverKind: "screenshot",
     cover: { src: "/work/knife-sharpening/cover.webp", alt: "Figma 시안 화면 3장 - 내 정보 메인과 칼갈이 신청 배너, 보유 쿠폰 목록, 약관 동의 시트" },
     gallery: [],
     detail: {
@@ -650,6 +691,7 @@ const projectList: readonly PortfolioProject[] = [
       "AI 의사결정 시스템 도입을 설명하는 웹 슬라이드 제안서와 인쇄용 버전.",
     disciplines: ["Interactive deck", "Print"],
     status: "case",
+    coverKind: "screenshot",
     cover: { src: "/work/proposal-brochure/cover.webp", alt: "웹 슬라이드 제안서 표지 - PLUCK 블록 로고와 'AI 의사결정 지원 시스템 구축 제안서' 타이틀" },
     gallery: [
       { src: "/work/proposal-brochure/01.webp", alt: "제안 개요 슬라이드 - 결정 속도 개선, 자료 정리·비교 기준·쉬운 설명, 최종 판단은 사람 세 가지 핵심 카드" },
@@ -698,6 +740,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Community", "Web service"],
     status: "live",
     url: "https://www.myotgiya.com/",
+    coverKind: "screenshot",
     cover: { src: "/work/myotgiya/cover.webp", alt: "몇기야 메인 - 기수별 커뮤니티 히어로 배너와 동문찾기·커뮤니티·모임·비즈니스 바로가기" },
     gallery: [
       { src: "/work/myotgiya/02.webp", alt: "동문 비즈니스 페이지 - 업종·지역 필터와 로그인 안내" },
@@ -746,6 +789,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Content automation", "Admin", "AI"],
     status: "live",
     url: "https://seo-engine-web-two.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/seo-engine/cover.webp", alt: "SEO 엔진 관리자 블로그 대시보드 - 수집 소스·신규 키워드·검토대기·발행완료·추정 수익 KPI와 인기 글 TOP 5" },
     gallery: [
       { src: "/work/seo-engine/01.webp", alt: "주제 큐 화면 - 트렌드·정보·제휴 탭과 주제별 콘텐츠 생성·카드뉴스 생성 버튼 카드" },
@@ -799,6 +843,7 @@ const projectList: readonly PortfolioProject[] = [
       "모든 개봉 결과를 Provably-Fair 알고리즘과 Kaia 블록체인으로 검증하는 랜덤박스 커머스.",
     disciplines: ["Commerce", "Blockchain", "Admin"],
     status: "development",
+    coverKind: "screenshot",
     cover: { src: "/work/boxon/cover.webp", alt: "boxon 웹 홈 - 옐로 히어로 'OPEN YOUR NEXT.'와 유리 선물상자 오브젝트, 카테고리 탭과 오늘의 발견 박스 카드" },
     gallery: [
       { src: "/work/boxon/01.webp", alt: "박스 상세 화면 - 스타터 컬렉션 박스 이미지, 가격 19,900원, 구성·확률 안내 버튼" },
@@ -852,6 +897,7 @@ const projectList: readonly PortfolioProject[] = [
       "웹툰 에피소드 위에 배우가 대사를 직접 녹음해 자신만의 더빙 버전을 만드는 보이스 스튜디오.",
     disciplines: ["Web app", "Audio", "AI image"],
     status: "development",
+    coverKind: "screenshot",
     cover: { src: "/work/webtoon-voice/cover.webp", alt: "AI 웹툰을 내 목소리로라는 헤드라인과 AI 생성 컷, 음성 파형이 담긴 앱 화면 목업이 있는 더빙고 웹 메인" },
     gallery: [
       { src: "/work/webtoon-voice/01.webp", alt: "웹툰 컷 이미지와 대사 플레이어 옆에 컷별 녹음 진행, 전체 영상 미리보기, 영상 생성 패널이 있는 에피소드 녹음 스튜디오" },
@@ -903,6 +949,7 @@ const projectList: readonly PortfolioProject[] = [
       "실거래·매물·공고·정책을 지도 위에 모아, 내 조건으로 갈 수 있는 집을 보여주는 주거 탐색 서비스.",
     disciplines: ["Map service", "Public data"],
     status: "development",
+    coverKind: "screenshot",
     cover: { src: "/work/seoul-home/cover.webp", alt: "서울·수도권 지도 위에 공고와 매물 건수가 표시되고 왼쪽에 마감 임박 공고 목록이 놓인 집 찾기 작업 화면" },
     gallery: [
       { src: "/work/seoul-home/01.webp", alt: "정비구역을 진행 단계별 빗금으로 표시하고 구역 정보 팝업과 레이어 패널을 연 지도 화면" },
@@ -951,6 +998,7 @@ const projectList: readonly PortfolioProject[] = [
       "스토어프론트, 자체 API, 관리자 화면을 하나의 코드베이스로 묶은 자동차용품 전문 D2C 쇼핑몰.",
     disciplines: ["Commerce", "API", "Admin"],
     status: "development",
+    coverKind: "screenshot",
     cover: { src: "/work/car-store/cover.webp", alt: "튜닝 차량 사진 위에 MOVE DIFFERENT 헤드라인과 전체 컬렉션, 차량 맞춤 찾기 버튼이 놓인 ONTHEWAY 쇼핑몰 메인" },
     gallery: [
       { src: "/work/car-store/01.webp", alt: "Every line has a purpose 헤드라인 아래 바디킷, 범퍼, 스포일러, 디퓨저 카테고리 카드가 이어지는 섹션" },
@@ -1002,6 +1050,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["PWA", "Web push"],
     status: "live",
     url: "https://house-parking.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/villa-parking/cover.webp", alt: "빌라 3D 일러스트와 출차하기 버튼이 있는 홈, 차량 위치가 표시된 주차장 평면, 자리 상세 시트를 담은 모바일 화면 3장" },
     gallery: [
       { src: "/work/villa-parking/01.webp", alt: "왼쪽 주차 구역의 빈자리 표시, 내 차량 등록·차종 선택, 방문 차량 등록 화면을 나란히 놓은 모바일 화면 3장" },
@@ -1051,6 +1100,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Event page", "Mobile web", "Supabase"],
     status: "live",
     url: "https://gender-reveal-eta-wheat.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/gender-reveal/cover.webp", alt: "데모 모드 모바일 화면 3장 - 태명 입력, 의사 전용 성별 선택, 카운트다운이 있는 이벤트 페이지" },
     gallery: [
       { src: "/work/gender-reveal/01.webp", alt: "데모 모드 모바일 화면 3장 - 성별 확인 요청 완료, 봉인 완료, IT'S A GIRL 공개 화면" },
@@ -1096,6 +1146,7 @@ const projectList: readonly PortfolioProject[] = [
       "상품, 주문, 시즌, 정산까지 농수산물 위탁판매 운영을 관리하는 어드민.",
     disciplines: ["Admin", "Dashboard"],
     status: "development",
+    coverKind: "screenshot",
     cover: { src: "/work/farm-sales/cover.webp", alt: "도매시장 경매 데이터와 검색 트렌드를 바탕으로 추천 품목을 원형 지표 카드로 보여주는 시장 분석 화면" },
     gallery: [
       { src: "/work/farm-sales/01.webp", alt: "품목별 검색 트렌드 선 그래프와 관심도 상승 TOP 10 막대 그래프, 카테고리별 분포 도넛 차트" },
@@ -1147,6 +1198,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Flutter", "Fitness"],
     status: "live",
     url: "https://setflow-app.vercel.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/setflow/cover.webp", alt: "Setflow 모바일 화면 3종: 오늘 운동 홈, 세트 기록, 함께 운동 레이스" },
     gallery: [
       { src: "/work/setflow/01.webp", alt: "루틴 편집, 휴식 타이머가 켜진 세트 기록, 내 루틴 목록" },
@@ -1196,6 +1248,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Flutter", "Firebase", "AI"],
     status: "development",
     url: "https://naengkeep-support.web.app/",
+    coverKind: "screenshot",
     cover: { src: "/work/naengkeep/cover.webp", alt: "냉킵 모바일 화면 3종: 시작 화면, 나의 작은 냉장고, 재료 넣기 선택" },
     gallery: [
       { src: "/work/naengkeep/01.webp", alt: "재료 상세 시트(보관 칸·참고 기간)와 월간 장보기 가계부" },
@@ -1242,6 +1295,7 @@ const projectList: readonly PortfolioProject[] = [
       "조선의 신분·직업·관직을 카드로 수집하는 팩 오프닝 앱. Unity 이펙트를 Flutter에 연결.",
     disciplines: ["Flutter", "Unity"],
     status: "development",
+    coverKind: "screenshot",
     cover: { src: "/work/joseon/cover.webp", alt: "붉은 봉인팩이 열리며 조선풍 인물 카드들이 금빛 이펙트와 함께 쏟아지는 키 비주얼" },
     gallery: [
       { src: "/work/joseon/01.webp", alt: "모바일 4화면 — 왕실 봉인팩 민팅, 내 컬렉션, 카드 대결, 마켓 탭" },
@@ -1288,6 +1342,7 @@ const projectList: readonly PortfolioProject[] = [
       "턴테이블·믹서·A/B 파형을 한 화면에 담은 Windows DJ 작업실. 규칙 기반 자동 믹싱과 외부 장비용 DJ 프롬프터를 실험 중.",
     disciplines: ["Desktop app", "Audio DSP", "AI"],
     status: "development",
+    coverKind: "screenshot",
     cover: { src: "/work/ai-dj/cover.webp", alt: "AI DJ Navigation 실행 화면 - 두 덱 턴테이블과 믹서, A/B 파형 위로 프롬프터가 '저음 자리 교체'를 안내하는 전환 구간" },
     gallery: [
       { src: "/work/ai-dj/01.webp", alt: "두 덱에 무료 라이선스 곡을 불러온 DJ 작업실 - 실제 오디오 파형과 BPM·키 분석 라이브러리" },
@@ -1339,6 +1394,7 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Android", "Webview", "Next.js"],
     status: "live",
     url: "https://play.google.com/store/apps/details?id=com.adrock.driverlicense300",
+    coverKind: "screenshot",
     cover: { src: "/work/adrock-driving/cover.webp", alt: "Google Play 스토어 스크린샷 3장 - 모의고사, 유형별 학습하기, 속성암기 화면" },
     gallery: [
       { src: "/work/adrock-driving/01.webp", alt: "Google Play 스토어 스크린샷 2장 - 오답노트·즐겨찾기 복습하기, 운전면허 학원찾기 화면" },
@@ -1383,7 +1439,8 @@ const projectList: readonly PortfolioProject[] = [
       "사주·타로·점성술·수비학·AI 손금과 관상을 한 앱에 담은 글로벌 영성 웰니스 앱.",
     disciplines: ["Mobile app", "LLM", "Vision AI"],
     status: "development",
-    cover: { src: "/work/omen/cover.webp", alt: "사주 네 기둥과 사주·타로·점성술·손금 메뉴 타일, 타로 카드를 표현한 OMEN 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/omen/cover.webp", alt: "OMEN PLUCK 브랜드 썸네일 — 한국의 사주를 글로벌 웰니스 앱으로" },
     gallery: [],
     detail: {
       oneLiner: "한국의 사주를 글로벌 웰니스 앱으로",
@@ -1428,7 +1485,8 @@ const projectList: readonly PortfolioProject[] = [
       "요양보호사와 어르신의 대화를 음성 인식으로 받아 건강 기록과 리포트로 정리하는 앱.",
     disciplines: ["Mobile app", "Speech", "RAG"],
     status: "development",
-    cover: { src: "/work/care-helper/cover.webp", alt: "음성 녹음 버튼과 대화 말풍선, 혈압·혈당·통증 기록 카드를 표현한 케어헬퍼 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/care-helper/cover.webp", alt: "케어헬퍼 PLUCK 브랜드 썸네일 — 말로 하는 건강 체크를 기록으로" },
     gallery: [],
     detail: {
       oneLiner: "말로 하는 건강 체크를 기록으로",
@@ -1471,10 +1529,19 @@ const projectList: readonly PortfolioProject[] = [
       "여러 PC의 Codex·Claude Code 세션을 모바일에서 음성으로 지시하고 결과를 확인하는 리모트.",
     disciplines: ["Mobile", "Voice", "Dev tools"],
     status: "development",
-    cover: { src: "/work/voxcli/cover.webp", alt: "마이크 버튼과 음성 파형, 완료 결과 카드가 있는 VoxCLI 모바일 화면과 Hub·Agent 노드를 표현한 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/voxcli/cover.webp", alt: "VoxCLI PLUCK 브랜드 썸네일 — 폰에서 말로 여러 PC의 Codex·Claude 세션을 지휘한다" },
     gallery: [
-      { src: "/work/voxcli/01.webp", alt: "Remote 앱에서 Hub, 각 PC의 Agent를 거쳐 결과 카드로 돌아오는 흐름 다이어그램" },
-      { src: "/work/voxcli/02.webp", alt: "위험 명령 차단, 승인 후 실행, 운전 모드로 구성된 안전 정책 설명 카드" },
+      {
+        src: "/work/voxcli/01.webp",
+        alt: "Remote 앱에서 Hub, 각 PC의 Agent를 거쳐 결과 카드로 돌아오는 흐름 설명 패널",
+        diagram: {"title": "폰에서 Hub를 거쳐\n각 PC의 Agent로", "flow": true, "items": [{"title": "Remote 앱", "text": "PC와 CLI 세션을 고르고 음성이나 텍스트로 지시"}, {"title": "Hub", "text": "WebSocket으로 요청을 라우팅하고 정책을 검사"}, {"title": "Agent", "text": "PC마다 상주하며 tmux 세션에 프롬프트 주입"}, {"title": "결과 카드", "text": "터미널 출력과 요약이 앱으로 돌아옴"}]},
+      },
+      {
+        src: "/work/voxcli/02.webp",
+        alt: "위험 명령 차단, 승인 후 실행, 운전 모드로 구성된 안전 정책 설명 패널",
+        diagram: {"title": "말로 시키되,\n위험한 일은 멈춘다", "items": [{"title": "위험 명령 차단", "text": "배포, DB 마이그레이션, 강제 푸시 같은 명령은 정책 패키지가 걸러냄"}, {"title": "승인 후 실행", "text": "확인이 필요한 작업은 앱에서 한 번 더 승인"}, {"title": "운전 모드", "text": "화면을 보지 않아도 음성 중심으로 상태를 알림"}]},
+      },
     ],
     detail: {
       oneLiner: "폰에서 말로 여러 PC의 Codex·Claude 세션을 지휘한다",
@@ -1521,6 +1588,7 @@ const projectList: readonly PortfolioProject[] = [
       "스크립트, 스토리보드, TTS, 렌더링까지 Claude Code와 Remotion으로 잇는 영상 제작 파이프라인.",
     disciplines: ["Remotion", "Agents"],
     status: "case",
+    coverKind: "screenshot",
     cover: { src: "/work/video-kit/cover.webp", alt: "파이프라인으로 렌더링한 '차트해부학 Pattern Master' 시즌2 쇼츠 프레임 3컷 — W 패턴 비교, 가짜 돌파 판별, 리테스트 해부" },
     gallery: [
       { src: "/work/video-kit/01.webp", alt: "롱폼 차트 타이밍 에피소드 렌더 프레임 — 1단계 추세 파악, 상승 추세 캔들 차트와 이동평균선" },
@@ -1570,10 +1638,20 @@ const projectList: readonly PortfolioProject[] = [
       "레퍼런스 검색부터 이미지 생성까지, 브랜드 가이드에 맞춘 썸네일을 만드는 Claude Code 스킬.",
     disciplines: ["Image generation", "Agents"],
     status: "case",
-    cover: { src: "/work/thumbnail/cover.webp", alt: "A부터 D까지 네 가지 썸네일 시안을 2x2 그리드로 비교하는 모습을 표현한 디자인 커버" },
+    coverKind: "brand",
+    coverMotif: "window",
+    cover: { src: "/work/thumbnail/cover.webp", alt: "YouTube 썸네일 생성기 PLUCK 브랜드 썸네일 — 주제 하나로 썸네일 시안 네 개를 뽑는 스킬" },
     gallery: [
-      { src: "/work/thumbnail/01.webp", alt: "조사, 콘셉트, 레퍼런스, 생성, 2x2 비교로 이어지는 썸네일 제작 파이프라인 다이어그램" },
-      { src: "/work/thumbnail/02.webp", alt: "search, download, generate, create-grid 네 개의 CLI 스크립트 역할 설명" },
+      {
+        src: "/work/thumbnail/01.webp",
+        alt: "조사, 콘셉트, 레퍼런스, 생성, 2x2 비교로 이어지는 썸네일 제작 파이프라인 설명 패널",
+        diagram: {"title": "주제 하나에서\n네 장의 시안까지", "flow": true, "items": [{"title": "조사", "text": "비슷한 영상의 상위 썸네일 수집"}, {"title": "콘셉트 A–D", "text": "호기심·페인 포인트 관점의 네 방향"}, {"title": "레퍼런스", "text": "콘셉트마다 참고 이미지 수집"}, {"title": "생성", "text": "브랜드 가이드를 반영해 병렬 생성"}, {"title": "2×2 비교", "text": "그리드로 비교하고 리파인"}]},
+      },
+      {
+        src: "/work/thumbnail/02.webp",
+        alt: "search, download, generate, create-grid 네 개의 CLI 스크립트 역할 설명 패널",
+        diagram: {"title": "에이전트가 부르는\n작은 CLI 도구들", "items": [{"title": "search", "text": "유사 영상·썸네일 조사"}, {"title": "download", "text": "레퍼런스 이미지 저장"}, {"title": "generate", "text": "콘셉트별 이미지 생성"}, {"title": "create-grid", "text": "A·B·C·D 2×2 비교 그리드"}]},
+      },
     ],
     detail: {
       oneLiner: "주제 하나로 썸네일 시안 네 개를 뽑는 스킬",
@@ -1614,10 +1692,15 @@ const projectList: readonly PortfolioProject[] = [
       "매일 아침 공모전 공고를 조사해 새로운 후보와 변경점을 HTML 리포트로 정리하는 AI 모니터.",
     disciplines: ["Scheduled agent", "Reporting"],
     status: "case",
-    cover: { src: "/work/contest-watch/cover.webp", alt: "09:00 KST 스탬프와 D-day 배지, 신규·마감 변경 상태가 표시된 공모전 아침 리포트를 표현한 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/contest-watch/cover.webp", alt: "공모전 모니터 PLUCK 브랜드 썸네일 — 매일 아침 9시, 공모전을 대신 찾아 정리하는 AI" },
     gallery: [
       { src: "/work/contest-watch/01.webp", alt: "2026-10-29 공모전 모니터 HTML 리포트 상단 — 오늘의 요약, 우선순위, 전일 대비 변화(신규·마감 변경·D-7/D-1) 표" },
-      { src: "/work/contest-watch/02.webp", alt: "예약 실행, 후보 탐색, 원문 검증, 전일 비교, HTML 리포트로 이어지는 매일의 실행 흐름 다이어그램" },
+      {
+        src: "/work/contest-watch/02.webp",
+        alt: "예약 실행, 후보 탐색, 원문 검증, 전일 비교, HTML 리포트로 이어지는 매일의 실행 흐름 설명 패널",
+        diagram: {"title": "찾고, 검증하고,\n어제와 비교한다", "flow": true, "items": [{"title": "아침 9시 실행", "text": "작업 스케줄러가 읽기 전용·웹 검색 모드로 실행"}, {"title": "후보 탐색", "text": "공모전 포털에서 개발·AI 공고 탐색"}, {"title": "원문 검증", "text": "주최 기관 원문으로 마감·자격·상금 확인"}, {"title": "전일 비교", "text": "신규·마감 변경·임박·종료 구분"}, {"title": "HTML 리포트", "text": "날짜별 리포트와 최신본 저장"}]},
+      },
     ],
     detail: {
       oneLiner: "매일 아침 9시, 공모전을 대신 찾아 정리하는 AI",
@@ -1658,10 +1741,20 @@ const projectList: readonly PortfolioProject[] = [
       "Discord 채널을 Codex CLI와 원격 PC 작업 공간으로 바꾸는 개발 운영 봇.",
     disciplines: ["Dev ops", "Agents", "Bot"],
     status: "case",
-    cover: { src: "/work/discord-bridge/cover.webp", alt: "Discord 채널 대화 속 !git status 명령과 파란 진행 카드, 초록 완료 카드를 표현한 디자인 커버" },
+    coverKind: "brand",
+    coverMotif: "terminal",
+    cover: { src: "/work/discord-bridge/cover.webp", alt: "Discord–Codex Bridge PLUCK 브랜드 썸네일 — Discord 채널을 원격 PC의 AI 작업실로 바꾸는 봇" },
     gallery: [
-      { src: "/work/discord-bridge/01.webp", alt: "일반 대화, ! 셸 명령, 슬래시 명령의 세 가지 실행 경로를 설명하는 다이어그램" },
-      { src: "/work/discord-bridge/02.webp", alt: "Discord 채널마다 서로 다른 작업 폴더와 Codex 세션이 연결되는 구조 다이어그램" },
+      {
+        src: "/work/discord-bridge/01.webp",
+        alt: "일반 대화, ! 셸 명령, 슬래시 명령의 세 가지 실행 경로 설명 패널",
+        diagram: {"title": "메시지 하나로,\n세 가지 실행 경로", "items": [{"title": "일반 대화", "text": "접두어 없는 메시지는 Codex 프롬프트가 되어 채널 세션에서 이어짐"}, {"title": "! 명령", "text": "느낌표로 시작하면 PowerShell로 그대로 실행, !codex는 실제 CLI"}, {"title": "슬래시 명령", "text": "이미지·파일 첨부와 함께 묻거나 작업 폴더를 바꾸고 세션 초기화"}]},
+      },
+      {
+        src: "/work/discord-bridge/02.webp",
+        alt: "Discord 채널마다 서로 다른 작업 폴더와 Codex 세션이 연결되는 구조 설명 패널",
+        diagram: {"title": "채널마다 다른 폴더,\n다른 Codex 세션", "items": [{"title": "채널 = 작업 공간", "text": "채널 ID마다 작업 폴더를 따로 기억"}, {"title": "세션 유지", "text": "채널별 Codex 세션 ID를 이어 붙여 대화 맥락 유지"}, {"title": "재시작 후에도", "text": "/start 로 폴더 변경, /reset 으로 세션 초기화"}]},
+      },
     ],
     detail: {
       oneLiner: "Discord 채널을 원격 PC의 AI 작업실로 바꾸는 봇",
@@ -1704,10 +1797,20 @@ const projectList: readonly PortfolioProject[] = [
       "오픈소스 Figma MCP Bridge에 디자인→웹 구현을 위한 정밀 데이터 추출을 더한 포크.",
     disciplines: ["MCP", "Design to code"],
     status: "case",
-    cover: { src: "/work/figma-mcp/cover.webp", alt: "Figma 프레임에서 선택한 카드 컴포넌트와 MCP로 추출된 정밀 디자인 데이터 JSON을 나란히 표현한 디자인 커버" },
+    coverKind: "brand",
+    coverMotif: "window",
+    cover: { src: "/work/figma-mcp/cover.webp", alt: "Figma MCP Bridge 확장 PLUCK 브랜드 썸네일 — Figma 디자인을 웹으로 옮길 때 숫자까지 정확하게" },
     gallery: [
-      { src: "/work/figma-mcp/01.webp", alt: "면별 테두리, 혼합 텍스트, 변수 바인딩, 레이아웃 제약을 보존하는 확장 내용을 정리한 표" },
-      { src: "/work/figma-mcp/02.webp", alt: "get_design_context, PNG·SVG·PDF 내보내기, 안전장치 세 가지 추가 도구 설명 카드" },
+      {
+        src: "/work/figma-mcp/01.webp",
+        alt: "면별 테두리, 혼합 텍스트, 변수 바인딩, 레이아웃 제약을 보존하는 확장 내용 설명 패널",
+        diagram: {"title": "비슷하게가 아니라,\n같은 수치로", "items": [{"title": "면별 테두리", "text": "위·오른쪽·아래·왼쪽을 각각 보존"}, {"title": "혼합 텍스트", "text": "한 문단 안의 굵기·색 범위를 그대로"}, {"title": "변수 바인딩", "text": "색·간격이 어떤 토큰에 묶였는지"}, {"title": "레이아웃 제약", "text": "최소·최대 너비와 사이징 규칙"}]},
+      },
+      {
+        src: "/work/figma-mcp/02.webp",
+        alt: "get_design_context, PNG·SVG·PDF 내보내기, 안전장치 세 가지 추가 도구 설명 패널",
+        diagram: {"title": "에이전트가 쓰는\n새 도구들", "items": [{"title": "get_design_context", "text": "선택을 바꾸지 않고 특정 노드를 깊게 읽어 CSS·변수·SVG 후보 반환"}, {"title": "PNG·SVG·PDF 내보내기", "text": "에셋을 파일로 내보내고 크기와 해시를 함께 기록"}, {"title": "안전장치", "text": "내보내기 크기 제한, 타임아웃, 회귀 테스트"}]},
+      },
     ],
     detail: {
       oneLiner: "Figma 디자인을 웹으로 옮길 때 숫자까지 정확하게",
@@ -1751,6 +1854,7 @@ const projectList: readonly PortfolioProject[] = [
       "두 손의 손가락 프레임 안에 실시간 필터나 AI로 변환한 영상을 여는 인터랙션 스튜디오.",
     disciplines: ["MediaPipe", "Generative video"],
     status: "case",
+    coverKind: "screenshot",
     cover: { src: "/work/handstage/cover.webp", alt: "가상 프레임 데모 — 네 꼭짓점 손가락 프레임 안에 Aurora 필터가 열린 HandStage 라이브 화면" },
     gallery: [
       { src: "/work/handstage/02.webp", alt: "Prism 필터로 전환한 상태 — 기울어진 손가락 프레임 안에 붉은 그라데이션 효과" },
@@ -1799,7 +1903,8 @@ const projectList: readonly PortfolioProject[] = [
       "말로 부르면 말로 답하고 PC 작업까지 수행하는 로컬 AI 음성 비서. API 키 대신 CLI 구독 인증을 사용.",
     disciplines: ["Voice agent", "Local STT", "HUD"],
     status: "case",
-    cover: { src: "/work/jarvis/cover.webp", alt: "음성 입력부터 HUD 반응까지 4단계 흐름과 아크 리액터 형태의 원형 HUD를 표현한 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/jarvis/cover.webp", alt: "JARVIS 음성 비서 PLUCK 브랜드 썸네일 — API 키 없이 돌아가는 로컬 음성 비서" },
     gallery: [],
     detail: {
       oneLiner: "API 키 없이 돌아가는 로컬 음성 비서",
@@ -1843,7 +1948,8 @@ const projectList: readonly PortfolioProject[] = [
       "템플릿과 데이터로 정보형 글을 대량 생성·검수·발행하는 프로그래매틱 SEO 도구.",
     disciplines: ["Programmatic SEO", "Worker", "Admin"],
     status: "case",
-    cover: { src: "/work/programmatic-seo/cover.webp", alt: "변수 템플릿이 워커와 검수 큐를 거쳐 여러 장의 글 페이지로 만들어지는 흐름을 표현한 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/programmatic-seo/cover.webp", alt: "블로그 양산 엔진 PLUCK 브랜드 썸네일 — 템플릿 하나로 글 수백 편의 뼈대를" },
     gallery: [],
     detail: {
       oneLiner: "템플릿 하나로 글 수백 편의 뼈대를",
@@ -1885,7 +1991,8 @@ const projectList: readonly PortfolioProject[] = [
       "쿠팡·테무·알리익스프레스·1688 상품을 수집해 마진을 계산하고 진입 여부를 추천하는 셀러 도구.",
     disciplines: ["Crawler", "Margin calc", "Automation"],
     status: "case",
-    cover: { src: "/work/seller-sourcing/cover.webp", alt: "원가·배송비·관세·수수료 막대와 예상 마진, 플랫폼별 수집 상태를 표현한 디자인 커버" },
+    coverKind: "brand",
+    cover: { src: "/work/seller-sourcing/cover.webp", alt: "셀러 소싱 분석기 PLUCK 브랜드 썸네일 — 팔 만한 상품인지 숫자로 먼저 본다" },
     gallery: [],
     detail: {
       oneLiner: "팔 만한 상품인지 숫자로 먼저 본다",
@@ -1927,7 +2034,9 @@ const projectList: readonly PortfolioProject[] = [
       "터미널과 LLM 에이전트가 실제 Chrome을 제어하도록 잇는 브라우저 브리지. DOM 분석과 데이터 추출용.",
     disciplines: ["Chrome extension", "WebSocket", "Dev tool"],
     status: "case",
-    cover: { src: "/work/browser-bridge/cover.webp", alt: "터미널 명령이 브라우저 창의 DOM 요소를 선택해 데이터를 추출하는 흐름을 표현한 디자인 커버" },
+    coverKind: "brand",
+    coverMotif: "browser",
+    cover: { src: "/work/browser-bridge/cover.webp", alt: "Browser Bridge PLUCK 브랜드 썸네일 — CLI에서 실제 브라우저를 조종한다" },
     gallery: [],
     detail: {
       oneLiner: "CLI에서 실제 브라우저를 조종한다",
@@ -1955,6 +2064,521 @@ const projectList: readonly PortfolioProject[] = [
         "데이터 추출",
         "WebSocket 브리지 서버",
         "Docker 실행 지원",
+      ],
+    },
+  },
+  {
+    slug: "modoocar",
+    name: "MODOOCAR · 법인차 구독",
+    category: "client",
+    years: [2025, 2025],
+    description:
+      "법인차 구독 서비스를 리스·장기 렌트와 비교해 보여주고 상담 문의로 잇는 서비스 사이트.",
+    disciplines: ["Website", "Marketing", "Next.js"],
+    status: "live",
+    url: "https://modoo-three.vercel.app/",
+    coverKind: "screenshot",
+    cover: { src: "/work/modoocar/cover.webp", alt: "MODOOCAR 메인 히어로 - 법인차 구독 서비스 헤드라인과 파란 스포츠카 이미지" },
+    gallery: [
+      { src: "/work/modoocar/01.webp", alt: "구독·리스·장기 렌트를 보증금, 취득세, 보험료 같은 항목별로 비교한 표와 구독 장점 목록" },
+      { src: "/work/modoocar/02.webp", alt: "모바일 메인 화면 - 헤드라인과 차량 이미지, 구독 이유 섹션" },
+    ],
+    detail: {
+      oneLiner: "법인차 구독을 리스·렌트와 한눈에 비교하는 사이트",
+      role: ["UI 디자인", "프론트엔드", "배포"],
+      stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
+      overview:
+        "법인차 구독 서비스 MODOOCAR의 웹사이트입니다. 구독이 리스·장기 렌트와 무엇이 다른지 항목별로 보여주고, 차량 리스트와 구독 가이드, FAQ를 거쳐 상담 문의로 이어지게 구성했습니다.",
+      problem:
+        "법인차를 알아보는 고객은 구독, 리스, 장기 렌트의 비용 구조 차이를 한 번에 비교하기 어려워 상담 전에 이탈하기 쉽습니다.",
+      solution:
+        "보증금·취득세·보험료·초기 비용 같은 항목을 표로 나란히 비교하는 섹션을 첫 화면 바로 아래에 두고, 모든 화면에서 문의 버튼으로 이어지게 했습니다. 검색 노출을 위한 메타데이터와 광고 태그도 함께 정리했습니다.",
+      features: [
+        "구독·리스·장기 렌트 항목별 비교표",
+        "구독 장점 요약 섹션",
+        "차량 리스트와 구독 가이드",
+        "FAQ와 상담 문의 연결",
+        "모바일 대응",
+        "검색 메타데이터·광고 태그 설정",
+      ],
+    },
+  },
+  {
+    slug: "rotc-seating",
+    name: "ROTC 비즈니스연합회 행사 좌석 안내",
+    category: "client",
+    years: [2026, 2026],
+    description:
+      "회장 이·취임식 참석자가 휴대폰으로 기수별 좌석과 행사 일정, 조직도를 확인하는 모바일 웹.",
+    disciplines: ["Mobile web", "Event", "Next.js"],
+    status: "live",
+    url: "https://rotc-all.vercel.app/",
+    coverKind: "screenshot",
+    cover: { src: "/work/rotc-seating/cover.webp", alt: "모바일 화면 2종: 무대와 기수별·VIP 좌석 배치도, 월별 행사 일정·조직도 바로가기" },
+    gallery: [],
+    detail: {
+      oneLiner: "행사장에서 휴대폰으로 찾는 내 자리",
+      role: ["기획", "UI 디자인", "프론트엔드"],
+      stack: ["Next.js", "React", "react-big-calendar", "date-fns", "Vercel"],
+      overview:
+        "대한민국ROTC 비즈니스연합회의 회장 이·취임식에서 참석자가 자기 기수의 좌석을 바로 찾을 수 있도록 만든 모바일 웹입니다. 같은 단체의 회원 플랫폼과 별도로, 행사 당일에 바로 쓰는 가벼운 도구로 만들었습니다.",
+      problem:
+        "기수별로 좌석이 나뉘는 대규모 행사에서는 입구 안내판 앞에 사람이 몰리고, 좌석표를 종이로 다시 뽑아야 하는 일이 반복됩니다.",
+      solution:
+        "무대 기준 좌석 배치를 기수·VIP석으로 나눠 보여주고 좌석을 탭하면 상세 정보를 확인하게 했습니다. 하단 탭에서 연간 행사 일정과 임원 조직도도 볼 수 있습니다.",
+      features: [
+        "무대 기준 기수별·VIP 좌석 배치도",
+        "일반석·VIP석 필터",
+        "좌석 탭 상세 정보",
+        "월별 행사 일정 캘린더",
+        "임원 조직도",
+        "하단 탭 내비게이션",
+      ],
+    },
+  },
+  {
+    slug: "pairing-book",
+    name: "페어링 북",
+    category: "product",
+    years: [2025, 2025],
+    description:
+      "주제에 맞춰 글을 쓰고 그림을 그려 나만의 이야기책을 만들고, 공개해 친구와 나누는 웹 서비스.",
+    disciplines: ["Web service", "Drawing", "Community"],
+    status: "live",
+    url: "https://heart-paring.vercel.app/",
+    coverKind: "brand",
+    cover: { src: "/work/pairing-book/cover.webp", alt: "페어링 북 PLUCK 브랜드 썸네일 — 글과 그림으로 만드는 나만의 이야기책" },
+    gallery: [
+      { src: "/work/pairing-book/01.webp", alt: "페어링 북 메인 - '나만의 페어링 북 만들기' 안내와 공개된 페어링 북 목록 영역" },
+    ],
+    detail: {
+      oneLiner: "글과 그림으로 만드는 나만의 이야기책",
+      role: ["기획", "UI 디자인", "프론트엔드"],
+      stack: ["Next.js", "React", "Vercel"],
+      overview:
+        "여러 주제에 맞춰 글을 쓰고 그림을 그려 한 권의 페어링 북을 만드는 웹 서비스입니다. 완성한 책은 공개로 설정해 다른 사람과 나눌 수 있습니다.",
+      problem:
+        "함께 기록을 남기고 싶어도 글과 그림을 한곳에 엮어 책처럼 보관하고 공유할 수 있는 간단한 도구가 마땅치 않았습니다.",
+      solution:
+        "주제별 작성 흐름과 그리기 기능을 하나의 책 단위로 묶고, 공개 설정한 책을 메인에서 모아 볼 수 있게 했습니다.",
+      features: [
+        "로그인 후 나만의 책 만들기",
+        "주제별 글 작성",
+        "그림 그리기",
+        "공개 설정과 공유",
+        "공개된 책 모아보기",
+      ],
+    },
+  },
+  {
+    slug: "planning-kit",
+    name: "Claude Planning Kit",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "아이디어 하나에서 SRS·기능명세·화면설계·코드·테스트·Living Spec까지 Claude Code가 단계별로 만들게 하는 기획 자동화 키트.",
+    disciplines: ["Claude Code", "Planning", "Agents"],
+    status: "case",
+    coverKind: "brand",
+    coverMotif: "terminal",
+    cover: { src: "/work/planning-kit/cover.webp", alt: "Claude Planning Kit PLUCK 브랜드 썸네일 — 아이디어에서 명세·코드·테스트까지 이어지는 기획 키트" },
+    gallery: [
+      {
+        src: "/work/planning-kit/01.webp",
+        alt: "아이디어, SRS, 기능명세서, 화면설계, 코드, 테스트·Living Spec으로 이어지는 6단계 파이프라인 설명 패널",
+        diagram: {
+          title: "아이디어 하나에서\n살아 있는 명세까지",
+          flow: true,
+          items: [
+            { title: "아이디어", text: "Q&A로 유형·기능·역할·스택 정리" },
+            { title: "SRS", text: "요구사항 명세 자동 작성" },
+            { title: "기능명세·화면설계", text: "기능 단위 명세와 화면 설계 문서" },
+            { title: "퍼블리싱·코드", text: "화면설계서를 기준으로 구현" },
+            { title: "테스트와 Living Spec", text: "TC·E2E와 코드에 붙는 명세" },
+          ],
+        },
+      },
+    ],
+    detail: {
+      oneLiner: "아이디어에서 명세·코드·테스트까지 이어지는 기획 키트",
+      role: ["설계", "Claude 스킬·커맨드·에이전트", "설치 스크립트"],
+      stack: ["Claude Code", "Shell", "Obsidian Templater", "React"],
+      overview:
+        "Claude Code로 기획부터 테스트까지 이어지는 개발 라이프사이클을 돌리기 위한 설치형 키트입니다. 스킬 6개, 커맨드 10개, 에이전트 3개와 Obsidian 기획 볼트 템플릿, 코드에 붙는 Living Spec 컴포넌트를 한 번에 설치합니다.",
+      problem:
+        "AI로 코드를 바로 만들면 요구사항과 화면설계가 문서로 남지 않아, 프로젝트가 커질수록 무엇을 왜 만들었는지 추적하기 어렵습니다.",
+      solution:
+        "오케스트레이터 커맨드가 마스터 진행표를 만들고 SRS → 기능명세 → 화면설계 → 퍼블리싱 → 코드 → 테스트 순서로 단계를 넘기게 했습니다. 기존 기획 자료(PDF·엑셀·이미지)가 있으면 그것부터 읽어 시작합니다.",
+      features: [
+        "/orchestra init·next·status 단계 진행",
+        "SRS·기능명세서·화면설계 문서 자동 생성",
+        "기존 PDF·엑셀·이미지 기획 자료 반영",
+        "Obsidian 기획 볼트(폴더·Templater 템플릿)",
+        "코드에 붙는 Living Spec 컴포넌트와 CLI",
+        "부분 설치 지원 설치 스크립트",
+      ],
+    },
+  },
+  {
+    slug: "oinzi",
+    name: "Oinzi · AI 에이전트 브라우저",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "사람과 AI 에이전트가 같은 로그인 세션을 쓰되 탭은 나눠 쓰는 Windows 브라우저. 구독 중인 Claude·Codex CLI를 그대로 붙인다.",
+    disciplines: ["Desktop app", "AI agent", "MCP"],
+    status: "development",
+    coverKind: "screenshot",
+    cover: { src: "/work/oinzi/cover.webp", alt: "Oinzi 브라우저 화면 - 왼쪽 탭 사이드바와 오른쪽 AI 패널에서 가격 비교 요청을 처리하는 모습(이름 변경 전 테스트 빌드)" },
+    gallery: [
+      { src: "/work/oinzi/01.webp", alt: "세션 개요 화면 - AI 대화별 세션과 탭을 카드로 보여주고 '보는 중' 상태를 표시" },
+      { src: "/work/oinzi/02.webp", alt: "AI가 테스트 페이지를 조작하는 동안 테두리 오로라와 'AI가 클릭하고 있어요' 상태 표시가 뜬 화면" },
+    ],
+    detail: {
+      oneLiner: "사람과 AI가 한 브라우저를 나눠 쓰는 법",
+      role: ["기획", "데스크톱 앱", "에이전트 연동", "설치 패키지"],
+      stack: ["C# .NET 10", "WinForms", "WebView2", "Node.js", "MCP", "Inno Setup"],
+      overview:
+        "AI 에이전트가 사람의 로그인 상태를 그대로 쓰면서도, 사람의 탭과 에이전트의 탭은 섞이지 않게 만든 Windows 브라우저입니다. Edge WebView2 위에 탭·프로필·AI 패널을 직접 구현했고, 설치 파일(0.9.1)까지 빌드했습니다.",
+      problem:
+        "에이전트용 헤드리스 브라우저는 로그인 세션이 없고, 사람이 쓰는 브라우저를 그대로 넘기면 에이전트가 무엇을 하는지 보거나 멈추기 어렵습니다.",
+      solution:
+        "하나의 영구 프로필을 공유하되 AI 대화마다 별도 세션과 탭을 주고 다른 세션의 접근을 막았습니다. 내장 AI 패널은 사용자가 로그인해 둔 claude·codex CLI를 헤드리스로 실행해 API 키 없이 구독을 그대로 쓰고, 외부 에이전트는 MCP 서버·스크립트·CLI로 붙습니다.",
+      features: [
+        "AI 대화별 세션·탭 분리와 접근 차단",
+        "Claude Code·Codex CLI 기반 내장 AI 패널, 실행 중 메시지로 방향 수정",
+        "MCP 서버·agent 스크립트·CLI 세 가지 연결 방식",
+        "AI 작업 중 오버레이(가상 커서·클릭 표시)와 세션 개요에서 이어받기·중지",
+        "작업 녹화와 자막 포함 MP4 저장",
+        "DPAPI 암호화 사이트 로그인, 예약 작업, 다중 프로필·계정",
+      ],
+    },
+  },
+  {
+    slug: "threads-agent",
+    name: "Threads 운영 에이전트",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "브랜드 Threads 계정의 글쓰기·답글·리서치를 정해진 페르소나와 규칙 안에서 자동으로 돌리는 운영 에이전트.",
+    disciplines: ["Social automation", "Agents", "Scheduler"],
+    status: "case",
+    coverKind: "brand",
+    coverMotif: "flow",
+    cover: { src: "/work/threads-agent/cover.webp", alt: "Threads 운영 에이전트 PLUCK 브랜드 썸네일 — 브랜드 SNS를 규칙 안에서 굴리는 에이전트" },
+    gallery: [
+      {
+        src: "/work/threads-agent/01.webp",
+        alt: "30분 하트비트, 피드 읽기, 글 작성, 검수, 게시로 이어지는 실행 흐름 설명 패널",
+        diagram: {
+          title: "30분마다 깨어나\n쓸지 말지부터 정한다",
+          flow: true,
+          items: [
+            { title: "하트비트", text: "작업 스케줄러가 30분마다 무작위 지연 후 실행" },
+            { title: "피드 읽기", text: "홈 피드와 주제별 인기 글을 먼저 확인" },
+            { title: "글 작성", text: "페르소나 규칙에 맞춰 Claude가 초안 작성" },
+            { title: "검수", text: "링크·해시태그·최근 글과 같은 첫 줄이면 폐기" },
+            { title: "게시·기록", text: "상태와 로그를 남기고 Discord로 알림" },
+          ],
+        },
+      },
+    ],
+    detail: {
+      oneLiner: "브랜드 SNS를 규칙 안에서 굴리는 에이전트",
+      role: ["기획", "자동화 설계", "프롬프트·페르소나", "운영"],
+      stack: ["Node.js", "Oinzi 브라우저 자동화", "Claude CLI", "Windows 작업 스케줄러", "Discord Webhook"],
+      overview:
+        "PLUCK의 Threads 계정을 꾸준히 운영하기 위해 만든 로컬 에이전트입니다. 직접 만든 Oinzi 브라우저로 실제 계정 화면을 조작하고, 글은 Claude CLI가 페르소나 문서에 맞춰 씁니다.",
+      problem:
+        "외주 문의로 이어질 만큼 유용한 계정을 만들려면 매일 글을 쓰고 답글을 달아야 하는데, 손으로 하기엔 시간이 들고 내용이 들쭉날쭉해집니다.",
+      solution:
+        "하루 게시 수·시간대·간격·글 유형 비율을 규칙으로 정하고, 확률로 게시 여부를 정하는 하트비트로 돌렸습니다. 인용 가능한 사실 목록을 페르소나에 두어 매출·조회수 같은 수치를 지어내지 못하게 막았고, 하루 행동 수에도 상한을 뒀습니다.",
+      features: [
+        "07시–23시 사이 하루 2–4회, 2.5시간 간격 게시 규칙",
+        "개발·정보·질문 글 유형 비율과 연속 반복 방지",
+        "페르소나 기반 사실 가드(수치·고객명 생성 금지)",
+        "내 글 답글 응대와 하루 행동 상한",
+        "인기 글 수집 후 스타일 가이드 자동 갱신",
+        "DRY_RUN 테스트 모드와 상태·로그 기록",
+      ],
+    },
+  },
+  {
+    slug: "threads-saas",
+    name: "Threads 자동화 SaaS",
+    category: "product",
+    years: [2025, 2025],
+    description:
+      "웹에서 가입·구독하고, 데스크톱 앱이 사용자 PC에서 Threads 자동화를 실행하는 구조의 B2C 서비스.",
+    disciplines: ["SaaS", "Desktop app", "Automation"],
+    status: "case",
+    coverKind: "brand",
+    coverMotif: "window",
+    cover: { src: "/work/threads-saas/cover.webp", alt: "Threads 자동화 SaaS PLUCK 브랜드 썸네일 — 웹 구독과 데스크톱 실행을 잇는 자동화 서비스" },
+    gallery: [],
+    detail: {
+      oneLiner: "웹 구독과 데스크톱 실행을 잇는 자동화 서비스",
+      role: ["기획", "백엔드", "데스크톱 앱", "자동화"],
+      stack: ["Flask", "PostgreSQL", "Docker", "Electron", "Playwright", "Swagger"],
+      overview:
+        "Threads 계정 운영 자동화를 구독형 서비스로 묶은 프로젝트입니다. Flask 웹 서버가 가입·로그인·요금제·구독 승인을 맡고, Electron 데스크톱 앱이 웹 계정으로 로그인해 사용자 PC에서 브라우저 자동화를 실행합니다.",
+      problem:
+        "SNS 자동화를 서버에서 돌리면 계정 보안과 차단 위험이 커지고, 사용자는 자동화가 실제로 무엇을 하는지 볼 수 없습니다.",
+      solution:
+        "인증과 구독 관리는 웹 서버에 두고, 실제 자동화는 사용자 PC의 데스크톱 앱에서 브라우저를 띄워 실행해 진행 상황을 실시간 로그로 보여주도록 나눴습니다.",
+      features: [
+        "회원가입·로그인과 관리자 구독 승인",
+        "요금제·대시보드 웹 화면",
+        "웹 계정으로 로그인하는 Electron 앱",
+        "Playwright 기반 로컬 자동화와 실시간 로그",
+        "Docker Compose 서버 구성",
+        "Swagger API 문서",
+      ],
+    },
+  },
+  {
+    slug: "lucky-draw",
+    name: "Lucky Draw · 송년회 뽑기",
+    category: "product",
+    years: [2025, 2025],
+    description:
+      "초대 코드로 들어오는 게임방에서 트리 장식·슬롯 카드로 경품을 뽑는 송년회용 웹 이벤트 도구.",
+    disciplines: ["Event web", "Supabase", "Admin"],
+    status: "case",
+    coverKind: "brand",
+    cover: { src: "/work/lucky-draw/cover.webp", alt: "Lucky Draw · 송년회 뽑기 PLUCK 브랜드 썸네일 — 초대 코드로 여는 송년회 경품 뽑기" },
+    gallery: [],
+    detail: {
+      oneLiner: "초대 코드로 여는 송년회 경품 뽑기",
+      role: ["기획", "UI 디자인", "프론트엔드", "어드민"],
+      stack: ["Next.js 16", "Supabase", "TanStack Query", "Zustand", "Framer Motion"],
+      overview:
+        "송년회 같은 행사에서 참가자가 초대 코드나 QR로 들어와 경품을 뽑는 웹 이벤트 도구입니다. 진행자는 어드민에서 게임과 템플릿을 만들고 예약·부대 신청을 관리합니다.",
+      problem:
+        "행사 경품 추첨은 종이 제비뽑기나 엑셀 난수로 하는 경우가 많아 현장 분위기를 살리기 어렵고, 행사마다 다시 준비해야 했습니다.",
+      solution:
+        "초대 코드 기반 게임방과 크리스마스 트리 장식·슬롯 카드 형태의 뽑기 보드를 만들고, 게임 템플릿을 저장해 다음 행사에서 다시 쓰게 했습니다.",
+      features: [
+        "초대 코드·QR로 입장하는 게임방",
+        "트리 장식·슬롯 카드 뽑기 보드와 축하 효과",
+        "게임·템플릿 관리 어드민",
+        "행사 예약과 부대 신청 접수",
+        "스프라이트 위치 조정 도구",
+      ],
+    },
+  },
+  {
+    slug: "vip-care",
+    name: "VIP Care · 시니어 건강 관리",
+    category: "app",
+    years: [2025, 2025],
+    description:
+      "복약 일정과 혈압 기록, AI 건강 상담을 한국어·영어·일본어로 제공하는 시니어 건강 관리 웹앱 MVP.",
+    disciplines: ["Mobile web", "Health", "AI assistant"],
+    status: "live",
+    url: "https://senior-hazel.vercel.app/",
+    coverKind: "screenshot",
+    cover: { src: "/work/vip-care/cover.webp", alt: "모바일 화면 3종(샘플 데이터): 인사 카드와 생활 서비스 메뉴, 오늘의 복약·진료 일정과 추천, 혈압·혈당·복약 순응도 요약" },
+    gallery: [],
+    detail: {
+      oneLiner: "복약과 건강 기록을 챙기는 시니어 앱",
+      role: ["기획", "UI 디자인", "프론트엔드", "백엔드"],
+      stack: ["Next.js 16", "Supabase", "next-intl", "OpenAI API", "Chart.js", "Zustand"],
+      overview:
+        "어르신과 보호자를 위한 건강 관리 서비스의 MVP입니다. 약 등록과 복약 일정, 혈압 같은 건강 기록, AI 건강 어시스턴트를 다국어 모바일 웹앱으로 구현했습니다. 공개 화면은 샘플 데이터로 보여줍니다.",
+      problem:
+        "여러 약을 함께 먹는 어르신은 복용 시간과 남은 약을 챙기기 어렵고, 보호자는 건강 상태 변화를 한눈에 보기 어렵습니다.",
+      solution:
+        "약을 등록하면 복약 일정이 자동으로 만들어지고, 복용·건너뛰기 처리에 따라 재고가 차감되게 했습니다. 건강 기록은 차트로 보여주고, AI 어시스턴트가 기록을 바탕으로 대화와 주간 리포트를 돕습니다.",
+      features: [
+        "약 등록과 복약 일정 자동 생성",
+        "오늘 할 일(복약·진료) 카드와 복용 완료 처리",
+        "남은 약 재고 자동 차감",
+        "혈압·혈당 기록과 차트",
+        "AI 건강 상담과 주간 리포트",
+        "한국어·영어·일본어 지원",
+      ],
+    },
+  },
+  {
+    slug: "dropship-os",
+    name: "글로벌 드롭쉬핑 운영 시스템",
+    category: "product",
+    years: [2026, 2026],
+    description:
+      "상품 검증부터 Stripe 결제, 공급처 자동 발주·환불까지 묶은 미국 대상 드롭쉬핑 스토어와 운영 현황판.",
+    disciplines: ["Commerce", "Stripe", "Operations"],
+    status: "development",
+    coverKind: "brand",
+    cover: { src: "/work/dropship-os/cover.webp", alt: "글로벌 드롭쉬핑 운영 시스템 PLUCK 브랜드 썸네일 — 검증되지 않으면 결제가 열리지 않는 드롭쉬핑 스토어" },
+    gallery: [],
+    detail: {
+      oneLiner: "검증되지 않으면 결제가 열리지 않는 드롭쉬핑 스토어",
+      role: ["기획", "리서치 자동화", "풀스택", "운영 설계"],
+      stack: ["Next.js", "PostgreSQL", "Stripe", "Resend", "Discord Embedded App SDK"],
+      overview:
+        "미국 고객 대상 드롭쉬핑을 위한 스토어와 운영 시스템입니다. 상품 후보 리서치와 근거 링크 검증, 고객용 스토어, 서버 결제, 공급처 발주, 주문 이메일, 관리자 현황판을 하나로 구성했습니다.",
+      problem:
+        "드롭쉬핑은 재고·배송일·품질·세금 같은 조건이 하나라도 확인되지 않은 채 판매를 열면 환불과 손실로 바로 이어집니다.",
+      solution:
+        "상품별 실재고·원가·배송일·샘플 검증과 판매 법인·세금·이메일 설정이 모두 실제 값으로 연결되기 전에는 결제가 자동으로 잠기도록 설계했습니다. 현재도 실판매 조건이 확인되지 않아 결제는 잠긴 상태입니다.",
+      features: [
+        "상품 후보 근거 링크 자동 재검증",
+        "서버에서 가격을 확정하는 Stripe 결제와 웹훅",
+        "공급처 자동 발주와 배송 추적 반영",
+        "발주 실패·출고 지연 시 자동 환불",
+        "주문·배송·환불 고객 이메일",
+        "조건 미충족 시 결제 자동 차단 운영 현황판",
+      ],
+    },
+  },
+  {
+    slug: "card-news-studio",
+    name: "AI 카드뉴스 마케팅 스튜디오",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "로컬 ComfyUI로 사진을 만들고 6컷 카드뉴스를 편집·승인·내보내는 마케팅 작업 공간.",
+    disciplines: ["Image generation", "MCP", "Content tool"],
+    status: "case",
+    coverKind: "brand",
+    coverMotif: "window",
+    cover: { src: "/work/card-news-studio/cover.webp", alt: "AI 카드뉴스 마케팅 스튜디오 PLUCK 브랜드 썸네일 — 사진 생성부터 6컷 카드뉴스 내보내기까지" },
+    gallery: [],
+    detail: {
+      oneLiner: "사진 생성부터 6컷 카드뉴스 내보내기까지",
+      role: ["기획", "프론트엔드", "서버", "ComfyUI 워크플로"],
+      stack: ["React", "Vite", "Node.js", "ComfyUI MCP", "Meta MCP", "Playwright"],
+      overview:
+        "고객사 SNS용 카드뉴스를 만드는 로컬 마케팅 작업 공간입니다. 서버가 ComfyUI MCP로 사진을 생성하고, 6컷 편집기에서 문구를 고친 뒤 승인된 버전을 PNG나 ZIP으로 내보냅니다. 6컷 합성용 ComfyUI 커스텀 노드도 함께 만들었습니다.",
+      problem:
+        "카드뉴스 한 세트를 만들 때마다 이미지 생성 도구, 디자인 툴, 메신저 승인을 오가며 버전이 섞였습니다.",
+      solution:
+        "프로젝트마다 6컷 원고·이미지·승인 이력을 저장하고, 한국어 채팅 명령으로 수정하게 했습니다. 이미지 생성은 로컬 GPU의 ComfyUI로 돌리고, 내보내기는 Playwright로 실제 렌더링 결과를 저장합니다.",
+      features: [
+        "6컷 카드뉴스 편집기와 버전별 승인",
+        "ComfyUI MCP 연결로 6컷·개별 사진 생성",
+        "작업 상태와 오류 이력",
+        "PNG·6장 ZIP 내보내기",
+        "Meta MCP 연결과 도구 탐색",
+        "채팅 사진 첨부(EXIF 제거·리사이즈)",
+      ],
+    },
+  },
+  {
+    slug: "virtual-model-catalog",
+    name: "AI 가상 모델 카탈로그",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "의류 상품 사진 폴더를 넣으면 같은 가상 모델이 입은 카탈로그 컷 세트를 로컬 GPU로 만드는 ComfyUI 파이프라인.",
+    disciplines: ["ComfyUI", "Image generation", "Pipeline"],
+    status: "case",
+    coverKind: "brand",
+    cover: { src: "/work/virtual-model-catalog/cover.webp", alt: "AI 가상 모델 카탈로그 PLUCK 브랜드 썸네일 — 상품 폴더 하나로 모델 착용 컷 세트" },
+    gallery: [
+      {
+        src: "/work/virtual-model-catalog/01.webp",
+        alt: "상품 폴더, 의류 편집, 디테일 보정, 의류 보존, 최종 착용 컷으로 이어지는 파이프라인 설명 패널",
+        diagram: {
+          title: "상품 폴더 하나,\n큐 한 번으로 전체 컷",
+          flow: true,
+          items: [
+            { title: "상품 폴더", text: "원본 사진을 준비 단계에서 정리" },
+            { title: "의류 편집", text: "색·형태를 기준 모델에 맞게 편집" },
+            { title: "디테일 보정", text: "단추·봉제선 같은 세부를 다듬기" },
+            { title: "의류 보존", text: "원래 옷의 디자인이 바뀌지 않게 고정" },
+            { title: "착용 컷", text: "같은 얼굴의 가상 모델 카탈로그" },
+          ],
+        },
+      },
+    ],
+    detail: {
+      oneLiner: "상품 폴더 하나로 모델 착용 컷 세트",
+      role: ["워크플로 설계", "커스텀 노드", "테스트"],
+      stack: ["ComfyUI", "Python", "Z-Image Turbo", "Qwen Image Edit", "RTX 4070 Ti"],
+      overview:
+        "의류 쇼핑몰의 모델 착용 사진을 촬영 없이 만들기 위한 ComfyUI 파이프라인입니다. 상품 폴더를 넣고 한 번 큐에 올리면 의류 편집부터 최종 착용 컷까지 이어서 생성합니다. 모든 처리를 로컬 GPU에서 돌려 이미지당 API 비용이 없습니다.",
+      problem:
+        "상품마다 모델 촬영을 하기엔 비용과 시간이 크고, 이미지 생성 AI를 그냥 쓰면 옷의 디테일이 바뀌거나 컷마다 모델 얼굴이 달라집니다.",
+      solution:
+        "단계를 의류 편집·디테일 보정·의류 보존·최종 착용·단추 보정으로 나누고, 같은 얼굴 레퍼런스를 모든 컷에 쓰게 했습니다. 폴더 준비와 이력 관리는 직접 만든 커스텀 노드가 맡고 테스트로 고정했습니다.",
+      features: [
+        "상품 폴더 → 큐 한 번 → 전체 컷 세트",
+        "의류 편집·디테일 보정·의류 보존 단계 분리",
+        "컷 전체에 같은 가상 모델 얼굴 유지",
+        "단추 배치 보정 워크플로",
+        "준비·이력 관리 커스텀 노드와 테스트",
+        "로컬 GPU 실행(API 비용 없음)",
+      ],
+    },
+  },
+  {
+    slug: "vox-studio",
+    name: "Vox Studio · 음성 복제 스튜디오",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "Qwen3-TTS 기반 음성 복제·파인튜닝과 대본·오디오 편집을 한 데스크톱 앱에 모은 TTS 스튜디오.",
+    disciplines: ["Desktop app", "Voice AI", "TTS"],
+    status: "case",
+    coverKind: "brand",
+    coverMotif: "window",
+    cover: { src: "/work/vox-studio/cover.webp", alt: "Vox Studio · 음성 복제 스튜디오 PLUCK 브랜드 썸네일 — 목소리 복제부터 편집까지 한 앱에서" },
+    gallery: [],
+    detail: {
+      oneLiner: "목소리 복제부터 편집까지 한 앱에서",
+      role: ["설계", "데스크톱 앱", "음성 AI 백엔드"],
+      stack: ["Electron", "React 19", "Tailwind CSS", "FastAPI", "Qwen3-TTS", "RVC"],
+      overview:
+        "음성 복제와 TTS 생성, 파인튜닝, RVC 학습, 대본 작성, 오디오 편집을 하나로 묶은 Electron 데스크톱 앱입니다. 화면은 React로, 모델 처리는 로컬 Python FastAPI 서버로 나눴습니다.",
+      problem:
+        "음성 콘텐츠를 만들 때 음성 복제, 생성, 편집 도구가 제각각이라 파일을 옮기며 작업해야 했습니다.",
+      solution:
+        "보이스 관리·생성·학습·편집을 한 앱의 화면으로 나누고, GPU 작업은 로컬 백엔드가 맡게 해 앱은 가볍게 유지했습니다.",
+      features: [
+        "보이스 등록과 음성 생성",
+        "Qwen3-TTS 파인튜닝",
+        "RVC 학습",
+        "대본 작성과 스토리 리메이크",
+        "파형 기반 오디오 편집",
+        "생성 이력 관리",
+      ],
+    },
+  },
+  {
+    slug: "motion-study",
+    name: "몰입형 웹 모션 스터디",
+    category: "ai",
+    years: [2026, 2026],
+    description:
+      "레퍼런스 수집·모션 실측·구현·화면 검증을 에이전트 파이프라인으로 묶고, 그 위에서 만든 WebGL 스크롤 경험 실험.",
+    disciplines: ["WebGL", "Motion", "Agent pipeline"],
+    status: "case",
+    coverKind: "screenshot",
+    cover: { src: "/work/motion-study/cover.webp", alt: "Pluck Motion Field 첫 화면 - 어두운 파티클 공간 위의 입체 PLUCK 타이포그래피" },
+    gallery: [
+      { src: "/work/motion-study/01.webp", alt: "스크롤에 따라 수천 개의 입자가 공간을 채우는 Enter the Field 구간" },
+      { src: "/work/motion-study/02.webp", alt: "스크롤로 회전하는 3D 매듭 오브젝트와 Form follows scroll 타이포그래피" },
+      { src: "/work/motion-study/03.webp", alt: "실내 기후 콘셉트 사이트 TEMPER의 새벽 장면 첫 화면" },
+      { src: "/work/motion-study/04.webp", alt: "TEMPER 정오 장면 - 스크롤에 따라 빛줄기와 하늘색이 바뀌는 구간" },
+    ],
+    detail: {
+      oneLiner: "몰입형 웹을 만드는 과정을 파이프라인으로",
+      role: ["크리에이티브 디렉션", "모션 설계", "WebGL 구현", "에이전트 설계"],
+      stack: ["Three.js", "GSAP", "Vite", "TypeScript", "Playwright", "Claude 에이전트"],
+      overview:
+        "몰입형 웹 경험을 반복해서 만들 수 있도록 레퍼런스 수집, 모션 실측, 구현, 화면 검증을 스킬과 에이전트로 나눈 제작 허브입니다. 이 파이프라인으로 PLUCK 모션 필드와 실내 기후 콘셉트 TEMPER 같은 실험 사이트를 만들었습니다.",
+      problem:
+        "스크롤 연출이 많은 사이트는 감으로 만들면 타이밍이 흔들리고, 정지 화면 확인만으로는 모션 품질을 검증하기 어렵습니다.",
+      solution:
+        "크리에이티브 디렉터·모션 디렉터·테크니컬 아티스트·QA 역할의 에이전트가 콘셉트 문장과 디자인 JSON, 스크롤 타임라인 스펙을 순서대로 넘기게 하고, 결과는 Playwright 스크린샷으로 판단하도록 규칙을 세웠습니다.",
+      features: [
+        "레퍼런스 수집·분류·컨택트시트",
+        "모션 실측(이징·스태거·duration) 스펙 문서화",
+        "스크롤=재생헤드 구조의 WebGL 구현",
+        "AI 영상 히어로 스크럽 파이프라인",
+        "Playwright 다중 해상도 화면 검증",
       ],
     },
   },

@@ -1,5 +1,5 @@
 // Shared helpers for PLUCK portfolio images. All outputs: 1600x1000 (16:10) webp, <=250KB.
-// Usage: const c = require('C:/Users/SIMJAE/AppData/Local/Temp/pwtool/compose.js');
+// Usage (run from this folder so sharp resolves from the repo): const c = require("./compose.js");
 //   await c.desktop(pngBufferOrPath, 'D:/.../public/work/<slug>/cover.webp', { position: 'top' })
 //   await c.phones([buf1, buf2, buf3], outPath, { bg: '#dfe3da' })   // 1-3 mobile shots side by side
 //   await c.blur(input, [{left,top,width,height}], outPngPath)       // blur regions before composing
