@@ -22,7 +22,7 @@ export function Hero3D({ contactHref }: Props) {
 
   useEffect(() => {
     const section = root.current;
-    const canvas = canvasRef.current;
+    let canvas = canvasRef.current;
     if (!section || !canvas) return;
     const stage = section.querySelector<HTMLElement>(".hero3d-stage")!;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -101,26 +101,58 @@ export function Hero3D({ contactHref }: Props) {
       onScroll();
     });
 
-    const boot = async () => {
+    // Boot with retries: WebGL context creation can fail transiently (busy GPU,
+    // too many live contexts, driver reset). Keep the floating poster meanwhile.
+    let attempts = 0;
+    let retryTimer = 0;
+    const boot = async (): Promise<void> => {
+      attempts += 1;
       try {
         const { createPluckScene } = await import("@/lib/pluck-scene");
         if (disposed) return;
         const mobile = window.matchMedia("(max-width: 760px), (pointer: coarse)").matches;
-        scene = createPluckScene(canvas, { mobile });
+        scene = createPluckScene(canvas!, { mobile });
         scene.setProgress(progress());
         scene.setCopyRect(copyRect());
         io.observe(section);
-        ro.observe(canvas);
+        ro.observe(canvas!);
         sync();
-        await scene.ready;
+        await Promise.race([
+          scene.ready,
+          new Promise((_, reject) => setTimeout(() => reject(new Error("first frame timeout")), 8000)),
+        ]);
         if (!disposed) section.dataset.state = "live";
       } catch {
-        // No WebGL (or context creation failed): keep the still poster.
-        section.dataset.state = "fallback";
         scene?.dispose();
         scene = null;
+        if (disposed) return;
+        if (attempts < 4) {
+          section.dataset.state = "loading";
+          retryTimer = globalThis.setTimeout(() => void boot(), 1500 * attempts) as unknown as number;
+        } else {
+          // No usable WebGL: keep the (animated) still poster.
+          section.dataset.state = "fallback";
+        }
       }
     };
+    // GPU reset / context loss: show the poster, then rebuild the scene.
+    const onLost = (e: Event) => {
+      e.preventDefault();
+      section.dataset.state = "loading";
+      scene?.dispose();
+      scene = null;
+      // A lost context can't be reused: swap in a fresh canvas element.
+      const fresh = canvas!.cloneNode(false) as HTMLCanvasElement;
+      canvas!.removeEventListener("webglcontextlost", onLost);
+      ro.unobserve(canvas!);
+      canvas!.replaceWith(fresh);
+      canvas = fresh;
+      canvas.addEventListener("webglcontextlost", onLost);
+      attempts = 0;
+      clearTimeout(retryTimer);
+      retryTimer = globalThis.setTimeout(() => void boot(), 1200) as unknown as number;
+    };
+    canvas.addEventListener("webglcontextlost", onLost);
 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -132,18 +164,20 @@ export function Hero3D({ contactHref }: Props) {
     document.addEventListener("visibilitychange", sync);
     // After first paint + idle, so the DOM headline is the LCP.
     const kick = () => {
-      if ("requestIdleCallback" in window) idle = requestIdleCallback(() => void boot(), { timeout: 1200 });
+      if ("requestIdleCallback" in window) idle = requestIdleCallback(() => void boot(), { timeout: 500 });
       else idle = globalThis.setTimeout(() => void boot(), 200) as unknown as number;
     };
-    if (document.readyState === "complete") kick();
-    else window.addEventListener("load", kick, { once: true });
+    // Prefetch the three.js chunk right away, boot on the first idle slot after paint.
+    void import("@/lib/pluck-scene").catch(() => {});
+    requestAnimationFrame(() => kick());
 
     return () => {
       disposed = true;
       if ("cancelIdleCallback" in window) cancelIdleCallback(idle);
       clearTimeout(idle);
       cancelAnimationFrame(scrollRaf);
-      window.removeEventListener("load", kick);
+      clearTimeout(retryTimer);
+      canvas?.removeEventListener("webglcontextlost", onLost);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", onPointer);
       document.documentElement.removeEventListener("pointerleave", onLeave);

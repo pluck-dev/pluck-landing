@@ -244,6 +244,17 @@ summary:focus-visible {
 .hero3d[data-state="live"] .hero3d-poster {
   opacity: 0;
 }
+/* Until WebGL is live (or if it never is), the poster floats gently so the hero never feels frozen. */
+@keyframes hero3d-float {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50% { transform: translateY(-14px) rotate(1.5deg); }
+}
+.hero3d:not([data-state="live"]) .hero3d-poster {
+  animation: hero3d-float 5.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero3d .hero3d-poster { animation: none; }
+}
 .hero3d-copy {
   position: absolute;
   right: 0;
