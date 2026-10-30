@@ -13,6 +13,7 @@ import {
   type ProjectCategory,
 } from "@/lib/portfolio";
 import { StatusPill } from "@/components/status-pill";
+import { CardPreview } from "@/components/work-video";
 
 type Filter = ProjectCategory | "all";
 
@@ -54,6 +55,7 @@ export function ProjectCard({
             loading={eager ? "eager" : "lazy"}
             className="work-card-image"
           />
+          {project.demo ? <CardPreview video={project.demo} /> : null}
           <span className="work-card-circle" aria-hidden="true">
             <ArrowUpRight size={18} />
           </span>

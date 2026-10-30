@@ -157,4 +157,32 @@
 - 포함: 자기 커밋이 있는 실제 작업(내부 도구·실험 포함). 제외: 자기 커밋 없는 포크, 타사 사이트 클론·레퍼런스 재현물, 튜토리얼, 하루 미만 무기능 스캐폴드, 트레이딩·크립토 시그널, ibctgit, 개인 노트, 실데이터 폴더.
 - 별도 GitHub 계정 spacePluck(space.pluck@gmail.com) 도 오너 것. Vercel 프로젝트 대부분이 여기에 연결돼 있고 일부 레포는 pluck-dev 로 못 읽음 → `npx vercel api "/v6/deployments?app=<name>&target=production"` 의 meta.githubCommitAuthorName 으로 작성자·기간 확인(adrock_simjae = 오너).
 - 오너 확인 대기: MODOOCAR 가 고객 작업인지 자체 사업인지, 페어링 북 코드(비공개), Figma MCP 확장의 오너 커밋 위치.
-- Oinzi 캡처는 이름 변경 전(pluck) 테스트 빌드 — st-accounts 등 설정 화면엔 계정 이메일·사용자 경로가 보여 사용 금지. threads-scheduler shots 는 타인 핸들·아바타가 보여 사용 금지. marketing-studio 화면은 고객사(바야다) 브랜드라 사용 금지.
+- Oinzi 는 2026-10-30 현재 빌드(publish/oinzi.exe 0.9.1)를 임시 프로필로 재캡처(영상 포함). 설정·환영 화면엔 계정 이메일·사용자 경로가 보여 사용 금지. threads-scheduler shots 는 타인 핸들·아바타가 보여 사용 금지. marketing-studio 화면은 고객사(바야다) 브랜드라 사용 금지.
+
+# Portfolio 영상·실화면 캡처: ProjectVideo 스펙, WorkVideo/CardPreview, 프로젝트 타입별 캡처 레시피
+
+## 데이터·렌더 (2026-10-30, feat/portfolio-media)
+- 갤러리 항목은 ProjectMedia = 이미지 | { type:"video", src(mp4), webm?, poster, alt, caption? }. 프로젝트 `demo?` 는 상세 히어로(커버 자리)와 홈 카드 호버 미리보기에 쓰인다. 정적 이미지 자리(홈 featured inset 등)는 mediaStill() 로 poster 사용.
+- components/work-video.tsx: WorkVideo 는 next/image 포스터(children) 위에 <video> 를 겹친다 — LCP·첫 페인트는 최적화된 포스터 이미지, 재생 시작(playing) 후에만 video opacity 1 → 레이아웃 시프트 0. video 에 poster 속성을 주지 않는 이유: 원본 webp 를 한 번 더 받게 됨. IntersectionObserver(0.35)로 화면 안에서만 재생, reduced-motion 이면 자동재생 안 하고 가운데 큰 재생 버튼. 자동재생 거부(play() reject)도 큰 버튼. 일시정지 토글은 항상 있음(WCAG 2.2.2).
+- CardPreview: (hover:hover)+(pointer:fine) 에서만, 첫 pointerenter 때 src 를 붙인다(preload none) → 그리드가 영상을 미리 받지 않음.
+- 영상 규격: 1440x900(16:10) H.264 mp4, 오디오 없음, fps 30, crf 30, -movflags +faststart, 8–24s, 목표 ≤2.5MB(실측 0.2–1.6MB). 포스터 = 0.5s 프레임을 1600x1000 webp(첫 프레임은 회색/빈 화면일 때가 많음). 모바일 녹화는 390x844 를 1600x1000 #dfe3da 캔버스에 둥근 마스크+그림자로 합성(ffmpeg alphamerge).
+- 캡션은 '로컬 실행 화면 녹화 — A → B (샘플 데이터)'처럼 출처와 데이터 성격을 밝힌다.
+
+## 캡처 레시피 (레포 밖 C:\Temp\pmcap 하네스, playwright/sharp 는 NODE_PATH=레포 node_modules)
+- 공통: 프로젝트를 C:\Temp\pmrun 으로 robocopy(.env*/node_modules/.git 제외) 후 설치·실행 → 원본 폴더·실데이터 무변경. 끝나면 포트로 PID 찾아 종료.
+- Playwright recordVideo 는 size 를 viewport 와 같게(DSF2 모바일에 size 2배를 주면 왼쪽 위 1/4만 찍힘). 시작 지점은 첫 의미 있는 프레임에서 mark() 로 트림.
+- WebGL(three) 앱은 headless 에서 `--enable-unsafe-swiftshader --use-angle=swiftshader --ignore-gpu-blocklist` 없으면 캔버스가 비어 보인다(jarvis).
+- Supabase 앱: NEXT_PUBLIC_SUPABASE_URL 을 가짜 로컬 주소로 빌드하고 Playwright context.route 로 PostgREST(/rest/v1/<table>, eq 필터, Accept vnd.pgrst.object = single, /rpc) 를 가짜 데이터로 응답(lucky-draw). 실 DB 접속 없음.
+- Postgres 앱(online-store): docker 로 임시 postgres:17 컨테이너(55432) + db/migrate.mjs, 샘플 고객 가입→모의결제(ALLOW_MOCK_PAYMENTS)로 주문 3건 만든 뒤 어드민 녹화, 끝나면 컨테이너 삭제.
+- Flask(threads_auto/web): 임시 venv + DATABASE_URL=sqlite 임시 파일, 샘플 사용자·구독을 모델로 직접 생성.
+- Electron 렌더러(vox-studio): out/renderer 를 정적 서빙하고 addInitScript 로 window.api 를 재귀 Proxy 스텁(목록=[], on*=unsubscribe, 샘플 보이스 2개) → 파이썬 엔진 없이 실제 UI.
+- WS 로 상태를 받는 HUD(jarvis): window.__pluckyNative=true 로 WebSocket 대신 브리지 모드 → page.evaluate(pluckyPush) 로 상태 스크립트 재생. 캡션에 '데모 스크립트' 명시.
+- Flutter: 임시 클론에 `flutter create . --platforms web` → `flutter build web` → python http.server. 입력은 좌표 클릭+keyboard.type(캔버스 렌더). dart:io Platform 을 쓰는 앱(OMEN)은 웹에서 즉시 크래시.
+- Windows 데스크톱(Oinzi): OINZI_DATA_DIR=임시 폴더로 실행(이 env 가 있으면 Rebrand 마이그레이션이 실 AppData 를 건드리지 않음). Python 3.10(anaconda 파이썬은 _ctypes 없음) + win32gui 로 클라이언트 1600x1000 배치·클릭, 영상은 ffmpeg gdigrab 영역 녹화. 첫 화면 환영 대화상자에 Claude/Codex 계정 이메일이 보이므로 녹화 전에 닫는다.
+- 라이브 사이트 녹화 시 개인 이름은 addInitScript 로 해당 텍스트 요소에 blur(5px) (rotc-seating 행사 일정의 강사 이름).
+
+## 함정
+- Python 으로 portfolio.ts 를 고칠 때 text 모드 write 는 Windows 에서 CRLF 로 바꾼다 → newline="
+" 필수.
+- vip-care 라이브에서 '복용 완료'를 누르면 Supabase env 누락 에러로 화면이 하얗게 된다(라이브 버그) → 녹화에서 누르지 않음.
+- threads_auto web 의 /pricing 은 플랜 필드 일부가 'undefined' 로 나온다(실버그) → 캡처 미사용.

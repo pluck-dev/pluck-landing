@@ -16,6 +16,7 @@ import {
   categoryOrder,
   getPortfolioStats,
   getProject,
+  mediaStill,
   projects,
 } from "@/lib/portfolio";
 import {
@@ -424,7 +425,7 @@ export default function Home() {
                       {inset ? (
                         <span className="featured-inset">
                           <Image
-                            src={inset.src}
+                            src={mediaStill(inset)}
                             alt=""
                             fill
                             sizes="(max-width: 900px) 50vw, 340px"

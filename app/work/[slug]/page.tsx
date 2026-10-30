@@ -11,11 +11,13 @@ import {
 import { StatusPill } from "@/components/status-pill";
 import { JsonLd } from "@/components/json-ld";
 import { ProjectCard } from "@/components/project-index";
+import { WorkVideo } from "@/components/work-video";
 import {
   categoryLabels,
   formatYears,
   getAdjacentProjects,
   getProject,
+  mediaStill,
   projects,
   type PortfolioProject,
   type ProjectCategory,
@@ -33,6 +35,9 @@ import {
 } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
+
+const FRAME_SIZES =
+  "(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), 1320px";
 
 /** Only slugs from lib/portfolio.ts exist; anything else is a 404. */
 export const dynamicParams = false;
@@ -199,16 +204,32 @@ export default async function WorkPage({ params }: Props) {
           </div>
         </section>
 
-        <div className="shell work-cover">
-          <Image
-            src={project.cover.src}
-            alt={project.cover.alt}
-            width={1600}
-            height={1000}
-            preload
-            sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), 1320px"
-          />
-        </div>
+        <figure className="shell work-cover">
+          {project.demo ? (
+            <WorkVideo video={project.demo}>
+              <Image
+                src={project.demo.poster}
+                alt={project.demo.alt}
+                width={1600}
+                height={1000}
+                preload
+                sizes={FRAME_SIZES}
+              />
+            </WorkVideo>
+          ) : (
+            <Image
+              src={project.cover.src}
+              alt={project.cover.alt}
+              width={1600}
+              height={1000}
+              preload
+              sizes={FRAME_SIZES}
+            />
+          )}
+          {project.demo?.caption ? (
+            <figcaption>{project.demo.caption}</figcaption>
+          ) : null}
+        </figure>
 
         <section className="shell work-body" aria-label="프로젝트 설명">
           {sections.map(([label, text]) => (
@@ -239,17 +260,31 @@ export default async function WorkPage({ params }: Props) {
               화면 둘러보기
             </h2>
             <ul data-count={project.gallery.length}>
-              {project.gallery.map((image) => (
-                <li key={image.src}>
+              {project.gallery.map((media) => {
+                const still = (
                   <Image
-                    src={image.src}
-                    alt={image.alt}
+                    src={mediaStill(media)}
+                    alt={media.alt}
                     width={1600}
                     height={1000}
-                    sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), 1320px"
+                    sizes={FRAME_SIZES}
                   />
-                </li>
-              ))}
+                );
+                return (
+                  <li key={media.src} data-type={media.type ?? "image"}>
+                    <figure>
+                      {media.type === "video" ? (
+                        <WorkVideo video={media}>{still}</WorkVideo>
+                      ) : (
+                        still
+                      )}
+                      {media.caption ? (
+                        <figcaption>{media.caption}</figcaption>
+                      ) : null}
+                    </figure>
+                  </li>
+                );
+              })}
             </ul>
           </section>
         ) : null}

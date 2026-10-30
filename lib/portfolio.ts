@@ -8,10 +8,13 @@ export type ProjectCategory = "client" | "product" | "app" | "ai";
 export type ProjectStatus = "live" | "development" | "case" | "concept";
 
 export type ProjectImage = {
+  type?: "image";
   /** 1600x1000 (16:10) webp under /public/work/<slug>/. */
   src: string;
   /** Korean alt text describing the screen. */
   alt: string;
+  /** Optional Korean caption shown under the frame. */
+  caption?: string;
   /**
    * Brand-style explanation panel rendered by scripts/render-brand-covers.mjs
    * (title may contain "
@@ -23,6 +26,29 @@ export type ProjectImage = {
     items: readonly { title: string; text?: string }[];
   };
 };
+
+/**
+ * Short muted demo loop recorded from the real app (see MEMORY: video spec).
+ * 16:10, no audio, H.264 mp4 (+ optional VP9 webm), <=2.5MB, 8-25s.
+ */
+export type ProjectVideo = {
+  type: "video";
+  /** H.264 mp4 under /public/work/<slug>/. */
+  src: string;
+  /** Optional VP9 webm offered before the mp4. */
+  webm?: string;
+  /** 1600x1000 webp first frame; doubles as LCP image and reduced-motion still. */
+  poster: string;
+  alt: string;
+  caption?: string;
+};
+
+export type ProjectMedia = ProjectImage | ProjectVideo;
+
+/** Still image for a gallery item (poster for videos). */
+export function mediaStill(media: ProjectMedia) {
+  return media.type === "video" ? media.poster : media.src;
+}
 
 /**
  * "screenshot" = real product capture. "brand" = the unified PLUCK thumbnail
@@ -58,7 +84,9 @@ export type PortfolioProject = {
   coverMotif?: CoverMotif;
   /** Real screenshot when one exists; otherwise a generated brand cover (see MEMORY). */
   cover: ProjectImage;
-  gallery: readonly ProjectImage[];
+  gallery: readonly ProjectMedia[];
+  /** Hero demo loop shown over the cover on the detail page and on card hover. */
+  demo?: ProjectVideo;
   detail: ProjectDetail;
 };
 
@@ -600,9 +628,15 @@ const projectList: readonly PortfolioProject[] = [
       "자동차 튜닝 파츠 브랜드의 자사몰. 차종 적합성 기반 스토어프론트와 주문·재고 관리자를 한 코드베이스로.",
     disciplines: ["E-commerce", "Admin", "PostgreSQL"],
     status: "development",
-    coverKind: "brand",
-    cover: { src: "/work/d2c-store/cover.webp", alt: "자동차용품 자사몰 PLUCK 브랜드 썸네일 — 차종에 맞는 파츠를 파는 자체 개발 쇼핑몰" },
-    gallery: [],
+    coverKind: "screenshot",
+    cover: { src: "/work/d2c-store/cover.webp", alt: "튜닝 차량 사진 위에 MOVE DIFFERENT 헤드라인과 컬렉션 버튼이 놓인 자사몰 메인(로컬 실행)" },
+    demo: { type: "video", src: "/work/d2c-store/demo.mp4", poster: "/work/d2c-store/demo-poster.webp", alt: "메인에서 카테고리와 차종 맞춤 섹션을 지나 상품 상세에서 장바구니에 담기까지의 화면 녹화", caption: "로컬 실행 화면 녹화 — 메인 → 상품 상세 → 장바구니" },
+    gallery: [
+      { type: "video", src: "/work/d2c-store/admin.mp4", poster: "/work/d2c-store/admin-poster.webp", alt: "관리자 콘솔에서 운영 대시보드, 주문·배송, 재고·창고, 통계 메뉴를 차례로 여는 화면 녹화", caption: "관리자 콘솔 — 대시보드·주문·재고·통계 (샘플 주문 데이터)" },
+      { src: "/work/d2c-store/01.webp", alt: "결제액·주문·출고·신규 회원 카드와 최근 주문, 재고 부족 상품 표가 있는 운영 대시보드(샘플 데이터)" },
+      { src: "/work/d2c-store/02.webp", alt: "결제 완료·배송 준비 등 상태 탭과 주문별 택배사·송장 입력 칸이 있는 주문·배송 관리(샘플 주문)" },
+      { src: "/work/d2c-store/03.webp", alt: "바디킷 카테고리 필터 칩과 무료배송 배지가 붙은 상품 카드 목록" },
+    ],
     detail: {
       oneLiner: "차종에 맞는 파츠를 파는 자체 개발 쇼핑몰",
       role: [
@@ -1102,6 +1136,7 @@ const projectList: readonly PortfolioProject[] = [
     url: "https://gender-reveal-eta-wheat.vercel.app/",
     coverKind: "screenshot",
     cover: { src: "/work/gender-reveal/cover.webp", alt: "데모 모드 모바일 화면 3장 - 태명 입력, 의사 전용 성별 선택, 카운트다운이 있는 이벤트 페이지" },
+    demo: { type: "video", src: "/work/gender-reveal/demo.mp4", poster: "/work/gender-reveal/demo-poster.webp", alt: "태명과 부모 이름 입력, 의사 화면에서 성별 선택·봉인, 이벤트 페이지에서 눌러서 공개하기까지 이어지는 모바일 화면 녹화", caption: "로컬 데모 모드 화면 녹화 — 태명 입력 → 의사 봉인 → 공개 (localStorage, 샘플 이름)" },
     gallery: [
       { src: "/work/gender-reveal/01.webp", alt: "데모 모드 모바일 화면 3장 - 성별 확인 요청 완료, 봉인 완료, IT'S A GIRL 공개 화면" },
     ],
@@ -1485,9 +1520,12 @@ const projectList: readonly PortfolioProject[] = [
       "요양보호사와 어르신의 대화를 음성 인식으로 받아 건강 기록과 리포트로 정리하는 앱.",
     disciplines: ["Mobile app", "Speech", "RAG"],
     status: "development",
-    coverKind: "brand",
-    cover: { src: "/work/care-helper/cover.webp", alt: "케어헬퍼 PLUCK 브랜드 썸네일 — 말로 하는 건강 체크를 기록으로" },
-    gallery: [],
+    coverKind: "screenshot",
+    cover: { src: "/work/care-helper/cover.webp", alt: "오늘 방문 현황과 바로가기가 있는 홈, 어르신 기본 정보 입력, 병력 선택 화면을 나란히 놓은 모바일 화면 3장(샘플 입력)" },
+    demo: { type: "video", src: "/work/care-helper/demo.mp4", poster: "/work/care-helper/demo-poster.webp", alt: "홈에서 어르신 등록을 눌러 성함·연락처·주소를 입력하고 병력을 고르는 모바일 화면 녹화", caption: "Flutter 웹 빌드 화면 녹화 — 홈 → 어르신 등록 (샘플 입력)" },
+    gallery: [
+      { src: "/work/care-helper/01.webp", alt: "홈 대시보드, 어르신 기본 정보 입력, 병력·알레르기 선택 칩 모바일 화면 3장(샘플 입력)" },
+    ],
     detail: {
       oneLiner: "말로 하는 건강 체크를 기록으로",
       role: [
@@ -1903,9 +1941,13 @@ const projectList: readonly PortfolioProject[] = [
       "말로 부르면 말로 답하고 PC 작업까지 수행하는 로컬 AI 음성 비서. API 키 대신 CLI 구독 인증을 사용.",
     disciplines: ["Voice agent", "Local STT", "HUD"],
     status: "case",
-    coverKind: "brand",
-    cover: { src: "/work/jarvis/cover.webp", alt: "JARVIS 음성 비서 PLUCK 브랜드 썸네일 — API 키 없이 돌아가는 로컬 음성 비서" },
-    gallery: [],
+    coverKind: "screenshot",
+    cover: { src: "/work/jarvis/cover.webp", alt: "어두운 HUD 가운데 청록색 파티클 아크 리액터와 사용자 요청·자비스 답변 자막이 떠 있는 응답 중 화면" },
+    demo: { type: "video", src: "/work/jarvis/demo.mp4", poster: "/work/jarvis/demo-poster.webp", alt: "부팅 시퀀스 후 대기·듣는 중·분석 중(도구 사용)·응답 중 상태에 따라 아크 리액터 색과 자막이 바뀌는 HUD 화면 녹화", caption: "로컬 실행 HUD 화면 녹화 — 상태 메시지를 데모 스크립트로 재생 (음성·백엔드 없이)" },
+    gallery: [
+      { src: "/work/jarvis/01.webp", alt: "보라색으로 바뀐 아크 리액터와 'PC 제어 · 폴더 만들기' 도구 라벨, 사용자 요청 자막이 보이는 분석 중 화면" },
+      { src: "/work/jarvis/02.webp", alt: "ARC REACTOR ONLINE, 음성 인식·두뇌 연결·음성 합성 준비 OK 줄이 이어지는 부팅 화면" },
+    ],
     detail: {
       oneLiner: "API 키 없이 돌아가는 로컬 음성 비서",
       role: [
@@ -2079,6 +2121,7 @@ const projectList: readonly PortfolioProject[] = [
     url: "https://modoo-three.vercel.app/",
     coverKind: "screenshot",
     cover: { src: "/work/modoocar/cover.webp", alt: "MODOOCAR 메인 히어로 - 법인차 구독 서비스 헤드라인과 파란 스포츠카 이미지" },
+    demo: { type: "video", src: "/work/modoocar/demo.mp4", poster: "/work/modoocar/demo-poster.webp", alt: "메인 히어로에서 구독 장점, 이용 단계, 추가약정·보험 표, 고객 리뷰, 자주 묻는 질문까지 스크롤하는 라이브 사이트 녹화", caption: "라이브 사이트 화면 녹화 — 메인 → 비교표 → 이용 단계 → FAQ" },
     gallery: [
       { src: "/work/modoocar/01.webp", alt: "구독·리스·장기 렌트를 보증금, 취득세, 보험료 같은 항목별로 비교한 표와 구독 장점 목록" },
       { src: "/work/modoocar/02.webp", alt: "모바일 메인 화면 - 헤드라인과 차량 이미지, 구독 이유 섹션" },
@@ -2115,7 +2158,10 @@ const projectList: readonly PortfolioProject[] = [
     url: "https://rotc-all.vercel.app/",
     coverKind: "screenshot",
     cover: { src: "/work/rotc-seating/cover.webp", alt: "모바일 화면 2종: 무대와 기수별·VIP 좌석 배치도, 월별 행사 일정·조직도 바로가기" },
-    gallery: [],
+    demo: { type: "video", src: "/work/rotc-seating/demo.mp4", poster: "/work/rotc-seating/demo-poster.webp", alt: "기수별·VIP 좌석 배치도에서 월별 행사 일정으로 이동해 연간 일정을 스크롤하는 모바일 라이브 사이트 녹화", caption: "라이브 사이트 화면 녹화 — 좌석 배치도 → 월별 행사 일정 (개인 이름은 블러)" },
+    gallery: [
+      { src: "/work/rotc-seating/01.webp", alt: "좌석 배치도와 월별 행사 일정 목록 모바일 화면 3장(개인 이름 블러)" },
+    ],
     detail: {
       oneLiner: "행사장에서 휴대폰으로 찾는 내 자리",
       role: ["기획", "UI 디자인", "프론트엔드"],
@@ -2229,10 +2275,11 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Desktop app", "AI agent", "MCP"],
     status: "development",
     coverKind: "screenshot",
-    cover: { src: "/work/oinzi/cover.webp", alt: "Oinzi 브라우저 화면 - 왼쪽 탭 사이드바와 오른쪽 AI 패널에서 가격 비교 요청을 처리하는 모습(이름 변경 전 테스트 빌드)" },
+    cover: { src: "/work/oinzi/cover.webp", alt: "Oinzi 0.9.1 화면 - 왼쪽 세로 탭 사이드바, 가운데 위키백과 페이지, 오른쪽 'Claude와 함께 브라우징' AI 패널과 추천 요청" },
+    demo: { type: "video", src: "/work/oinzi/demo.mp4", poster: "/work/oinzi/demo-poster.webp", alt: "Oinzi에서 사이트를 스크롤하고 새 탭을 열어 이동한 뒤 탭 전환, 세션 개요, AI 패널을 차례로 여는 실제 앱 화면 녹화", caption: "현재 빌드(0.9.1) 실제 창 녹화 — 새 탭 → 탭 전환 → 세션 개요 → AI 패널 (임시 프로필, AI 요청은 보내지 않음)" },
     gallery: [
-      { src: "/work/oinzi/01.webp", alt: "세션 개요 화면 - AI 대화별 세션과 탭을 카드로 보여주고 '보는 중' 상태를 표시" },
-      { src: "/work/oinzi/02.webp", alt: "AI가 테스트 페이지를 조작하는 동안 테두리 오로라와 'AI가 클릭하고 있어요' 상태 표시가 뜬 화면" },
+      { src: "/work/oinzi/01.webp", alt: "세션·녹화 탭이 있는 개요 화면 - 열린 탭을 '보는 중' 배지가 붙은 카드로 표시" },
+      { src: "/work/oinzi/02.webp", alt: "Oinzi 세로 탭 사이드바와 함께 PLUCK 사이트를 연 브라우저 화면" },
     ],
     detail: {
       oneLiner: "사람과 AI가 한 브라우저를 나눠 쓰는 법",
@@ -2312,10 +2359,14 @@ const projectList: readonly PortfolioProject[] = [
       "웹에서 가입·구독하고, 데스크톱 앱이 사용자 PC에서 Threads 자동화를 실행하는 구조의 B2C 서비스.",
     disciplines: ["SaaS", "Desktop app", "Automation"],
     status: "case",
-    coverKind: "brand",
-    coverMotif: "window",
-    cover: { src: "/work/threads-saas/cover.webp", alt: "Threads 자동화 SaaS PLUCK 브랜드 썸네일 — 웹 구독과 데스크톱 실행을 잇는 자동화 서비스" },
-    gallery: [],
+    coverKind: "screenshot",
+    cover: { src: "/work/threads-saas/cover.webp", alt: "'Threads 성장을 자동화하세요' 헤드라인과 무료로 시작하기·요금제 보기 버튼이 있는 Threads Auto 웹 서비스 메인" },
+    demo: { type: "video", src: "/work/threads-saas/demo.mp4", poster: "/work/threads-saas/demo-poster.webp", alt: "메인의 기능 소개·작동 방식·요금제를 스크롤한 뒤 로그인해 구독 플랜, 프로그램 다운로드, 사용 통계, Threads 계정 관리가 있는 대시보드를 보는 화면 녹화", caption: "로컬 실행 화면 녹화 — 메인 → 로그인 → 내 대시보드 (임시 DB, 샘플 계정)" },
+    gallery: [
+      { src: "/work/threads-saas/01.webp", alt: "남은 기간·계정 수·오늘 실행 횟수가 담긴 구독 플랜 카드와 Mac·Windows 데스크톱 앱 다운로드 영역이 있는 사용자 대시보드(샘플 계정)" },
+      { src: "/work/threads-saas/02.webp", alt: "등록 계정·실행 횟수·성공 작업 통계와 Threads 계정 추가·삭제를 하는 계정 관리 영역(샘플 계정)" },
+      { src: "/work/threads-saas/03.webp", alt: "타겟 마케팅·시간 절약·안전한 사용·실시간 분석·자동 댓글·데스크톱 앱 기능 카드와 3단계 작동 방식" },
+    ],
     detail: {
       oneLiner: "웹 구독과 데스크톱 실행을 잇는 자동화 서비스",
       role: ["기획", "백엔드", "데스크톱 앱", "자동화"],
@@ -2345,9 +2396,12 @@ const projectList: readonly PortfolioProject[] = [
       "초대 코드로 들어오는 게임방에서 트리 장식·슬롯 카드로 경품을 뽑는 송년회용 웹 이벤트 도구.",
     disciplines: ["Event web", "Supabase", "Admin"],
     status: "case",
-    coverKind: "brand",
-    cover: { src: "/work/lucky-draw/cover.webp", alt: "Lucky Draw · 송년회 뽑기 PLUCK 브랜드 썸네일 — 초대 코드로 여는 송년회 경품 뽑기" },
-    gallery: [],
+    coverKind: "screenshot",
+    cover: { src: "/work/lucky-draw/cover.webp", alt: "초대 코드 게임방의 경품 현황, 트리 오너먼트 선택, 당첨 결과 모달을 나란히 놓은 모바일 화면 3장(샘플 데이터)" },
+    demo: { type: "video", src: "/work/lucky-draw/demo.mp4", poster: "/work/lucky-draw/demo-poster.webp", alt: "초대 코드 입력, 참가자 이름 입력, 트리에서 오너먼트를 눌러 당첨 결과를 확인하는 모바일 화면 녹화", caption: "로컬 실행 화면 녹화 — 초대 코드 → 이름 입력 → 오너먼트 뽑기 (샘플 게임 데이터)" },
+    gallery: [
+      { src: "/work/lucky-draw/01.webp", alt: "경품 현황과 이름 입력, 오너먼트가 달린 트리, 당첨 결과 모달 모바일 화면 3장(샘플 데이터)" },
+    ],
     detail: {
       oneLiner: "초대 코드로 여는 송년회 경품 뽑기",
       role: ["기획", "UI 디자인", "프론트엔드", "어드민"],
@@ -2379,7 +2433,10 @@ const projectList: readonly PortfolioProject[] = [
     url: "https://senior-hazel.vercel.app/",
     coverKind: "screenshot",
     cover: { src: "/work/vip-care/cover.webp", alt: "모바일 화면 3종(샘플 데이터): 인사 카드와 생활 서비스 메뉴, 오늘의 복약·진료 일정과 추천, 혈압·혈당·복약 순응도 요약" },
-    gallery: [],
+    demo: { type: "video", src: "/work/vip-care/demo.mp4", poster: "/work/vip-care/demo-poster.webp", alt: "홈의 생활 서비스·오늘 할 일·추천·건강 요약을 스크롤한 뒤 서비스 찾기와 내 예약 탭으로 이동하는 모바일 라이브 사이트 녹화", caption: "라이브 사이트 화면 녹화 — 홈 → 서비스 찾기 → 내 예약 (샘플 데이터)" },
+    gallery: [
+      { src: "/work/vip-care/01.webp", alt: "서비스 메뉴와 오늘 할 일, 카테고리별 서비스 찾기, 예약 확인 코드가 있는 내 예약 모바일 화면 3장(샘플 데이터)" },
+    ],
     detail: {
       oneLiner: "복약과 건강 기록을 챙기는 시니어 앱",
       role: ["기획", "UI 디자인", "프론트엔드", "백엔드"],
@@ -2409,9 +2466,15 @@ const projectList: readonly PortfolioProject[] = [
       "상품 검증부터 Stripe 결제, 공급처 자동 발주·환불까지 묶은 미국 대상 드롭쉬핑 스토어와 운영 현황판.",
     disciplines: ["Commerce", "Stripe", "Operations"],
     status: "development",
-    coverKind: "brand",
-    cover: { src: "/work/dropship-os/cover.webp", alt: "글로벌 드롭쉬핑 운영 시스템 PLUCK 브랜드 썸네일 — 검증되지 않으면 결제가 열리지 않는 드롭쉬핑 스토어" },
-    gallery: [],
+    coverKind: "screenshot",
+    cover: { src: "/work/dropship-os/cover.webp", alt: "판매 매출·실제 주문·검증 대기·긴급 경고 카드와 남은 관문 체크리스트가 있는 드롭쉬핑 운영 현황판 첫 화면(로컬 실행)" },
+    demo: { type: "video", src: "/work/dropship-os/demo.mp4", poster: "/work/dropship-os/demo-poster.webp", alt: "운영 현황판에서 신호 레이더, 상품 게이트, 공급처 게이트, 주문·배송 탭을 차례로 여는 화면 녹화", caption: "로컬 실행 화면 녹화 — 오늘의 상황 → 신호 레이더 → 상품·공급처 게이트 → 주문·배송 (검증 모드, 테스트 주문)" },
+    gallery: [
+      { src: "/work/dropship-os/01.webp", alt: "점수·예상 판매가·직지원가와 실패 위험을 함께 보여주는 신규 조사 후보 카드(신호 레이더)" },
+      { src: "/work/dropship-os/02.webp", alt: "Proceed·Retest 판정과 마진 범위를 단 검증 전 상품 후보 5개(상품 게이트)" },
+      { src: "/work/dropship-os/03.webp", alt: "주문→발주→배송→완료 표와 사람이 봐야 할 예외 주문 목록(테스트 주문)" },
+      { src: "/work/dropship-os/04.webp", alt: "Less clutter. More living. 헤드라인의 판매용 스토어프론트 첫 화면" },
+    ],
     detail: {
       oneLiner: "검증되지 않으면 결제가 열리지 않는 드롭쉬핑 스토어",
       role: ["기획", "리서치 자동화", "풀스택", "운영 설계"],
@@ -2522,10 +2585,15 @@ const projectList: readonly PortfolioProject[] = [
       "Qwen3-TTS 기반 음성 복제·파인튜닝과 대본·오디오 편집을 한 데스크톱 앱에 모은 TTS 스튜디오.",
     disciplines: ["Desktop app", "Voice AI", "TTS"],
     status: "case",
-    coverKind: "brand",
-    coverMotif: "window",
-    cover: { src: "/work/vox-studio/cover.webp", alt: "Vox Studio · 음성 복제 스튜디오 PLUCK 브랜드 썸네일 — 목소리 복제부터 편집까지 한 앱에서" },
-    gallery: [],
+    coverKind: "screenshot",
+    cover: { src: "/work/vox-studio/cover.webp", alt: "Vox Studio 홈 - 왼쪽 메뉴, '샘플 목소리 하나로 대본을 읽히세요' 헤드라인과 음성 등록·생성·스크립트 카드, 엔진 상태와 제작 파이프라인" },
+    demo: { type: "video", src: "/work/vox-studio/demo.mp4", poster: "/work/vox-studio/demo-poster.webp", alt: "홈에서 음성 생성, 스크립트, 음성 라이브러리, RVC 변환, 오디오 편집, 동화 만들기 화면을 차례로 여는 데스크톱 앱 화면 녹화", caption: "앱 화면(렌더러 빌드) 녹화 — 음성 엔진 대신 샘플 데이터 응답으로 실행" },
+    gallery: [
+      { src: "/work/vox-studio/01.webp", alt: "프리셋·음성 복제·음성 디자인 모드와 참조 음성 선택, 텍스트 입력, 속도·언어·모델 크기 설정이 있는 음성 생성 화면" },
+      { src: "/work/vox-studio/02.webp", alt: "참조 음성으로 RVC 모델을 학습하고 입력 오디오를 변환 모델·피치·인덱스 비율로 바꾸는 RVC 변환 화면" },
+      { src: "/work/vox-studio/03.webp", alt: "동화 파일 선택, 목소리 선택, AI 목소리 카드, 변환 시작 3단계로 이루어진 동화 만들기 화면" },
+      { src: "/work/vox-studio/04.webp", alt: "[화자명](감정) 형식 대본을 입력하고 파싱하는 스크립트 화면" },
+    ],
     detail: {
       oneLiner: "목소리 복제부터 편집까지 한 앱에서",
       role: ["설계", "데스크톱 앱", "음성 AI 백엔드"],

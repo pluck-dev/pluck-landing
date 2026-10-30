@@ -1110,6 +1110,96 @@ summary:focus-visible {
   border-radius: 14px;
   background: #dfe3da;
 }
+.work-cover,
+.work-gallery figure {
+  margin: 0;
+}
+.work-cover figcaption,
+.work-gallery figcaption {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-3);
+  word-break: keep-all;
+}
+/* Demo loop sits on top of its poster image; it fades in once frames play. */
+.work-video {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  isolation: isolate;
+}
+.work-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.work-video[data-started] video {
+  opacity: 1;
+}
+.work-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px #2025231a;
+  pointer-events: none;
+}
+.work-video-toggle {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #202523b3;
+  color: var(--paper);
+  cursor: pointer;
+  opacity: 0.55;
+  transition:
+    opacity 0.25s,
+    background 0.25s;
+}
+.work-video:hover .work-video-toggle,
+.work-video-toggle:focus-visible,
+.work-video-toggle[data-idle] {
+  opacity: 1;
+}
+.work-video-toggle[data-idle] {
+  width: 64px;
+  height: 64px;
+  right: 50%;
+  bottom: 50%;
+  transform: translate(50%, 50%);
+  background: var(--blue);
+}
+.work-video-toggle:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+.work-card-video {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.work-card-video[data-shown] {
+  opacity: 1;
+}
 .work-body {
   padding-block: 110px 30px;
 }
@@ -1296,7 +1386,8 @@ summary:focus-visible {
     grid-template-columns: 68px minmax(0, 1fr);
   }
   .work-cover img,
-  .work-gallery img {
+  .work-gallery img,
+  .work-video {
     border-radius: 10px;
   }
   .work-body {
