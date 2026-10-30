@@ -17,7 +17,7 @@ export function LoginForm({ next }: { next: string }) {
       <div className="adm-stack">
         <p className="adm-note" role="status">
           {email} 이(가) 등록된 관리자라면 로그인 링크를 보냈어요. 메일의 링크를
-          누르거나, 메일에 적힌 숫자 코드를 아래에 입력하세요.
+          누르면 바로 로그인돼요. 휴대폰 메일 앱에서 눌러도 돼요. (메일에 숫자 코드가 있다면 아래에 입력해도 돼요)
         </p>
         <form action={verifyAction} className="adm-stack">
           <input type="hidden" name="email" value={email} />
