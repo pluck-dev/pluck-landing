@@ -1110,7 +1110,10 @@ summary:focus-visible {
   border-radius: 14px;
   background: #dfe3da;
 }
-.work-cover,
+/* .work-cover is a <figure>: keep .shell's inline auto margins. */
+.work-cover {
+  margin-block: 0;
+}
 .work-gallery figure {
   margin: 0;
 }
