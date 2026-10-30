@@ -16,7 +16,7 @@
 - boryoung.co.kr: 라이브 HTML 메타/카피가 clients/boryoung/apps/web 과 일치 → 링크 OK.
 - bayadakorea.com: WordPress/Elementor 사이트, 우리 코드 아님 → 링크 금지.
 - boxon.vercel.app: 스페인어 다른 서비스(타 소유) → 우리 boxon 아님, 링크·캡처 금지.
-- jeongfood.vercel.app: /admin/login 으로만 이동(공개 화면 없음). 로컬 실행은 운영 Supabase+실거래처 데이터에 붙으므로 금지 → 디자인 커버.
+- jeongfood.vercel.app: /admin/login 으로만 이동(공개 화면 없음). 로컬 실행은 운영 Supabase+실거래처 데이터에 붙으므로 금지 → 브랜드 썸네일.
 - ndrop.kr, draw.pluck.co.kr: DNS NXDOMAIN (피처드 카드/MORE TO EXPLORE 링크 죽어 있음, 오너 결정 대기).
 - admin-pando.vercel.app (FitGenie): 404 → MORE TO EXPLORE 에서 제거.
 - KakaoWork exporter(tools/kakaowork/upstream): 외부 작성자(kangjung) 레포라 제외.
@@ -24,18 +24,18 @@
 ## 제외 레포 판단 (2026-10-29, 재검토 방지)
 - pluck-dev/ad = 개인 마케팅 학습 노트, securities-cs-knowledge-base = 개인 학습 문서, simjae-fn12/hirebest = Webflow 템플릿(heavn-one) 미러, pluck-dev/ordering = '발주모아 클론', exercises-dataset = 포크, info-admin = 하루짜리 스캐폴드, clients/marketting(ALPHA 랜딩) = 하루 작업·미배포·고객 불명, maengrov-landing = README 없음(레퍼런스 클론).
 - 사주 앱: 소스는 이 PC/접근 가능 GitHub 에 없음. env-collection-20260630/app-manse(구 Mac 경로 personal/app-manse)에 env 이름만 존재. 사주 기능은 pluck-dev/omen(OMEN, 기존 사주 리포트 파이프라인 재활용)에 포함 → OMEN 엔트리로 대체.
-- D2C(dev-gwedo) 배포는 Vercel 로그인 보호(해시 URL만) → 디자인 커버. d2c.vercel.app 등은 타인 사이트.
+- D2C(dev-gwedo) 배포는 Vercel 로그인 보호(해시 URL만) → 브랜드 썸네일. d2c.vercel.app 등은 타인 사이트.
 
 # Portfolio 이미지: public/work/<slug>/ 규격, 소싱 순서, 개인정보 규칙
 
 ## 규격 (WHY: 카드·상세·OG 를 한 비율로 통일)
 - 모든 이미지 1600x1000(16:10) webp ≤250KB. cover.webp = 카드·상세 히어로·OG 이미지, 01..0N.webp = 갤러리(최대 6, 홀수면 첫 장 전폭).
 - 모바일 화면은 390 캡처 2-3장을 #dfe3da 캔버스에 둥근 모서리+그림자로 합성 (docs/work-covers/compose.js phones()).
-- 소싱 우선순위: 라이브 사이트 캡처 → 프로젝트 폴더 기존 QA/Playwright 스크린샷 → 로컬 실행(데모/모크 모드만) → 디자인 커버.
+- 소싱 우선순위: 라이브 사이트 캡처 → 프로젝트 폴더 기존 QA/Playwright 스크린샷 → 로컬 실행(데모/모크 모드만) → 브랜드 썸네일(coverKind "brand").
 
 ## 개인정보/식별 규칙 (하드)
 - 실명·전화번호·회원 명단·실데이터 어드민·토큰·실제 Discord/카톡 화면 금지. 블러하거나 제외. 데모 데이터 어드민은 OK.
-- caryoung/bayada/nousbo 는 브랜드명·로고·고유 통계(예: 50년/33,000+/22개국)·견적 금액이 보이면 안 됨. homecare 캡처는 로고 숨김+텍스트 치환으로 찍었고 빨간 브랜드 컬러는 남아 있음(더 강한 익명성 필요하면 디자인 커버로 교체).
+- caryoung/bayada/nousbo 는 브랜드명·로고·고유 통계(예: 50년/33,000+/22개국)·견적 금액이 보이면 안 됨. homecare 는 이제 브랜드 썸네일만 쓴다(예전 캡처는 갤러리에서도 빠져 있음).
 - farm-sales 서비스명에 개인 실명이 들어 있어 전 이미지에서 블러. seoul-home 공고의 사업자 개인명 블러. webtoon 푸터(사업자 정보) 크롭.
 - setflow 라이브 캡처는 실사용자 작성자명이 보여 미사용 → build/shots 데모 데이터 캡처 사용.
 - v8-cal-lab(hptunermap) 데스크톱 헤더의 'CALL 010-…' 사업장 번호는 블러(1800px 캡처 기준 x1100,y12,205x54). 푸터·CTA 프레임은 번호가 보여 미사용.
@@ -43,18 +43,22 @@
 - ai-dj(D:\dev\ai-dj-navigation, Tkinter): 레포 밖 하네스(C:\Temp\djcap\cap.py)로 App 을 library.sqlite3 **복사본** 데이터 폴더로 띄워 창 클라이언트 영역 1600x1000 을 PIL ImageGrab. .venv 는 _ctypes 없음 → .venv-package 사용, 하네스는 `if __name__=='__main__'` 필수(오디오 엔진 multiprocessing spawn 이 스크립트를 재실행). 재생 버튼은 누르지 않고 GUIDE 모드 transport 위치만 옮겨 전환 구간을 찍음(소리 없음). 덱 로드 후 PERFORM 패널을 열면 행이 걸려서 04 는 빈 덱 상태 캡처. 카피: 개발 중·규칙 기반(학습 모델 아님) 명시.
 - knife-sharpening(web-kal) 이미지는 레포 public/figma 의 Figma 시안 → alt 에 'Figma 시안' 명시.
 
-## 디자인 커버 (실화면이 없거나 노출 불가한 프로젝트)
-- 대상: discord-bridge, voxcli, thumbnail, figma-mcp, contest-watch(커버만), dealer-settlement(상태 다이어그램만, 커버는 실화면), jeongfood, lulla, d2c-store, omen, care-helper, jarvis, programmatic-seo, seller-sourcing, browser-bridge(모두 커버만).
-- render.js 실행: docs/work-covers 에서 `NODE_PATH=C:/Users/SIMJAE/AppData/Local/Temp/pwtool/node_modules node render.js a.html out.webp ...` (compose.js 의 sharp 해석용).
-- 소스: docs/work-covers/*.html (사이트 아트카드 톤 클래스 tone-blue/forest/lime/ink/stone) + panel.js(spec-*.json → 설명 패널) + render.js(Playwright→compose.js). 실행 시 playwright/sharp 가 설치된 위치에서 require 경로 맞춰 쓸 것.
-- 디자인 커버 안의 UI 목업에 구체 수치(건수·사용자 수)를 넣지 않는다 — 실제 지표처럼 읽힘. 막대/스파크라인으로 대체.
-- alt 텍스트에 "디자인 커버"/"다이어그램"이라고 명시해 실제 화면과 구분.
+## 브랜드 썸네일 (실화면이 없거나 노출 불가한 프로젝트, 2026-10-30)
+- 오너 피드백: 프로젝트마다 따로 디자인한 임시 커버(파란 배경 '룰라.' + 가짜 폰 목업 등)가 사이트와 따로 놀았다 → 한 템플릿으로 통일. 예전 docs/work-covers/*.html·panel.js·spec-*.json 은 삭제했다(재도입 금지).
+- 데이터: PortfolioProject.coverKind = "brand" | "screenshot" (필수), coverMotif?(browser/phone/window/terminal/flow), 갤러리 이미지의 diagram?{title(
+ 허용), flow?, items[{title,text?}]}.
+- 생성: `npm run covers:brand [-- slug ...]` = scripts/render-brand-covers.mjs (Playwright + sharp, lib/portfolio.ts 를 Node 24 type-stripping 으로 직접 import). coverKind brand 의 cover.webp 와, coverKind 와 상관없이 diagram 이 있는 갤러리 이미지를 다시 만든다. Google Fonts(Noto Sans KR 800/500, Geist)를 쓰므로 네트워크 필요.
+- 템플릿: 이름(굵은 한글, 2–3줄 자동 축소) + detail.oneLiner 한 줄 + 좌하단 '카테고리 · 연도' + 우측 선 글리프(라임/블루 원 = 뽑힌 점 모티프) + 우하단 PLUCK p 심볼. 톤은 카테고리로 고정: client·product=paper(#f4f4ef), app=blue(#335aeb), ai=ink(#202523). 글리프 기본값도 카테고리(client·product=browser, app=phone, ai=flow).
+- 설명 패널(diagram)도 같은 톤·심볼. eyebrow/번호/파란 마침표 없음. '·'는 한 줄 맨 앞에 오지 않게 이름·한 줄 소개에서만 단어 결합(⁠) 처리 — 패널 카드 안에서는 결합하면 카드 폭이 깨져서 안 한다.
+- alt 는 "{이름} PLUCK 브랜드 썸네일 — {oneLiner}" / 패널은 "… 설명 패널". 썸네일 안에 지표·가짜 UI 를 넣지 않는다.
+- docs/work-covers 에는 실스크린샷 합성용 compose.js(desktop/phones/blur)와 window.js(데스크톱 앱 캡처를 캔버스 중앙에)만 남김. 이 폴더에서 실행하면 sharp 가 레포 node_modules 로 해석된다.
 
 ## 함정
 - 그리드 순서: lib/portfolio.ts 의 projectList 작성 순서가 아니라 `projects` = 카테고리 순 → status(live>development>case>concept) 안정 정렬. 상세 이전/다음도 이 순서. categoryOrder 는 projects 계산 전에 선언돼야 함(TDZ).
 - eslint-config-next 16 의 react-hooks/set-state-in-effect 규칙: matchMedia 는 useSyncExternalStore 로 구독할 것.
 - 카드 진입 애니메이션은 필터 클릭 후에만(data-animate). 초기 로드에 걸면 풀페이지 캡처/스크롤 시 흐리게 보임.
-- 상태 pill 은 이미지 위가 아니라 카드 메타 행에 둔다 — 디자인 커버 좌상단 캡션과 겹침.
+- 상태 pill 은 이미지 위가 아니라 카드 메타 행에 둔다.
+- 커버를 같은 파일명으로 교체하면 로컬 `next start` 는 .next/cache/images 의 옛 최적화본을 계속 준다 → 캡처 전 .next/cache/images 삭제.
 - 헤더/푸터/CTA 는 components/site-chrome.tsx 공용. 상세 페이지에선 home=false 로 "/#work" 등 홈 앵커로 연결. 홈 앵커: #work(전체 그리드) #featured #services #process #faq #contact. 상담 메일 링크는 CONTACT_MAIL/contactMail(subject).
 - docs/work-covers 는 Node CJS 스크립트라 eslint globalIgnores 에 추가돼 있음.
 
@@ -145,3 +149,12 @@
 - Next dev(Turbopack) 는 라우트 파일을 지운 직후 HMR 패닉→무한 새로고침이 날 수 있음 → dev 서버 끄고 `.next/dev` 삭제 후 재시작.
 - 폼은 defaultValue 를 쓰므로 원격 변경 시 반영되도록 form key 에 행 값들을 넣어 리마운트한다.
 - 성능 측정/실시간 e2e 스크립트(Playwright)는 레포 밖 임시 폴더에서 돌렸다. 테스트 문의는 email `e2e-test@pluck.co.kr` 로 넣고 activity_log 와 함께 지운다.
+
+# Portfolio 인벤토리: 포함/제외 판단 기준, 소스 위치, 오너 확인 대기 (docs/portfolio-inventory.md)
+
+## 규칙 (2026-10-30, feat/portfolio-complete, 40→54)
+- 전체 목록과 제외 사유는 docs/portfolio-inventory.md 가 원본. 새 레포를 검토하면 그 표에 먼저 추가한다(재조사 방지).
+- 포함: 자기 커밋이 있는 실제 작업(내부 도구·실험 포함). 제외: 자기 커밋 없는 포크, 타사 사이트 클론·레퍼런스 재현물, 튜토리얼, 하루 미만 무기능 스캐폴드, 트레이딩·크립토 시그널, ibctgit, 개인 노트, 실데이터 폴더.
+- 별도 GitHub 계정 spacePluck(space.pluck@gmail.com) 도 오너 것. Vercel 프로젝트 대부분이 여기에 연결돼 있고 일부 레포는 pluck-dev 로 못 읽음 → `npx vercel api "/v6/deployments?app=<name>&target=production"` 의 meta.githubCommitAuthorName 으로 작성자·기간 확인(adrock_simjae = 오너).
+- 오너 확인 대기: MODOOCAR 가 고객 작업인지 자체 사업인지, 페어링 북 코드(비공개), Figma MCP 확장의 오너 커밋 위치.
+- Oinzi 캡처는 이름 변경 전(pluck) 테스트 빌드 — st-accounts 등 설정 화면엔 계정 이메일·사용자 경로가 보여 사용 금지. threads-scheduler shots 는 타인 핸들·아바타가 보여 사용 금지. marketing-studio 화면은 고객사(바야다) 브랜드라 사용 금지.
