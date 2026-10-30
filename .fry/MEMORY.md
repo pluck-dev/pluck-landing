@@ -135,7 +135,8 @@
 - vercel.json `regions: ["icn1"]` — 함수 전체(공개 사이트 서버 액션 포함)를 서울로. Hobby 는 리전 1개만.
 - /admin/* 는 전부 `app/admin/(protected)/[[...slug]]/page.tsx` 한 페이지. `_app/shell.tsx` 의 AdminRoutes 가 usePathname 으로 뷰를 고르고, 앱 내 링크(AdminLink)는 `history.pushState` → Next 가 usePathname 만 동기화하고 **서버 요청 0**. next/link 를 쓰면 RSC 왕복이 생기니 admin 안에선 쓰지 말 것.
 - 데이터: inquiries/projects/clients/project_tasks/project_payments **테이블 전체**(limit 2000)를 셸 마운트 직후 병렬 prefetch, 모든 화면(대시보드 집계·상태별 카운트·검색·정렬)은 lib/crm/derive.ts 로 클라이언트 계산. 상세의 activity_log·첨부 signed URL 만 개별 쿼리(호버 시 prefetch). 데이터가 수천 건을 넘으면 페이지네이션 재검토.
-- Realtime: postgres_changes 로 위 5개 테이블 캐시 패치 + activity_log INSERT 시 activity 쿼리 무효화. RLS 가 구독자별로 적용돼 admin 만 수신. 재연결 시 전체 refetch. 실시간이 끊긴 동안의 쓰기는 touches 테이블을 invalidate. **publication 등록(0002_realtime.sql)이 안 돼 있어도 채널은 SUBSCRIBED("실시간" 표시)라 이벤트만 안 온다** — 실시간이 안 되면 먼저 publication 확인.
+- Realtime: postgres_changes 로 위 5개 테이블 캐시 패치 + activity_log INSERT 시 activity 쿼리 무효화. RLS 가 구독자별로 적용돼 admin 만 수신. 실시간이 끊긴 동안의 쓰기는 touches 테이블을 invalidate.
+- **함정: channel SUBSCRIBED ≠ 변경 스트림 준비.** postgres_changes 는 서버가 system 메시지("Subscribed to PostgreSQL", extension=postgres_changes)를 보낸 뒤부터만 이벤트를 준다. 그 전에 커밋된 행은 영영 안 온다(로그인 직후 들어온 문의 누락 원인이었음). 그래서 "실시간" 표시와 catch-up refetch 는 이 system 메시지 기준. publication(0002_realtime.sql) 누락 시에도 채널 join 은 성공하니 실시간이 안 되면 publication 부터 확인.
 - 쓰기: 브라우저에서 crypto.randomUUID() 로 id 를 만들어 insert → 캐시에 즉시 반영/즉시 상세로 이동, 실패 시 스냅샷 롤백 + 에러 토스트. 문의→프로젝트 전환도 클라이언트(같은 이메일 고객 재사용 판단은 캐시 기준).
 - CRM_FIXTURE=1 dev 모드: layout 이 fixture 데이터를 seed 로 넘겨 캐시에 심고 fetch/realtime/쓰기를 끈다. proxy 는 fixture 모드면 통과(env 가 있을 때 login↔/admin 무한 리다이렉트 방지).
 

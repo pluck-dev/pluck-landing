@@ -197,11 +197,12 @@ export function AdminProvider({
       qc.prefetchQuery({ queryKey: [name], queryFn: () => fetchTable(name) });
     }
     return subscribeRealtime(qc, {
-      onStatus(status, reconnected) {
+      onStatus(status, catchUp) {
         liveRef.current = status === "live";
         setLive(status);
-        // Missed events while disconnected → resync once.
-        if (reconnected) for (const name of TABLES) qc.invalidateQueries({ queryKey: [name] });
+        // Rows written between the initial fetch (or a disconnect) and the moment
+        // the change stream became ready were never streamed → resync once.
+        if (catchUp) for (const name of TABLES) qc.invalidateQueries({ queryKey: [name] });
       },
       onNewInquiry(row) {
         setUnseen((n) => n + 1);
@@ -225,13 +226,12 @@ export function AdminProvider({
 function subscribeRealtime(
   qc: QC,
   handlers: {
-    onStatus: (status: AdminCtx["live"], reconnected: boolean) => void;
+    onStatus: (status: AdminCtx["live"], catchUp: boolean) => void;
     onNewInquiry: (row: InquiryRow) => void;
   },
 ) {
   const sb = browserClient();
   let cancelled = false;
-  let everLive = false;
   let channel: ReturnType<BrowserClient["channel"]> | null = null;
 
   (async () => {
@@ -266,11 +266,16 @@ function subscribeRealtime(
       { event: "INSERT", schema: "public", table: "activity_log" },
       () => qc.invalidateQueries({ queryKey: ["activity"] }),
     );
+    // SUBSCRIBED only means the socket joined; postgres_changes is ready when the
+    // server sends this system message. Events committed before it are not
+    // delivered, so "live" (and a catch-up refetch) waits for it.
+    channel.on("system", {}, (msg: { extension?: string; status?: string }) => {
+      if (msg.extension === "postgres_changes" && msg.status === "ok") {
+        handlers.onStatus("live", true);
+      }
+    });
     channel.subscribe((status) => {
-      if (status === "SUBSCRIBED") {
-        handlers.onStatus("live", everLive);
-        everLive = true;
-      } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+      if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
         handlers.onStatus("offline", false);
       }
     });
