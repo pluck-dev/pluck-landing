@@ -31,6 +31,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
+    {
+      url: absoluteUrl("/contact"),
+      lastModified: lastCommit("app/contact"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: absoluteUrl("/privacy"),
+      lastModified: lastCommit("app/privacy"),
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
     ...categoryOrder.map((category) => ({
       url: absoluteUrl(`/work/category/${category}`),
       lastModified: dataDate,

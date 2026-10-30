@@ -48,9 +48,9 @@ export function StudioHeader({ home = false }: { home?: boolean }) {
               </Link>
             ))}
           </nav>
-          <a className="header-contact" href={CONTACT_MAIL}>
+          <Link className="header-contact" href="/contact">
             상담하기
-          </a>
+          </Link>
         </div>
         <nav className="mobile-nav shell" aria-label="모바일 메뉴">
           {navItems.map(([id, label]) => (
@@ -86,10 +86,10 @@ export function ContactSection({
             아직 정리되지 않은 생각이어도 괜찮습니다. 해결하고 싶은 문제만
             알려주시면, 무엇부터 만들지 함께 정리해 드립니다.
           </p>
-          <a className="button button-ink" href={contactMail(subject)}>
+          <Link className="button button-ink" href="/contact">
             프로젝트 상담하기 <ArrowRight size={18} aria-hidden="true" />
-          </a>
-          <a className="contact-email" href={`mailto:${CONTACT_EMAIL}`}>
+          </Link>
+          <a className="contact-email" href={contactMail(subject)}>
             {CONTACT_EMAIL}
           </a>
         </div>

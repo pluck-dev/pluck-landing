@@ -108,3 +108,22 @@
 - 프로젝트 OG 라우트(/work/[slug]/opengraph-image/cover)는 빌드 때 프리렌더되지 않고 요청 시 렌더 → next.config.ts outputFileTracingIncludes 로 폰트·cover·lockup 을 함수 번들에 포함.
 - next/image loading="eager" 는 Next 16 에서 <link rel=preload> 를 만든다. 홈 그리드는 폴드 한참 아래라 전부 lazy(ProjectCard eager 기본 false, 허브 첫 줄만 eager).
 - sitemap lastModified 는 git log(포트폴리오 데이터/이미지 폴더). Vercel 얕은 클론에서 실패하면 빌드 시각으로 폴백.
+
+# CRM/문의: Supabase(shfdmlraappxyedacmok), RLS 모델, /contact 서버 액션, /admin 인증, env 목록
+
+## 구조와 WHY (2026-10-30, feat/supabase-crm)
+- 스키마는 supabase/migrations/0001_crm.sql 한 파일(idempotent, SQL Editor 에 붙여넣기). lib/supabase/types.ts 는 손으로 맞춘 타입 → SQL 바꾸면 둘 다 수정. 적용·Auth 설정·env 는 supabase/README.md.
+- RLS: 모든 테이블 on, anon 은 테이블 권한 자체 revoke. 공개 폼은 서버 액션(app/contact/actions.ts)이 service role 로 insert(그래서 anon insert 정책 없음). authenticated 는 public.is_admin()(JWT email ∈ admins, SECURITY DEFINER) 일 때만 전체 접근.
+- 관리자 = ADMIN_EMAILS(env, 기본 admin@pluck.co.kr) **와** public.admins 둘 다 있어야 함. admins 테이블은 RLS 가 실제로 강제하는 쪽이라, env 만 있고 테이블에 없으면 로그인돼도 데이터가 안 보이므로 UI 진입부터 막는다(lib/crm/auth.ts getAdmin). 로그인 폼은 허용 주소에만 매직링크를 보내지만 응답은 항상 같음(주소 탐지 방지).
+- proxy.ts(Next 16 의 middleware 대체)는 /admin/* 세션 갱신+미로그인 리다이렉트만 하는 낙관적 체크. 진짜 권한 검사는 (protected)/layout 의 requireAdmin + 모든 서버 액션의 writer().
+- 관리자 쓰기는 세션 클라이언트(RLS 적용)로만, 매번 activity_log 기록. projects.paid_amount 는 project_payments 트리거가 재계산 → 코드에서 직접 쓰지 말 것.
+- 문의 폼: zod 검증, honeypot(name=website), ip 해시(IP_HASH_SALT) 기준 시간당 5건, 첨부는 서버가 signed upload URL 발급 → 브라우저가 Storage 직접 업로드(pending/YYYY-MM/uuid/파일) → 제출 시 실제 존재하는 파일만 저장. 유입 경로는 components/source-tracker.tsx 가 pluck_src 쿠키(첫 랜딩·외부 referrer·UTM, 새 UTM 이 덮어씀)에 기록. Discord 웹훅·activity_log 는 after() 로 응답 후 실행.
+
+## 함정
+- env 없이도 빌드돼야 함. /contact 는 정적 페이지라 isInquiryConfigured() 가 **빌드 시점** 값 → Vercel 에 키 추가 후 재배포해야 폼이 켜짐(그 전엔 mailto 폴백 카드).
+- 폼 화면 캡처는 더미 키(URL+아무 문자열 anon/service)로 빌드해서 찍었다. 제출하면 "Invalid API key" → 에러 문구 표시가 정상.
+- `CRM_FIXTURE=1 npm run dev` = lib/crm/fixture.ts 가상 데이터로 /admin 미리보기(dev 전용, 프로덕션 빌드에선 꺼짐, 쓰기 불가). 가상 데이터를 사이트 카피·캡처 자료로 쓰지 말 것.
+- .field > label 규칙(padding:0)이 라벨형 버튼(.file-pick)을 덮어써서 `.field > .file-pick` 셀렉터를 추가해 둠.
+- 칩(chip)은 투명 radio 가 칩 위에 덮인 구조 → Playwright 에선 getByText 클릭 대신 check("input[name=project_type][value=…]").
+- 개인정보처리방침(app/privacy) 회사 정보는 상단 상수로 채우는 자리. 보유기간 1년은 purge_expired_inquiries() 와 맞춰져 있음.
+- 검증: `npm run verify:supabase`(.env.local 읽음) — 테이블 7개, admins seed, private 버킷, anon 차단, 테스트 문의 insert→delete.

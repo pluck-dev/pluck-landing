@@ -3,6 +3,7 @@ node_modules
 .next/dev
 .DS_Store
 .env*
+!.env.example
 *.tsbuildinfo
 next-env.d.ts
 .omc

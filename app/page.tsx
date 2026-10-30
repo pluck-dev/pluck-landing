@@ -7,7 +7,6 @@ import { Hero3D } from "@/components/hero-3d";
 import { ProjectIndex } from "@/components/project-index";
 import { ScrollExperience } from "@/components/scroll-experience";
 import {
-  CONTACT_MAIL,
   ContactSection,
   StudioFooter,
   StudioHeader,
@@ -277,7 +276,7 @@ export default function Home() {
       <JsonLd data={homeJsonLd()} />
       <StudioHeader home />
       <main id="main">
-        <Hero3D contactHref={CONTACT_MAIL} />
+        <Hero3D contactHref="/contact" />
 
         <section className="proof-band" aria-labelledby="proof-title">
           <div className="shell">

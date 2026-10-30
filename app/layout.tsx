@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
+import { SourceTracker } from "@/components/source-tracker";
 import {
   baseOpenGraph,
   BRAND,
@@ -106,7 +107,10 @@ export default function RootLayout({
       lang="ko"
       className={`${geistSans.variable} ${geistMono.variable} ${notoSansKr.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <SourceTracker />
+      </body>
     </html>
   );
 }
