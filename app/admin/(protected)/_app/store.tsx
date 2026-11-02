@@ -25,6 +25,7 @@ import type {
   ClientRow,
   InquiryRow,
   Json,
+  LeadRow,
   ProjectPaymentRow,
   ProjectRow,
   ProjectTaskRow,
@@ -47,9 +48,10 @@ export type Tables = {
   projects: ProjectRow;
   tasks: ProjectTaskRow;
   payments: ProjectPaymentRow;
+  leads: LeadRow;
 };
 export type TableName = keyof Tables;
-export const TABLES: TableName[] = ["inquiries", "projects", "clients", "tasks", "payments"];
+export const TABLES: TableName[] = ["inquiries", "projects", "clients", "tasks", "payments", "leads"];
 
 const dbName = {
   inquiries: "inquiries",
@@ -57,6 +59,7 @@ const dbName = {
   projects: "projects",
   tasks: "project_tasks",
   payments: "project_payments",
+  leads: "leads",
 } as const satisfies Record<TableName, string>;
 
 const desc = (a: { created_at: string }, b: { created_at: string }) =>
@@ -67,6 +70,7 @@ const order: { [K in TableName]: (a: Tables[K], b: Tables[K]) => number } = {
   inquiries: desc,
   clients: desc,
   projects: desc,
+  leads: desc,
   tasks: (a, b) => a.sort - b.sort || a.created_at.localeCompare(b.created_at),
   payments: (a, b) =>
     (a.due_date ?? "9999").localeCompare(b.due_date ?? "9999") ||

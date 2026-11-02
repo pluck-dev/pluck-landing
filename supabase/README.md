@@ -8,11 +8,13 @@ Project ref `gpxbvtiyxgfquaiowspz` (Seoul, ap-northeast-2) · URL `https://gpxbv
 2. `supabase/migrations/0001_crm.sql` 전체를 붙여넣고 Run
 3. 이어서 `supabase/migrations/0002_realtime.sql` 도 Run — /admin 실시간 갱신용으로 CRM 테이블을
    `supabase_realtime` publication 에 추가한다. 빠지면 관리자 화면은 동작하지만 새 문의가 새로고침 전까지 안 보인다.
-4. 여러 번 실행해도 안전함(idempotent). 스키마를 바꿀 땐 이 파일과 `lib/supabase/types.ts` 를 같이 고친다.
+4. `supabase/migrations/0003_leads.sql` — 영업 리드(`leads`, /admin/leads). 문의와 별개인 아웃바운드 잠재고객·경쟁업체 목록.
+   url unique index 로 재임포트 시 중복을 막고, `activity_log.entity` 에 `lead` 를 추가하며 realtime publication 에도 넣는다.
+5. 여러 번 실행해도 안전함(idempotent). 스키마를 바꿀 땐 이 파일과 `lib/supabase/types.ts` 를 같이 고친다.
 
 만들어지는 것: `admins`(seed `admin@pluck.co.kr`), `inquiries`, `clients`, `projects`,
 `project_tasks`, `project_payments`, `activity_log`, `is_admin()`, 입금 합계 트리거,
-`purge_expired_inquiries()`, private 버킷 `inquiry-files`(10MB, pdf/png/jpg/zip/docx/pptx/xlsx).
+`purge_expired_inquiries()`, `leads`(0003), private 버킷 `inquiry-files`(10MB, pdf/png/jpg/zip/docx/pptx/xlsx).
 
 ### 접근 모델 (RLS)
 
@@ -70,7 +72,7 @@ Authentication → URL Configuration
 npm run verify:supabase
 ```
 
-연결, 7개 테이블 존재, `inquiry-files` 버킷, 테스트 문의 insert → delete 를 확인한다.
+연결, 8개 테이블(leads 포함) 존재, `inquiry-files` 버킷, 테스트 문의 insert → delete 를 확인한다.
 
 ## 5. 보유기간 정리 (개인정보처리방침: 문의 1년)
 

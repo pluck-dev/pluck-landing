@@ -150,6 +150,20 @@
 - 폼은 defaultValue 를 쓰므로 원격 변경 시 반영되도록 form key 에 행 값들을 넣어 리마운트한다.
 - 성능 측정/실시간 e2e 스크립트(Playwright)는 레포 밖 임시 폴더에서 돌렸다. 테스트 문의는 email `e2e-test@pluck.co.kr` 로 넣고 activity_log 와 함께 지운다.
 
+# CRM 영업 리드(leads): 폐업 개발사 아웃바운드, inquiries 와 분리, url dedupe, 임포트 출처
+
+## 구조와 WHY (2026-11-02, 0003_leads.sql)
+- 오너 요청 "폐업 영업": 외주 개발사가 폐업/연락두절이라 사이트·앱·ERP 를 못 고치는 회사를 찾아 먼저 연락. 스크랩한 잠재고객이라 **inquiries 에 넣지 않는다** — inquiries 는 email·동의 필수이고 인바운드 통계·Discord 알림에 섞인다. 별도 테이블 public.leads(kind = lead | competitor, campaign 기본 '폐업 개발사').
+- 경쟁업체(같은 시장에서 "폐업 업체 유지보수"를 파는 곳)도 같은 테이블에 kind='competitor', status='skip' 으로 둔다. 화면에서 구분 select 로 전환.
+- posted_at·quality(상/중/하)·freshness(A/B/C)·recruit_status 는 **원문 문자열 그대로**(출처마다 "2026-10-27 (5일 전)", "확인 못 함", "2019" 처럼 제각각). 정렬은 leads.tsx 의 rank 맵으로.
+- RLS/realtime/activity_log 는 다른 CRM 테이블과 동일(store.tsx TABLES 에 leads 포함 → 전체 prefetch + 실시간 패치). activity_log.entity check 에 'lead' 추가. 상세 화면 없음: 목록에서 상태 select·메모 인라인 편집.
+
+## 임포트 (재실행 안전)
+- url unique index 로 dedupe(NULL 은 충돌 안 함). 임포트는 `on conflict (url) do update set col = coalesce(leads.col, excluded.col)` — **빈 칸만 채우고 상태/메모는 절대 덮지 않는다.**
+- 네이버 카페 링크는 검색마다 `?art=` 토큰이 달라 같은 글이 다른 url 이 됨 → origin+pathname 으로 정규화해서 넣는다. 지식iN 은 쿼리 유지(docId).
+- 1차 출처(2026-11-01, Oinzi 수집): `Documents/Oinzi/AI 작업/2026-11-01 폐업개발사 고객 리드.csv`(45, 구분 "A-위시켓 공고" 등 → source), Oinzi run `leads_naver.csv`(25, freshness 보강, 9건 신규), `2026-11-01 경쟁업체 목록.txt`(25). 결과 리드 54 + 경쟁 25.
+- 함정: 경쟁업체 이맥스솔루션의 출처 url 이 리드(MES 카페 글)와 같아 unique 충돌 → 회사 사이트 url 로 넣고 원래 글은 memo 에 남김. 임포트 스크립트는 레포 밖(C:\Temp\pluck-leads)에 두고 pg 풀러 접속, 비밀번호는 env 로만.
+
 # Portfolio 인벤토리: 포함/제외 판단 기준, 소스 위치, 오너 확인 대기 (docs/portfolio-inventory.md)
 
 ## 규칙 (2026-10-30, feat/portfolio-complete, 40→54)

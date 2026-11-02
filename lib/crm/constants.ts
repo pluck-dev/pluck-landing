@@ -1,6 +1,8 @@
 import type {
   Budget,
   InquiryStatus,
+  LeadKind,
+  LeadStatus,
   ProjectStatus,
   ProjectType,
   Timeline,
@@ -57,6 +59,20 @@ export const projectStatusLabels: Record<ProjectStatus, string> = {
   done: "완료",
   maintenance: "유지보수",
   paused: "중단",
+};
+
+export const leadStatusLabels: Record<LeadStatus, string> = {
+  new: "미연락",
+  contacted: "연락함",
+  replied: "답장 받음",
+  won: "수주",
+  lost: "무산",
+  skip: "제외",
+};
+
+export const leadKindLabels: Record<LeadKind, string> = {
+  lead: "리드",
+  competitor: "경쟁업체",
 };
 
 /** Statuses counted as "진행 중" on the dashboard. */

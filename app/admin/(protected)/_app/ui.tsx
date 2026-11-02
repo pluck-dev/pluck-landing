@@ -3,6 +3,7 @@
 import { navigate, usePrefetch } from "./store";
 import {
   inquiryStatusLabels,
+  leadStatusLabels,
   projectStatusLabels,
 } from "@/lib/crm/constants";
 import type {
@@ -205,6 +206,7 @@ const entityLabels: Record<string, string> = {
   project: "프로젝트",
   task: "할 일",
   payment: "입금",
+  lead: "영업 리드",
 };
 
 function describe(entry: ActivityLogRow) {
@@ -213,12 +215,9 @@ function describe(entry: ActivityLogRow) {
   if (entry.action === "status_changed" || entry.action === "converted") {
     const from = detail.from as string | undefined;
     const to = detail.to as string | undefined;
+    const labels = (entry.entity === "lead" ? leadStatusLabels : inquiryStatusLabels) as Record<string, string>;
     const label = (v?: string) =>
-      v
-        ? (inquiryStatusLabels as Record<string, string>)[v] ??
-          (projectStatusLabels as Record<string, string>)[v] ??
-          v
-        : "-";
+      v ? labels[v] ?? (projectStatusLabels as Record<string, string>)[v] ?? v : "-";
     if (to) parts.push(`${label(from)} → ${label(to)}`);
   }
   if (typeof detail.title === "string") parts.push(detail.title);

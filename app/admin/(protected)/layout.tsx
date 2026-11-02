@@ -17,6 +17,7 @@ export default async function AdminAppLayout({ children }: { children: React.Rea
       projects: f.fixtureProjects,
       tasks: f.fixtureTasks,
       payments: f.fixturePayments,
+      leads: f.fixtureLeads,
       activity: f.fixtureActivity,
     };
   }

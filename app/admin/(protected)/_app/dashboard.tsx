@@ -1,9 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import { formatWon, inquiryStatusLabels, projectStatusLabels, projectTypeLabels } from "@/lib/crm/constants";
+import {
+  formatWon,
+  inquiryStatusLabels,
+  leadStatusLabels,
+  projectStatusLabels,
+  projectTypeLabels,
+} from "@/lib/crm/constants";
 import { buildDashboard, kstToday, progressOf } from "@/lib/crm/derive";
-import { INQUIRY_STATUSES, PROJECT_STATUSES } from "@/lib/supabase/types";
+import { INQUIRY_STATUSES, LEAD_STATUSES, PROJECT_STATUSES } from "@/lib/supabase/types";
 import { useProjectList } from "./hooks";
 import { useTable } from "./store";
 import {
@@ -19,6 +25,7 @@ import {
 
 export function DashboardView() {
   const inquiries = useTable("inquiries");
+  const leads = useTable("leads");
   const projects = useProjectList();
   const loading = inquiries.isPending || projects.isPending;
   const d = useMemo(
@@ -43,6 +50,10 @@ export function DashboardView() {
 
   const inquiryCounts = countBy(inquiries.data ?? [], (i) => i.status);
   const projectCounts = countBy(projects.data, (p) => p.status);
+  const leadCounts = countBy(
+    (leads.data ?? []).filter((l) => l.kind === "lead"),
+    (l) => l.status,
+  );
 
   return (
     <>
@@ -89,6 +100,14 @@ export function DashboardView() {
           {PROJECT_STATUSES.map((s) => (
             <AdminLink key={s} href={`/admin/projects?status=${s}`} className="adm-pipe">
               {projectStatusLabels[s]} <b>{projectCounts[s] ?? 0}</b>
+            </AdminLink>
+          ))}
+        </div>
+        <div>
+          <span className="adm-muted">영업 리드</span>
+          {LEAD_STATUSES.filter((s) => s !== "skip").map((s) => (
+            <AdminLink key={s} href={`/admin/leads?status=${s}`} className="adm-pipe">
+              {leadStatusLabels[s]} <b>{leadCounts[s] ?? 0}</b>
             </AdminLink>
           ))}
         </div>

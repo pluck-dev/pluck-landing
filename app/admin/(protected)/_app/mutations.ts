@@ -8,6 +8,8 @@ import type {
   ClientRow,
   InquiryRow,
   InquiryStatus,
+  LeadRow,
+  LeadStatus,
   PaymentLabel,
   ProjectPaymentRow,
   ProjectRow,
@@ -71,6 +73,26 @@ export function useCrm() {
           write: (sb) => must(sb.from("inquiries").update({ admin_memo }).eq("id", id), "메모 저장 실패"),
           logs: [{ entity: "inquiry", entity_id: id, action: "memo_updated" }],
           touches: ["inquiries"],
+        });
+      },
+
+      setLeadStatus(id: string, status: LeadStatus) {
+        const from = find<LeadRow>("leads", id)?.status ?? null;
+        if (from === status) return;
+        return mutate({
+          patch: (qc) => patchRow(qc, "leads", id, { status }),
+          write: (sb) => must(sb.from("leads").update({ status }).eq("id", id), "상태 변경 실패"),
+          logs: [{ entity: "lead", entity_id: id, action: "status_changed", detail: { from, to: status } }],
+          touches: ["leads"],
+        });
+      },
+
+      saveLeadMemo(id: string, memo: string | null) {
+        return mutate({
+          patch: (qc) => patchRow(qc, "leads", id, { memo }),
+          write: (sb) => must(sb.from("leads").update({ memo }).eq("id", id), "메모 저장 실패"),
+          logs: [{ entity: "lead", entity_id: id, action: "memo_updated" }],
+          touches: ["leads"],
         });
       },
 

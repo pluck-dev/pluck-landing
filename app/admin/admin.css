@@ -561,6 +561,7 @@ a.adm-kpi:hover {
   color: #8a5300;
 }
 .adm-st-quoted,
+.adm-st-replied,
 .adm-ps-planning {
   background: #ecebfb;
   color: #4b3fb0;
@@ -576,6 +577,7 @@ a.adm-kpi:hover {
 }
 .adm-st-lost,
 .adm-st-on_hold,
+.adm-st-skip,
 .adm-ps-paused {
   background: #ebecea;
   color: #5d625c;
@@ -773,6 +775,9 @@ a.adm-kpi:hover {
 }
 .adm-search-input {
   width: 300px;
+}
+.adm-input-auto {
+  width: auto;
 }
 .adm-table-dense td {
   padding-block: 7px;
@@ -1040,4 +1045,42 @@ a.adm-kpi:hover {
   .adm-activity li > :last-child {
     grid-column: 2;
   }
+}
+
+/* Leads (영업 리드) */
+.adm-q-hi {
+  background: var(--lime);
+  color: #3a4d10;
+}
+.adm-q-mid {
+  background: #fdf0d7;
+  color: #8a5300;
+}
+.adm-q-lo {
+  background: #ebecea;
+  color: #5d625c;
+}
+.adm-leads td {
+  vertical-align: top;
+}
+.adm-lead-body {
+  min-width: 320px;
+  max-width: 560px;
+}
+.adm-lead-body strong {
+  display: block;
+  font-weight: 600;
+}
+.adm-lead-memo {
+  color: var(--ink);
+}
+.adm-lead-open {
+  color: #2447cc;
+  font-weight: 600;
+}
+.adm-table tbody tr.adm-lead-edit td {
+  background: #fafbf7;
+}
+.adm-lead-edit .adm-inline-form {
+  align-items: flex-start;
 }

@@ -1,5 +1,5 @@
 /**
- * Hand-written to match supabase/migrations/0001_crm.sql.
+ * Hand-written to match supabase/migrations/0001_crm.sql + 0003_leads.sql.
  * Change both together (or regenerate with `supabase gen types typescript`).
  */
 
@@ -61,8 +61,15 @@ export const ACTIVITY_ENTITIES = [
   "project",
   "task",
   "payment",
+  "lead",
 ] as const;
 export type ActivityEntity = (typeof ACTIVITY_ENTITIES)[number];
+
+export const LEAD_STATUSES = ["new", "contacted", "replied", "won", "lost", "skip"] as const;
+export type LeadStatus = (typeof LEAD_STATUSES)[number];
+
+export const LEAD_KINDS = ["lead", "competitor"] as const;
+export type LeadKind = (typeof LEAD_KINDS)[number];
 
 export type Json =
   | string
@@ -157,6 +164,29 @@ export type ProjectPaymentRow = {
   paid_at: string | null;
 };
 
+/** Outbound prospects. Text columns are kept as scraped (quality 상/중/하, freshness A/B/C). */
+export type LeadRow = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  campaign: string;
+  kind: LeadKind;
+  source: string | null;
+  category: string | null;
+  system_type: string | null;
+  title: string | null;
+  summary: string | null;
+  region: string | null;
+  budget: string | null;
+  posted_at: string | null;
+  recruit_status: string | null;
+  quality: string | null;
+  freshness: string | null;
+  url: string | null;
+  status: LeadStatus;
+  memo: string | null;
+};
+
 export type ActivityLogRow = {
   id: string;
   created_at: string;
@@ -234,6 +264,7 @@ export type Database = {
           },
         ]
       >;
+      leads: Table<LeadRow, never>;
       activity_log: Table<
         ActivityLogRow,
         "actor" | "entity" | "entity_id" | "action"

@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo } from "react";
 import { usePathname } from "next/navigation";
-import { Briefcase, Inbox, LayoutDashboard, Users, X } from "lucide-react";
+import { Briefcase, Inbox, LayoutDashboard, Target, Users, X } from "lucide-react";
 import { signOut } from "../../login/actions";
 import { ClientDetailView, ClientListView } from "./clients";
 import { DashboardView } from "./dashboard";
 import { InquiryDetailView, InquiryListView } from "./inquiries";
+import { LeadListView } from "./leads";
 import { ProjectDetailView, ProjectListView } from "./projects";
 import { AdminProvider, navigate, useAdmin, useTable, type Seed } from "./store";
 import { AdminLink, Empty } from "./ui";
@@ -16,6 +17,7 @@ const items = [
   { href: "/admin/inquiries", label: "문의", icon: Inbox, key: "i" },
   { href: "/admin/projects", label: "프로젝트", icon: Briefcase, key: "p" },
   { href: "/admin/clients", label: "고객", icon: Users, key: "c" },
+  { href: "/admin/leads", label: "영업 리드", icon: Target, key: "l" },
 ] as const;
 
 export function AdminShell({
@@ -94,6 +96,8 @@ function SideFoot() {
         <br />
         <kbd>g</kbd> <kbd>p</kbd> 프로젝트 · <kbd>g</kbd> <kbd>c</kbd> 고객
         <br />
+        <kbd>g</kbd> <kbd>l</kbd> 영업 리드
+        <br />
         <kbd>/</kbd> 검색 · <kbd>Esc</kbd> 입력 해제
       </p>
       <span className="adm-user" title={email}>
@@ -132,7 +136,7 @@ function Toasts() {
   );
 }
 
-/** g d / g i / g p / g c switch tabs, / focuses the page search. */
+/** g d / g i / g p / g c / g l switch tabs, / focuses the page search. */
 function Shortcuts() {
   useEffect(() => {
     let pendingG = 0;
@@ -182,6 +186,7 @@ export function AdminRoutes() {
       inquiries: "문의",
       projects: "프로젝트",
       clients: "고객",
+      leads: "영업 리드",
     };
     document.title = `${section ? titles[section] ?? "관리자" : "대시보드"} | PLUCK 관리자`;
   }, [section]);
@@ -196,6 +201,8 @@ export function AdminRoutes() {
       return id ? <ProjectDetailView key={id} id={id} /> : <ProjectListView />;
     case "clients":
       return id ? <ClientDetailView key={id} id={id} /> : <ClientListView />;
+    case "leads":
+      return id ? <NotFound /> : <LeadListView />;
     default:
       return <NotFound />;
   }

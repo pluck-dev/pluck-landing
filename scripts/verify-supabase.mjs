@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Checks a Supabase project against supabase/migrations/0001_crm.sql:
+ * Checks a Supabase project against supabase/migrations (0001_crm, 0003_leads):
  * connection, every CRM table, the inquiry-files bucket, anon lockout, and a
  * test inquiry insert + delete with the service role.
  *
@@ -46,6 +46,7 @@ const TABLES = [
   "project_tasks",
   "project_payments",
   "activity_log",
+  "leads",
 ];
 
 let failures = 0;
