@@ -1071,6 +1071,35 @@ a.adm-kpi:hover {
   display: block;
   font-weight: 600;
 }
+.adm-lead-contact {
+  display: grid;
+  gap: 3px;
+  min-width: 170px;
+  font-size: 12.5px;
+}
+.adm-lead-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--blue);
+  word-break: break-all;
+}
+.adm-lead-contact a:hover {
+  text-decoration: underline;
+}
+.adm-lead-contact svg {
+  flex: none;
+  color: var(--muted);
+}
+.adm-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
 .adm-lead-memo {
   color: var(--ink);
 }

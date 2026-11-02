@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Globe, Mail, MessageSquare, Phone } from "lucide-react";
 import { leadKindLabels, leadStatusLabels } from "@/lib/crm/constants";
 import { matches } from "@/lib/crm/derive";
 import { memoShape, parseForm } from "@/lib/crm/validation";
@@ -32,6 +32,7 @@ export function LeadListView() {
   const [kind, setKind] = useState<LeadKind>("lead");
   const [campaign, setCampaign] = useState("");
   const [quality, setQuality] = useState("");
+  const [contactOnly, setContactOnly] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
 
   const all = useMemo(() => data ?? [], [data]);
@@ -45,9 +46,24 @@ export function LeadListView() {
           l.kind === kind &&
           (!campaign || l.campaign === campaign) &&
           (!quality || l.quality === quality) &&
-          matches(list.deferredQ, l.title, l.summary, l.source, l.category, l.system_type, l.region, l.memo),
+          (!contactOnly || hasContact(l)) &&
+          matches(
+            list.deferredQ,
+            l.company,
+            l.title,
+            l.summary,
+            l.source,
+            l.category,
+            l.system_type,
+            l.region,
+            l.agency,
+            l.phone,
+            l.email,
+            l.website,
+            l.memo,
+          ),
       ),
-    [all, kind, campaign, quality, list.deferredQ],
+    [all, kind, campaign, quality, contactOnly, list.deferredQ],
   );
   const counts = useMemo(() => countBy(scoped, (l) => l.status), [scoped]);
 
@@ -76,7 +92,7 @@ export function LeadListView() {
       });
   }, [scoped, list.status, list.sort]);
 
-  const cols = 9;
+  const cols = 10;
   return (
     <>
       <PageHead title="영업 리드">
@@ -85,7 +101,7 @@ export function LeadListView() {
           type="search"
           value={list.q}
           onChange={(e) => list.setQ(e.target.value)}
-          placeholder="내용, 출처, 지역, 메모 검색  ( / )"
+          placeholder="회사, 내용, 제작사, 지역, 연락처, 메모 검색  ( / )"
           aria-label="리드 검색"
           data-admin-search
         />
@@ -127,6 +143,10 @@ export function LeadListView() {
             </option>
           ))}
         </select>
+        <label className="adm-check-label">
+          <input type="checkbox" checked={contactOnly} onChange={(e) => setContactOnly(e.target.checked)} />
+          연락처 있음
+        </label>
       </PageHead>
       <FilterTabs
         current={list.status}
@@ -146,6 +166,7 @@ export function LeadListView() {
                 <SortTh label="품질" k="quality" sort={list.sort} onSort={list.onSort} />
                 <SortTh label="최신도" k="freshness" sort={list.sort} onSort={list.onSort} />
                 <th scope="col">내용</th>
+                <th scope="col">연락처</th>
                 <th scope="col">지역</th>
                 <th scope="col">예산</th>
                 <SortTh label="게시" k="posted_at" sort={list.sort} onSort={list.onSort} />
@@ -183,7 +204,7 @@ export function LeadListView() {
         </div>
       ) : (
         <Empty>
-          {list.deferredQ || list.status || campaign || quality
+          {list.deferredQ || list.status || campaign || quality || contactOnly
             ? "조건에 맞는 리드가 없어요."
             : "아직 가져온 리드가 없어요."}
         </Empty>
@@ -208,8 +229,10 @@ function LeadRows({
   onStatus: (s: LeadStatus) => void;
   onSaveMemo: (form: HTMLFormElement) => void;
 }) {
-  const label = l.title || l.summary || "리드";
-  const meta = [l.source, l.category, l.system_type].filter(Boolean).join(" · ");
+  const label = l.company || l.title || l.summary || "리드";
+  const meta = [l.source, l.category, l.system_type, l.agency && `제작사 ${l.agency}`]
+    .filter(Boolean)
+    .join(" · ");
   return (
     <>
       <tr className={l.status === "new" && l.kind === "lead" ? "is-new" : undefined}>
@@ -222,10 +245,39 @@ function LeadRows({
         </td>
         <td className="adm-muted">{l.freshness ?? "-"}</td>
         <td className="adm-lead-body">
-          {l.title && <strong>{l.title}</strong>}
-          {l.summary && <span className={l.title ? "adm-sub" : undefined}>{l.summary}</span>}
+          {(l.company || l.title) && <strong>{l.company || l.title}</strong>}
+          {l.company && l.title && l.title !== l.company && <span className="adm-sub">{l.title}</span>}
+          {l.summary && <span className={l.company || l.title ? "adm-sub" : undefined}>{l.summary}</span>}
           {meta && <span className="adm-sub">{meta}</span>}
+          {l.signals.length > 0 && <span className="adm-sub">징후 · {l.signals.join(", ")}</span>}
           {l.memo && !editing && <span className="adm-sub adm-lead-memo">메모 · {l.memo}</span>}
+        </td>
+        <td className="adm-lead-contact">
+          {l.phone && (
+            <a href={`tel:${l.phone.replace(/[^0-9+]/g, "")}`} title="전화 걸기">
+              <Phone size={13} aria-hidden="true" />
+              {l.phone}
+            </a>
+          )}
+          {l.email && (
+            <a href={`mailto:${l.email}`} title="메일 쓰기 (광고성 메일은 사전 동의 필요)">
+              <Mail size={13} aria-hidden="true" />
+              {l.email}
+            </a>
+          )}
+          {l.website && (
+            <a href={l.website} target="_blank" rel="noopener noreferrer nofollow" title={l.website}>
+              <Globe size={13} aria-hidden="true" />
+              {l.website.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+            </a>
+          )}
+          {l.contact_form_url && (
+            <a href={l.contact_form_url} target="_blank" rel="noopener noreferrer nofollow" title={l.contact_form_url}>
+              <MessageSquare size={13} aria-hidden="true" />
+              문의 폼
+            </a>
+          )}
+          {!hasContact(l) && <span className="adm-muted">-</span>}
         </td>
         <td className="adm-nowrap">{l.region ?? "-"}</td>
         <td className="adm-nowrap">{l.budget ?? "-"}</td>
@@ -304,4 +356,8 @@ function LeadRows({
       )}
     </>
   );
+}
+
+function hasContact(l: LeadRow) {
+  return Boolean(l.phone || l.email || l.contact_form_url);
 }

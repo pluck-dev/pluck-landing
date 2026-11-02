@@ -164,6 +164,11 @@
 - 1차 출처(2026-11-01, Oinzi 수집): `Documents/Oinzi/AI 작업/2026-11-01 폐업개발사 고객 리드.csv`(45, 구분 "A-위시켓 공고" 등 → source), Oinzi run `leads_naver.csv`(25, freshness 보강, 9건 신규), `2026-11-01 경쟁업체 목록.txt`(25). 결과 리드 54 + 경쟁 25.
 - 함정: 경쟁업체 이맥스솔루션의 출처 url 이 리드(MES 카페 글)와 같아 unique 충돌 → 회사 사이트 url 로 넣고 원래 글은 memo 에 남김. 임포트 스크립트는 레포 밖(C:\Temp\pluck-leads)에 두고 pg 풀러 접속, 비밀번호는 env 로만.
 
+## 연락처 컬럼·역추적 캠페인 (2026-11-02, 0004_lead_contacts.sql)
+- company/website/phone/email/contact_form_url/agency/signals 추가. 리스트에 tel:/mailto:/폼 링크와 "연락처 있음" 필터.
+- 캠페인 '폐업 개발사 역추적' = 사이트 하단 "Designed by/제작" 제작사 → 제작사 도메인 상태 확인 + 방치 신호(SSL 만료, ©≤2020 등)로 등급. 실제 '제작사 폐업 확인'은 일부뿐이고 대부분은 방치 신호 기반이라 콜 전에 사이트 직접 확인.
+- 연락처는 회사가 공개한 사업용만. 광고성 메일·문자 대량 발송 금지(정보통신망법 제50조) → 전화/문의 폼 1:1. 수집 스크립트는 레포 밖 C:\Temp\closed-agency-leads.
+
 # Portfolio 인벤토리: 포함/제외 판단 기준, 소스 위치, 오너 확인 대기 (docs/portfolio-inventory.md)
 
 ## 규칙 (2026-10-30, feat/portfolio-complete, 40→54)

@@ -1,5 +1,5 @@
 /**
- * Hand-written to match supabase/migrations/0001_crm.sql + 0003_leads.sql.
+ * Hand-written to match supabase/migrations/0001_crm.sql + 0003_leads.sql + 0004_lead_contacts.sql.
  * Change both together (or regenerate with `supabase gen types typescript`).
  */
 
@@ -185,6 +185,13 @@ export type LeadRow = {
   url: string | null;
   status: LeadStatus;
   memo: string | null;
+  company: string | null;
+  website: string | null;
+  phone: string | null;
+  email: string | null;
+  contact_form_url: string | null;
+  agency: string | null;
+  signals: string[];
 };
 
 export type ActivityLogRow = {

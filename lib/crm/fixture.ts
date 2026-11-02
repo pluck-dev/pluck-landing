@@ -222,6 +222,13 @@ const lead = (n: number, row: Partial<LeadRow>): LeadRow => ({
   url: "https://example.com/",
   status: "new",
   memo: null,
+  company: null,
+  website: null,
+  phone: null,
+  email: null,
+  contact_form_url: null,
+  agency: null,
+  signals: [],
   ...row,
 });
 
