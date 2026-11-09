@@ -327,11 +327,14 @@ const projectList: readonly PortfolioProject[] = [
       "회원·수업·매출·시설·급여를 다루는 센터 관리자 CRM과, 회원·트레이너·FC·직원이 쓰는 모바일 웹앱.",
     disciplines: ["CRM", "Mobile web", "Supabase"],
     status: "case",
-    coverKind: "brand",
-    cover: { src: "/work/fitness-crm/cover.webp", alt: "피트니스 센터 CRM · 회원앱 PLUCK 브랜드 썸네일 — 센터 운영과 회원 경험을 한 데이터로" },
+    coverKind: "screenshot",
+    cover: { src: "/work/fitness-crm/cover.webp", alt: "회원 모바일 웹앱 화면 3장 - 홈(위치·배너 문구·센터명 블러), 이용권 잔여 회차, 체성분 기록 (샘플 데이터)" },
     gallery: [
+      { src: "/work/fitness-crm/01.webp", alt: "관리자 CRM 매출 운영 코크핏 - 미수 추적·환불 검토·재등록 성과와 처리 큐 (로고·지점명·계정명 블러, 테스트 데이터)" },
+      { src: "/work/fitness-crm/02.webp", alt: "관리자 CRM 수업 캘린더 - 분류 필터와 월간 일정, 날짜별 그룹 수업 목록 (로고·지점명·강사명 블러, 테스트 데이터)" },
+      { src: "/work/fitness-crm/03.webp", alt: "트레이너·FC 모바일 화면 3장 - 트레이너 홈, 일정 승인 요청, 리드·상담 예정 목록 (이름 블러, 샘플 데이터)" },
       {
-        src: "/work/fitness-crm/01.webp",
+        src: "/work/fitness-crm/04.webp",
         alt: "관리자 CRM, 역할별 모바일 웹앱, 기획 문서 사이트, 시나리오 QA 네 갈래로 나눈 구성 설명 패널",
         diagram: {"title": "센터 운영과 회원 경험을\n한 데이터로", "items": [{"title": "관리자 CRM", "text": "회원·수업·매출·시설·급여·마케팅과 본사 KPI"}, {"title": "모바일 웹앱", "text": "회원·트레이너·FC·직원 역할별 화면"}, {"title": "기획 문서 사이트", "text": "역할·회원 상태·정량 정책을 한곳에 정리"}, {"title": "시나리오 QA", "text": "등록부터 환불·급여까지 Playwright로 검증"}]},
       },
@@ -549,9 +552,14 @@ const projectList: readonly PortfolioProject[] = [
       "방문간호·돌봄 기업을 위한 고객 웹사이트, 교육 플랫폼, 통합 관리자를 잇는 플랫폼.",
     disciplines: ["Website", "LMS", "Admin"],
     status: "development",
-    coverKind: "brand",
-    cover: { src: "/work/homecare-platform/cover.webp", alt: "홈헬스케어 통합 플랫폼 PLUCK 브랜드 썸네일 — 방문간호·돌봄 기업의 웹·교육·관리를 하나로" },
-    gallery: [],
+    coverKind: "screenshot",
+    cover: { src: "/work/homecare-platform/cover.webp", alt: "홈헬스케어 웹 서비스 화면 - 대표 서비스 Skilled Nursing 소개와 맞춤 요양·호스피스 등 서비스 카드 (고객사 로고 제외)" },
+    gallery: [
+      { src: "/work/homecare-platform/02.webp", alt: "연령대 맞춤 서비스 찾기 - 노인·성인·소아 케어 탭과 동행 돌봄·방문 건강관리·호스피스 서비스 카드" },
+      { src: "/work/homecare-platform/01.webp", alt: "홈헬스케어 쇼핑몰 - 의료기기·건강관리 용품·재활보조기구 등 카테고리" },
+      { src: "/work/homecare-platform/03.webp", alt: "서비스 시작 절차 - 상담, 평가, 플랜, 시작 4단계" },
+      { src: "/work/homecare-platform/04.webp", alt: "모바일 화면 3장 - 대표 서비스, 멤버십 혜택, 파트너 쇼핑몰(제휴처명 제외)" },
+    ],
     detail: {
       oneLiner: "방문간호·돌봄 기업의 웹·교육·관리를 하나로",
       role: [
@@ -1645,11 +1653,12 @@ const projectList: readonly PortfolioProject[] = [
       "블록픽은 파트너가 연 그리드형 이벤트 판에서 블록을 골라 참여하고, 광고·미션·친구 초대로 참여 기회를 늘리는 블록체인 기반 참여형 플랫폼의 Flutter 앱.",
     disciplines: ["Flutter", "Blockchain", "GraphQL"],
     status: "case",
-    coverKind: "brand",
-    cover: { src: "/work/blockpick/cover.webp", alt: "BlockPick PLUCK 브랜드 썸네일 — 큰 그리드에서 블록 하나를 고르는 참여형 앱" },
+    coverKind: "screenshot",
+    cover: { src: "/work/blockpick/cover.webp", alt: "블록픽 앱 초기 빌드 웹 배포 화면 3장 - 홈, 이벤트 목록, 쇼핑 (데모 데이터, 상품·호텔 사진과 이름 블러)" },
     gallery: [
+      { src: "/work/blockpick/01.webp", alt: "그리드에서 ROW를 고정한 뒤 COL을 고르는 블록 선택 화면 2장 (데모 데이터, 상품 사진 블러)" },
       {
-        src: "/work/blockpick/01.webp",
+        src: "/work/blockpick/02.webp",
         alt: "그리드 렌더링, 픽 모드, 참여 기록, 포인트 적립 네 가지로 나눈 앱 구성 설명 패널",
         diagram: {"title": "큰 그리드에서\n블록 하나를 고르기까지", "items": [{"title": "대형 그리드", "text": "최대 1000×1000 판을 확대·축소하며 선택"}, {"title": "픽 모드", "text": "기울기·소리·그리기 등 센서를 쓰는 선택 방식"}, {"title": "참여 기록", "text": "좌표를 암호화해 Ronin 체인 트랜잭션으로 기록"}, {"title": "포인트", "text": "광고·미션·출석·친구 초대로 추가 참여"}]},
       },
@@ -1793,8 +1802,8 @@ const projectList: readonly PortfolioProject[] = [
       "여러 PC의 Codex·Claude Code 세션을 모바일에서 음성으로 지시하고 결과를 확인하는 리모트.",
     disciplines: ["Mobile", "Voice", "Dev tools"],
     status: "development",
-    coverKind: "brand",
-    cover: { src: "/work/voxcli/cover.webp", alt: "VoxCLI PLUCK 브랜드 썸네일 — 폰에서 말로 여러 PC의 Codex·Claude 세션을 지휘한다" },
+    coverKind: "screenshot",
+    cover: { src: "/work/voxcli/cover.webp", alt: "VoxCLI Hub Windows 데스크톱 앱 실행 화면 - Hub·Agent 상태, 원격 URL, 경로·포트·페어링 설정 (서버 미기동 상태, 기기 이름은 데모 값)" },
     gallery: [
       {
         src: "/work/voxcli/01.webp",
@@ -1956,10 +1965,9 @@ const projectList: readonly PortfolioProject[] = [
       "매일 아침 공모전 공고를 조사해 새로운 후보와 변경점을 HTML 리포트로 정리하는 AI 모니터.",
     disciplines: ["Scheduled agent", "Reporting"],
     status: "case",
-    coverKind: "brand",
-    cover: { src: "/work/contest-watch/cover.webp", alt: "공모전 모니터 PLUCK 브랜드 썸네일 — 매일 아침 9시, 공모전을 대신 찾아 정리하는 AI" },
+    coverKind: "screenshot",
+    cover: { src: "/work/contest-watch/cover.webp", alt: "2026-10-29 공모전 모니터 HTML 리포트 상단 — 오늘의 요약, 우선순위, 전일 대비 변화(신규·마감 변경·D-7/D-1) 표" },
     gallery: [
-      { src: "/work/contest-watch/01.webp", alt: "2026-10-29 공모전 모니터 HTML 리포트 상단 — 오늘의 요약, 우선순위, 전일 대비 변화(신규·마감 변경·D-7/D-1) 표" },
       {
         src: "/work/contest-watch/02.webp",
         alt: "예약 실행, 후보 탐색, 원문 검증, 전일 비교, HTML 리포트로 이어지는 매일의 실행 흐름 설명 패널",
@@ -2418,11 +2426,9 @@ const projectList: readonly PortfolioProject[] = [
     disciplines: ["Web service", "Drawing", "Community"],
     status: "live",
     url: "https://heart-paring.vercel.app/",
-    coverKind: "brand",
-    cover: { src: "/work/pairing-book/cover.webp", alt: "페어링 북 PLUCK 브랜드 썸네일 — 글과 그림으로 만드는 나만의 이야기책" },
-    gallery: [
-      { src: "/work/pairing-book/01.webp", alt: "페어링 북 메인 - '나만의 페어링 북 만들기' 안내와 공개된 페어링 북 목록 영역" },
-    ],
+    coverKind: "screenshot",
+    cover: { src: "/work/pairing-book/cover.webp", alt: "페어링 북 메인 - '나만의 페어링 북 만들기' 안내와 공개된 페어링 북 목록 영역" },
+    gallery: [],
     detail: {
       oneLiner: "글과 그림으로 만드는 나만의 이야기책",
       role: ["기획", "UI 디자인", "프론트엔드"],
@@ -2536,9 +2542,8 @@ const projectList: readonly PortfolioProject[] = [
       "브랜드 Threads 계정의 글쓰기·답글·리서치를 정해진 페르소나와 규칙 안에서 자동으로 돌리는 운영 에이전트.",
     disciplines: ["Social automation", "Agents", "Scheduler"],
     status: "case",
-    coverKind: "brand",
-    coverMotif: "flow",
-    cover: { src: "/work/threads-agent/cover.webp", alt: "Threads 운영 에이전트 PLUCK 브랜드 썸네일 — 브랜드 SNS를 규칙 안에서 굴리는 에이전트" },
+    coverKind: "screenshot",
+    cover: { src: "/work/threads-agent/cover.webp", alt: "에이전트가 예약 게시 전 작성한 스레드 초안 화면 (계정 핸들·프로필 사진과 배경의 다른 계정 피드 블러)" },
     gallery: [
       {
         src: "/work/threads-agent/01.webp",
@@ -2555,6 +2560,7 @@ const projectList: readonly PortfolioProject[] = [
           ],
         },
       },
+      { src: "/work/threads-agent/02.webp", alt: "예약 게시 드라이런 화면 - PLUCK 사이트 링크 카드가 붙은 새 스레드 초안 (계정 핸들·배경·본문 수치 블러)" },
     ],
     detail: {
       oneLiner: "브랜드 SNS를 규칙 안에서 굴리는 에이전트",
@@ -2730,9 +2736,8 @@ const projectList: readonly PortfolioProject[] = [
       "로컬 ComfyUI로 사진을 만들고 6컷 카드뉴스를 편집·승인·내보내는 마케팅 작업 공간.",
     disciplines: ["Image generation", "MCP", "Content tool"],
     status: "case",
-    coverKind: "brand",
-    coverMotif: "window",
-    cover: { src: "/work/card-news-studio/cover.webp", alt: "AI 카드뉴스 마케팅 스튜디오 PLUCK 브랜드 썸네일 — 사진 생성부터 6컷 카드뉴스 내보내기까지" },
+    coverKind: "screenshot",
+    cover: { src: "/work/card-news-studio/cover.webp", alt: "카드뉴스 스튜디오 연결 설정 화면 - ComfyUI MCP·Meta MCP·채팅 AI 연결 상태 (고객사 로고·브랜드명·프로젝트명 블러)" },
     gallery: [],
     detail: {
       oneLiner: "사진 생성부터 6컷 카드뉴스 내보내기까지",
@@ -2763,8 +2768,8 @@ const projectList: readonly PortfolioProject[] = [
       "의류 상품 사진 폴더를 넣으면 같은 가상 모델이 입은 카탈로그 컷 세트를 로컬 GPU로 만드는 ComfyUI 파이프라인.",
     disciplines: ["ComfyUI", "Image generation", "Pipeline"],
     status: "case",
-    coverKind: "brand",
-    cover: { src: "/work/virtual-model-catalog/cover.webp", alt: "AI 가상 모델 카탈로그 PLUCK 브랜드 썸네일 — 상품 폴더 하나로 모델 착용 컷 세트" },
+    coverKind: "screenshot",
+    cover: { src: "/work/virtual-model-catalog/cover.webp", alt: "로컬 ComfyUI에 불러온 카탈로그 원큐 워크플로 - 정면·전신 컷 그룹마다 Catalog shot direction, Qwen 이미지 편집 인코딩, KSampler로 이어지는 노드 그래프" },
     gallery: [
       {
         src: "/work/virtual-model-catalog/01.webp",
@@ -2781,6 +2786,7 @@ const projectList: readonly PortfolioProject[] = [
           ],
         },
       },
+      { src: "/work/virtual-model-catalog/02.webp", alt: "직접 만든 shopping_catalog 커스텀 노드 - 상품 폴더·모델·시드를 받는 입력 노드와 컷별 촬영 지시(Catalog shot direction) 노드" },
     ],
     detail: {
       oneLiner: "상품 폴더 하나로 모델 착용 컷 세트",

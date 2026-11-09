@@ -27,7 +27,7 @@
 | V8 Cal Lab | carfixproj-Hwang/hptunermap | 스크린샷 |
 | Lulla · AI 동화책 | contentscoin/lulla | 브랜드 썸네일 |
 | 자동차용품 자사몰 (d2c-store) | dev-gwedo/D2C (`pluck\online-store`) | 로컬 실행 캡처 + 영상 2 |
-| 칼갈이 수거·배송 서비스 | Kalganunplace/web-kal (`_archive\web-kal`) | Figma 시안 |
+| 칼갈이 수거·배송 서비스 | Kalganunplace/web-kal (`_archive\web-kal`) | Figma 시안 (칼가는곳.com 은 2026-11-09 확인 결과 다른 빌드 → 아래 감사 표) |
 | AI 의사결정 시스템 제안서 | pluck-dev/brochure (`clients\nousbo`) | 스크린샷 |
 | 몇기야 | spacePluck/rotc (`personal\side\zm`) | 스크린샷 |
 | SEO 엔진 | pluck-dev/seo-engine | 스크린샷 |
@@ -63,7 +63,7 @@
 |---|---|---|---|---|---|
 | MODOOCAR · 법인차 구독 (modoocar) | spacePluck/modoo (비공개), Vercel `modoo` | 법인차 구독 서비스 사이트 | 클라이언트 · 라이브 | 라이브 캡처 | Vercel 배포 커밋 작성자가 오너(adrock_simjae), 2025-03~05. 브랜드명은 라이브 사이트에 공개 |
 | ROTC 비즈니스연합회 행사 좌석 안내 (rotc-seating) | spacePluck/rotc.all, rotc-all.vercel.app | 이·취임식 기수별 좌석·일정·조직도 모바일 웹 | 클라이언트 · 라이브 | 라이브 모바일 캡처 | 오너 커밋, 2026-01-17. 단체명은 라이브 사이트에 공개 |
-| 페어링 북 (pairing-book) | spacePluck/heart-paring (비공개), heart-paring.vercel.app | 글·그림으로 만드는 이야기책 서비스 | 자체 서비스 · 라이브 | 브랜드 썸네일 + 라이브 캡처 | 오너 커밋, 2025-03. 코드 열람 불가라 라이브 화면 문구 범위로만 기술 |
+| 페어링 북 (pairing-book) | spacePluck/heart-paring (비공개), heart-paring.vercel.app | 글·그림으로 만드는 이야기책 서비스 | 자체 서비스 · 라이브 | 라이브 캡처(커버) | 오너 커밋, 2025-03. 코드 열람 불가라 라이브 화면 문구 범위로만 기술 |
 | Claude Planning Kit (planning-kit) | pluck-dev/claude-planning-kit | 기획→명세→코드→테스트 Claude Code 키트 | AI·자동화 · 사례 | 브랜드 썸네일 + 설명 패널 | 오너 커밋, 2026-02. 68개 파일 |
 | Oinzi · AI 에이전트 브라우저 (oinzi) | simjae-fn12/auto-browser (`D:\auto-browser`) | 사람·AI가 세션을 나눠 쓰는 Windows 브라우저 | AI·자동화 · 개발 중 | 현재 빌드(0.9.1) 캡처 + 영상 | 오너 커밋 17개, 2026-10. 설치 파일 0.9.1 |
 | Threads 운영 에이전트 (threads-agent) | `D:\dev\tools\threads-scheduler` (커밋 없음) | PLUCK Threads 계정 자동 운영 | AI·자동화 · 사례 | 브랜드 썸네일 + 설명 패널 | 2026-10-30 가동. 캡처에 타인 핸들·아바타가 보여 미사용 |
@@ -118,6 +118,30 @@
 | 셀러 소싱 분석기, Browser Bridge, Discord–Codex Bridge, Figma MCP, Planning Kit, 공모전 모니터, 썸네일 생성기 | — | 자체 화면이 없는 크롤러·확장·봇·CLI(실제 UI 는 Discord/Figma/터미널, 외부 API 필요) → 브랜드+설명 패널 유지 |
 | AI 가상 모델 카탈로그 | — | ComfyUI 본체 기동 필요, 결과물이 의류 상품 이미지라 권리 확인 전 미사용 |
 | 정푸드, 홈헬스케어, 카드뉴스 스튜디오, Threads 운영 에이전트, 운전면허 PLUS | — | 기존 규칙(운영 DB·고객 브랜드·타인 핸들·코드 없음)으로 제외 |
+
+## 실화면 전환 감사 (2026-11-09, 오너 규칙: 실화면 우선·가려서 사용)
+
+| 프로젝트 | 결과 | 소스 / 남은 이유 |
+|---|---|---|
+| fitness-crm | 실화면 | client-pando `tests/.shots`(회원·트레이너·FC), admin-pando `qa-results/scenarios`(매출 코크핏·캘린더). FitGenie 로고·지점·계정·이름 블러 |
+| blockpick | 실화면 | web-sandy-three-85.vercel.app(초기 Flutter 빌드, 데모 데이터). 상품·호텔 사진·이름 블러. app-blockpick.vercel.app 은 API 실패 화면이라 미사용 |
+| homecare-platform | 실화면 | git 5cb20bb 의 로고 없는 예전 캡처 복원 |
+| threads-agent | 실화면 | threads-scheduler/shots 드라이런, 모달 밖 타 계정 피드·본문 수치·오너 계정 핸들/프로필 사진 블러 |
+| voxcli | 실화면(커버) | apps/windows_desktop_py VoxCLI Hub 를 임시 APPDATA 로 띄워 창 캡처(서버 미기동, 기기 이름 demo-pc). 모바일 Remote 는 웹 빌드 크래시라 여전히 미캡처 |
+| virtual-model-catalog | 실화면 | D:\ComfyUI 로컬 서버(Start-Catalog.ps1, 127.0.0.1:8189)에 CATALOG_ONE_QUEUE.workflow.json 을 불러온 노드 그래프. 생성 실행 안 함, 작업 대기열 패널(결과 썸네일)은 숨김 |
+| contest-watch, pairing-book | 실화면 | 기존 갤러리의 실캡처를 커버로 |
+| card-news-studio | 실화면 | marketing-studio/connections-test.png, 고객사 로고·브랜드·프로젝트명 블러 |
+| predixscore | 브랜드 유지 | 라이브 배포의 Polymarket API 호출이 422, /api/leaderboard·/api/paper/* 502 (2026-11-09 재확인) → 모든 데이터 화면이 오류/빈 상태. 압축본에 캡처 없음, 압축본 코드 실행 금지. 필요: 정상 동작하는 배포 또는 오너가 가진 캡처 |
+| jeongfood | 브랜드 유지 | 라이브는 로그인 화면뿐(2026-11-09 재확인, 로그인 폼 하나라 커버 가치 없음), 로컬 실행은 운영 Supabase·실거래처 데이터에 붙음. 필요: 테스트 계정+샘플 DB 또는 서버까지 가짜 Supabase 로 띄우는 하네스 |
+| lulla, omen | 브랜드 유지 | Flutter+Rust FFI / dart:io 로 웹 빌드 불가, 스토어 배포 없음. 필요: 실기기·에뮬레이터 캡처 |
+| discord-bridge, browser-bridge, figma-mcp, planning-kit | 브랜드 유지 | 자체 화면 없는 봇·확장·CLI·키트. 실화면은 실제 Discord/Chrome/Figma/터미널이라 개인 대화·계정이 섞임(discord-bridge data/attachments 는 카톡·메일 등 개인 캡처라 금지). browser-bridge 팝업은 280px 상태 표시뿐이고 output 은 쿠팡 상품 이미지(타사 데이터). figma-mcp 플러그인 UI 는 업스트림(hopp) 것이라 우리 작업으로 보이면 안 됨. 필요: 데모 Discord 서버·데모 Figma 파일로 녹화 |
+| thumbnail | 브랜드 유지 | 로컬 산출물은 picsum 테스트 그리드뿐 |
+| programmatic-seo, seller-sourcing | 브랜드 유지 | DB 비어 있고 생성·수집에 외부 LLM/크롤링 필요. 필요: 샘플 데이터 시드 후 로컬 실행 |
+
+### 칼가는곳.com 검증 (2026-11-09, knife-sharpening)
+
+- 오너가 알려준 도메인 https://칼가는곳.com (www.xn--o39a1r88koy7a.com) 은 200 이지만, 우리 레포 `_archive\web-kal`(마지막 커밋 2025-12-02, adrock_simjae 101 / Kalganunplace 5) 빌드가 아니다: AWS CloudFront 호스팅, 타이틀 '칼가는곳 | 믿고 맡기는 칼 연마' 의 마케팅 랜딩(/, /price, /daegu, /faq)이고 레포의 /client·/admin 라우트는 404. 랜딩이 소개하는 앱(Play com.edgecraft.kalganunplace, App Store id6761705397)의 '정밀 연마·견적·안심 보장·오로시 개조' 화면은 레포에 없는 기능.
+- GitHub Kalganunplace/web-kal 은 접근 불가, 로컬·압축본에서 랜딩 소스 못 찾음. → url·live 미적용, 라이브 화면 캡처도 우리 작업 화면이 아니라 미사용. 오너 확인 필요: 랜딩/새 앱도 우리가 만들었는지(그렇다면 소스 위치), 아니면 고객사가 이후 다른 팀과 만든 것인지.
 
 ## 제외
 

@@ -40,15 +40,25 @@
 - 모바일 화면은 390 캡처 2-3장을 #dfe3da 캔버스에 둥근 모서리+그림자로 합성 (docs/work-covers/compose.js phones()).
 - 소싱 우선순위: 라이브 사이트 캡처 → 프로젝트 폴더 기존 QA/Playwright 스크린샷 → 로컬 실행(데모/모크 모드만) → 브랜드 썸네일(coverKind "brand").
 
+## 오너 규칙: 실화면 우선, 가리고 쓴다 (2026-11-09)
+- "썸네일 실제로 할 수 있는 건 실제 걸로 해줘야 고객들이 좋아한다." → 커버·갤러리는 실제 화면이 원칙. 로고·고객사명·실명·전화·닉네임·브랜드 상품 사진·검증 안 된 수치 팝업이 문제면 **블러/크롭으로 가리고 쓴다**. 브랜드 썸네일은 실화면을 구할 방법이 정말 없을 때만.
+- 소스 순서: 라이브 URL(Playwright 헤드리스 캡처, 링크 안 거는 배포도 캡처는 가능) → 압축본·레포 안 실제 캡처(QA/테스트 shots, 스토어, Figma 출력) → 안전한 로컬 실행(가짜 데이터) → git 히스토리의 예전 실캡처 → 브랜드 썸네일.
+- 2026-11-09 전환: fitness-crm(client-pando tests/.shots + admin qa-results, FitGenie 로고·지점·계정·이름 블러), blockpick(web-sandy-three-85 = 초기 Flutter 빌드 데모 데이터, 상품·호텔 사진/이름 블러), homecare-platform(git 5cb20bb), threads-agent(threads-scheduler/shots, 모달 밖 배경·수치 블러), contest-watch·pairing-book(기존 갤러리 실캡처를 커버로), card-news-studio(marketing-studio/connections-test.png, 로고·브랜드·프로젝트명 블러).
+- 추가 전환(같은 날): voxcli 커버(VoxCLI Hub Tkinter 창, APPDATA=임시 폴더로 띄워 저장 설정·토큰 안 읽음, 기기 이름 demo-pc로 바꿔 찍음 — 기본값은 PC 호스트명이라 그대로 찍지 말 것), virtual-model-catalog(D:\ComfyUI 의 Start-Catalog.ps1 로 127.0.0.1:8189 기동 → Playwright 로 app.loadGraphData(CATALOG_ONE_QUEUE.workflow.json), 실행 버튼 안 누름. 작업 대기열 팝오버에 결과 썸네일(의류·인물)이 떠서 DOM 에서 숨기고 캡처, 끝나면 8189 PID 종료).
+- 블러 박스는 원본 캡처에서 다시 만든다: 합성본 위에 덧칠하다가 본문 첫 줄까지 덮은 적 있음(threads). 핸들 줄과 본문 줄 사이가 몇 px 라 박스를 행 단위로 나눌 것. threads 는 오너 본인 핸들(simjae____)·프로필 사진도 블러.
+- 아직 브랜드인 것과 이유는 docs/portfolio-inventory.md 의 '실화면 전환 감사' 표 참고.
+- 합성 도구: 레포 밖 PIL 스크립트(blur/desktop/panels — panels 는 비율이 다른 폰 캡처도 그대로 둥근 패널로 배치). compose.js 의 phones() 는 9:19.5 로 강제 크롭하므로 퍼블리싱 뷰(512x672 등)에는 부적합.
+
 ## 개인정보/식별 규칙 (하드)
 - 실명·전화번호·회원 명단·실데이터 어드민·토큰·실제 Discord/카톡 화면 금지. 블러하거나 제외. 데모 데이터 어드민은 OK.
-- caryoung/bayada/nousbo 는 브랜드명·로고·고유 통계(예: 50년/33,000+/22개국)·견적 금액이 보이면 안 됨. homecare 는 이제 브랜드 썸네일만 쓴다(예전 캡처는 갤러리에서도 빠져 있음).
+- caryoung/bayada/nousbo 는 브랜드명·로고·고유 통계(예: 50년/33,000+/22개국)·견적 금액이 보이면 안 됨. homecare 는 2026-11-09 오너 규칙(아래)에 따라 로고 없는 예전 실캡처(git 5cb20bb 의 cover·01-04)를 복원해 쓴다.
 - farm-sales 서비스명에 개인 실명이 들어 있어 전 이미지에서 블러. seoul-home 공고의 사업자 개인명 블러. webtoon 푸터(사업자 정보) 크롭.
 - setflow 라이브 캡처는 실사용자 작성자명이 보여 미사용 → build/shots 데모 데이터 캡처 사용.
 - v8-cal-lab(hptunermap) 데스크톱 헤더의 'CALL 010-…' 사업장 번호는 블러(1800px 캡처 기준 x1100,y12,205x54). 푸터·CTA 프레임은 번호가 보여 미사용.
 - gender-reveal 라이브는 로그인 벽 → 레포 복사본을 env 없이 로컬 실행(localStorage 데모 모드)해 캡처.
 - ai-dj(D:\dev\ai-dj-navigation, Tkinter): 레포 밖 하네스(C:\Temp\djcap\cap.py)로 App 을 library.sqlite3 **복사본** 데이터 폴더로 띄워 창 클라이언트 영역 1600x1000 을 PIL ImageGrab. .venv 는 _ctypes 없음 → .venv-package 사용, 하네스는 `if __name__=='__main__'` 필수(오디오 엔진 multiprocessing spawn 이 스크립트를 재실행). 재생 버튼은 누르지 않고 GUIDE 모드 transport 위치만 옮겨 전환 구간을 찍음(소리 없음). 덱 로드 후 PERFORM 패널을 열면 행이 걸려서 04 는 빈 덱 상태 캡처. 카피: 개발 중·규칙 기반(학습 모델 아님) 명시.
 - knife-sharpening(web-kal) 이미지는 레포 public/figma 의 Figma 시안 → alt 에 'Figma 시안' 명시.
+- knife-sharpening 도메인은 오너 기준 https://칼가는곳.com (punycode www.xn--o39a1r88koy7a.com). 단 2026-11-09 확인 시 라이브는 우리 web-kal 빌드가 아닌 마케팅 랜딩(CloudFront, /client·/admin 404, 앱 com.edgecraft.kalganunplace 는 레포에 없는 견적·정밀 연마 기능) → url/live·라이브 캡처 보류, 오너 확인 대기(docs/portfolio-inventory.md '칼가는곳.com 검증'). 오너가 우리 작업이라 확인하면 url 은 표시용 'https://칼가는곳.com' 으로.
 
 ## 브랜드 썸네일 (실화면이 없거나 노출 불가한 프로젝트, 2026-10-30)
 - 오너 피드백: 프로젝트마다 따로 디자인한 임시 커버(파란 배경 '룰라.' + 가짜 폰 목업 등)가 사이트와 따로 놀았다 → 한 템플릿으로 통일. 예전 docs/work-covers/*.html·panel.js·spec-*.json 은 삭제했다(재도입 금지).
