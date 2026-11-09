@@ -10,7 +10,7 @@
 - 뺀다: 자기 커밋이 없는 서드파티 OSS 포크, 다른 회사 사이트 클론·복제, 튜토리얼, 하루 미만이고 기능이 없는 스캐폴드, 트레이딩 봇, ibctgit 관련, 개인 문서·노트, 실데이터가 들어 있는 폴더.
 - 상태: `live` 는 우리가 배포했고 지금 200 으로 열리는 URL 이 있을 때만 쓴다. 고객사 실명은 고객 라이브 사이트에 이미 공개된 경우에만 쓴다.
 
-## 포함 (57)
+## 포함 (58)
 
 ### 기존 40개
 
@@ -84,10 +84,13 @@
 |---|---|---|---|---|---|
 | BlockPick (blockpick) | adrock `blockpick/app-blockpick` (Flutter) | 그리드형 이벤트 판 참여 + 포인트·리퍼럴 플랫폼의 유저앱 | 앱 · 사례 | 브랜드 썸네일 + 설명 패널 | 오너(adrock_simjae) 커밋 141/145, 2025-10~2026-05. 오너 요청으로 기존 제외 판단을 뒤집음(아래 제외 표 참고) |
 | 피트니스 센터 CRM · 회원앱 (fitness-crm) | dev-spogym/admin-pando, client-pando, docs-pando | 센터 관리자 CRM + 역할별 모바일 웹앱 + 기획 문서 사이트 | 클라이언트 · 사례 | 브랜드 썸네일 + 설명 패널 | 2026-03~06. Vercel 배포 3개 모두 404 → 링크 없음. 고객사명 미공개라 일반명 |
-| 드라이빙존 마케팅 캠페인 API (drivingzone-campaign) | adrock-dev/api.drivingzone | 지점 캠페인 랜딩·추천·추첨·랭킹 이벤트 엔진 NestJS 백엔드 | 클라이언트 · 사례 | 브랜드 썸네일 + 설명 패널 | 오너 커밋 26개(marketing·campaign-landing·admin-auth 도메인만), 2026-05~06. 레포 다른 모듈은 타 작성자 → 오너 범위로만 기재 |
+| 드라이빙존 웹 리뉴얼 · 캠페인 (drivingzone-campaign) | adrock-dev/web.drivingzone + adrock-dev/api.drivingzone | 지점 안내·상세·SEO(2025) + 캠페인 랜딩·관리자(2026) + 캠페인 이벤트 엔진 API | 클라이언트 · 라이브 | drivingzone.co.kr 라이브 캡처(상담 위젯·이용자 리뷰·강사 이름 블러) + 설명 패널 | web 오너 커밋 198개(2025-05~07, 2026-05~06, branch·SEO·campaign·admin), api 26개. 라이브 HTML 메타 문구가 레포 layout.tsx 와 일치 → 링크. 홈 화면은 팝업·수치 배지(8만명+/95.27%)라 캡처 미사용. 이력서의 '쿠폰 선물하기'는 커밋·코드에 없어 미기재 |
+| PredixScore (predixscore) | ADROCK-SIMJAE/predixscore (`-003.zip`) | Polymarket 공개 데이터 기반 가상 예측 기록·평판 서비스 | 클라이언트 · 사례 | 브랜드 썸네일 + 설명 패널 | 오너 커밋 16/19, 2026-05. Ronin 컨트랙트 배포·commit-reveal·가스 대납은 송문천 커밋 → '팀원과 함께'로만 표기. predixscore.vercel.app 은 레포와 같은 문구지만 우리 Vercel 계정에 없어 링크 보류 |
 | (확장) 운전면허 PLUS · 도로로 (adrock-driving) | adrock-dev/web.drivingplus | 운전면허 PLUS 앱 웹뷰 이벤트 화면 | 기존 유지 | 기존 유지 | 오너 커밋 251개, 2025-02~04(학과왕 응모·당첨·응모 이력·보상형 광고 브리지·Amplitude) |
 
-같은 압축본에서 뺀 것: `coupang-scraper-ext`(빈 폴더), adrock `browser-bridge`(기존 Browser Bridge 엔트리와 같은 프로젝트), adrock `seo`(경쟁사 블로그 21,275건 스크랩 데이터 + 전략 문서·PoC — 타사 데이터 기반 리서치라 게재 안 함, 기존 '블로그 양산 엔진'과 주제 중복), `_root-files`(설정 파일뿐). 브리프의 'BlockPick 웹 미니게임·결제·어드민', '드라이빙존 웹 리뉴얼'은 압축본에 코드가 없어 카피에 넣지 않음.
+두 번째 압축본(`adrock-*-003.zip`)에서 뺀 것: `scraw`(빈 폴더), `seo-app`(git 없음, academy.drivingplus.me 용 양산형 SEO 단일 테넌트 빌드 — 경쟁사 블로그 스크랩 리서치에서 이어진 것이고 기존 '블로그 양산 엔진'과 구성(관리자·워커·Next.js 커뮤니티 키트)이 겹침), `adrock-event`(세차 쿠폰 뽑기 이벤트 페이지, 오너 커밋 12개·실작업 2일(2026-04-20, 04-29), 배포·브랜드 확인 불가 → 보류).
+
+같은 압축본에서 뺀 것: `coupang-scraper-ext`(빈 폴더), adrock `browser-bridge`(기존 Browser Bridge 엔트리와 같은 프로젝트), adrock `seo`(경쟁사 블로그 21,275건 스크랩 데이터 + 전략 문서·PoC — 타사 데이터 기반 리서치라 게재 안 함, 기존 '블로그 양산 엔진'과 주제 중복), `_root-files`(설정 파일뿐). 브리프의 'BlockPick 웹 미니게임·결제·어드민', '드라이빙존 웹 리뉴얼'은 첫 압축본에 없어 보류했다가 `-003.zip` 의 web.drivingzone 으로 반영.
 
 ## 실화면·영상 캡처 현황 (2026-10-30, feat/portfolio-media)
 
