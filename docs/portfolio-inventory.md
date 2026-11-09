@@ -10,7 +10,7 @@
 - 뺀다: 자기 커밋이 없는 서드파티 OSS 포크, 다른 회사 사이트 클론·복제, 튜토리얼, 하루 미만이고 기능이 없는 스캐폴드, 트레이딩 봇, ibctgit 관련, 개인 문서·노트, 실데이터가 들어 있는 폴더.
 - 상태: `live` 는 우리가 배포했고 지금 200 으로 열리는 URL 이 있을 때만 쓴다. 고객사 실명은 고객 라이브 사이트에 이미 공개된 경우에만 쓴다.
 
-## 포함 (54)
+## 포함 (57)
 
 ### 기존 40개
 
@@ -76,6 +76,19 @@
 | Vox Studio · 음성 복제 스튜디오 (vox-studio) | pluck-dev/vox (`personal\voice\vox-studio`) | Qwen3-TTS 복제·파인튜닝 데스크톱 앱 | AI·자동화 · 사례 | 렌더러 실행 캡처 + 영상 | 오너 커밋, 2026-06. VoxCLI 와 별개 앱 |
 | 몰입형 웹 모션 스터디 (motion-study) | pluck-dev/design (`pluck\design` 의 pluck-motion, temper) | 몰입형 웹 제작 파이프라인과 WebGL 실험 | AI·자동화 · 사례 | 실제 실험 사이트 캡처 | 오너 작업. 레퍼런스 재현물(lusion·activetheory·NEXT 증권)과 shorttuber 클론은 제외 |
 
+### 2026-11-09 오너 업로드 아카이브로 추가한 3개 (+1 확장)
+
+출처: 오너가 올린 압축본 `Downloadslockpick-002.tar.gz`, `adrock-*.zip`, `pando-*.zip` (레포에는 넣지 않음). 연도·기여 범위는 압축본 안 `.git` 로그 기준.
+
+| 이름 (slug) | 소스 | 무엇인가 | 카테고리 · 상태 | 이미지 | 근거 |
+|---|---|---|---|---|---|
+| BlockPick (blockpick) | adrock `blockpick/app-blockpick` (Flutter) | 그리드형 이벤트 판 참여 + 포인트·리퍼럴 플랫폼의 유저앱 | 앱 · 사례 | 브랜드 썸네일 + 설명 패널 | 오너(adrock_simjae) 커밋 141/145, 2025-10~2026-05. 오너 요청으로 기존 제외 판단을 뒤집음(아래 제외 표 참고) |
+| 피트니스 센터 CRM · 회원앱 (fitness-crm) | dev-spogym/admin-pando, client-pando, docs-pando | 센터 관리자 CRM + 역할별 모바일 웹앱 + 기획 문서 사이트 | 클라이언트 · 사례 | 브랜드 썸네일 + 설명 패널 | 2026-03~06. Vercel 배포 3개 모두 404 → 링크 없음. 고객사명 미공개라 일반명 |
+| 드라이빙존 마케팅 캠페인 API (drivingzone-campaign) | adrock-dev/api.drivingzone | 지점 캠페인 랜딩·추천·추첨·랭킹 이벤트 엔진 NestJS 백엔드 | 클라이언트 · 사례 | 브랜드 썸네일 + 설명 패널 | 오너 커밋 26개(marketing·campaign-landing·admin-auth 도메인만), 2026-05~06. 레포 다른 모듈은 타 작성자 → 오너 범위로만 기재 |
+| (확장) 운전면허 PLUS · 도로로 (adrock-driving) | adrock-dev/web.drivingplus | 운전면허 PLUS 앱 웹뷰 이벤트 화면 | 기존 유지 | 기존 유지 | 오너 커밋 251개, 2025-02~04(학과왕 응모·당첨·응모 이력·보상형 광고 브리지·Amplitude) |
+
+같은 압축본에서 뺀 것: `coupang-scraper-ext`(빈 폴더), adrock `browser-bridge`(기존 Browser Bridge 엔트리와 같은 프로젝트), adrock `seo`(경쟁사 블로그 21,275건 스크랩 데이터 + 전략 문서·PoC — 타사 데이터 기반 리서치라 게재 안 함, 기존 '블로그 양산 엔진'과 주제 중복), `_root-files`(설정 파일뿐). 브리프의 'BlockPick 웹 미니게임·결제·어드민', '드라이빙존 웹 리뉴얼'은 압축본에 코드가 없어 카피에 넣지 않음.
+
 ## 실화면·영상 캡처 현황 (2026-10-30, feat/portfolio-media)
 
 브랜드 썸네일 프로젝트와 갤러리 2장 이하 프로젝트를 로컬에서 띄워 보려고 한 결과다. 방법은 `.fry/MEMORY.md` "Portfolio 영상·실화면 캡처" 참고.
@@ -124,7 +137,7 @@
 | `tools\task-api`, `simjae-dev\web\car`, pluck-dev/bayada-academy·bayada-landing, spacePluck/ou, `seoul-youth-home-finder`(D:\dev 루트) | 빈 스캐폴드·빈 레포 |
 | `personal\side\mart\party-sharing-api` | 1커밋 NestJS 스텁 |
 | `pluck\wedding-luxe-next`, pluck-dev/web-template(ALPHA, = clients/marketting) | 하루 작업 랜딩, 고객 불명 |
-| BlockPick(spacePluck/blockpick, web-sandy-three-85) | 블록체인 경매형 게임: 사행성·금융 리스크, 공개 화면은 스플래시뿐 |
+| BlockPick 웹(spacePluck/blockpick, web-sandy-three-85) | 웹 버전 코드는 접근 불가, 공개 화면은 스플래시뿐. 2026-11-09 오너 요청으로 Flutter 유저앱(blockpick)만 앱 엔트리로 게재 — 카피는 참여·포인트·리퍼럴 구조로만 쓰고 경매·사행 표현 금지 |
 | v0-* Vercel 프로젝트(스냅온유, 하늘 정원, ezpz 등) | v0 생성 프로토타입, git 없음, 고객 관계 확인 불가 |
 | `pluck\ad-agency-research`, `pluck\docs`, pluck-dev/ad, `personal\obsidian*`, obsidian-service-planning, securities-cs-knowledge-base | 개인 노트·문서 |
 | spacePluck/pixel-art, `simjae-dev\project\beads` | 2024년 소규모 실험 |

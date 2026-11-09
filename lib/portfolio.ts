@@ -319,6 +319,112 @@ const projectList: readonly PortfolioProject[] = [
     },
   },
   {
+    slug: "fitness-crm",
+    name: "피트니스 센터 CRM · 회원앱",
+    category: "client",
+    years: [2026, 2026],
+    description:
+      "회원·수업·매출·시설·급여를 다루는 센터 관리자 CRM과, 회원·트레이너·FC·직원이 쓰는 모바일 웹앱.",
+    disciplines: ["CRM", "Mobile web", "Supabase"],
+    status: "case",
+    coverKind: "brand",
+    cover: { src: "/work/fitness-crm/cover.webp", alt: "피트니스 센터 CRM · 회원앱 PLUCK 브랜드 썸네일 — 센터 운영과 회원 경험을 한 데이터로" },
+    gallery: [
+      {
+        src: "/work/fitness-crm/01.webp",
+        alt: "관리자 CRM, 역할별 모바일 웹앱, 기획 문서 사이트, 시나리오 QA 네 갈래로 나눈 구성 설명 패널",
+        diagram: {"title": "센터 운영과 회원 경험을\n한 데이터로", "items": [{"title": "관리자 CRM", "text": "회원·수업·매출·시설·급여·마케팅과 본사 KPI"}, {"title": "모바일 웹앱", "text": "회원·트레이너·FC·직원 역할별 화면"}, {"title": "기획 문서 사이트", "text": "역할·회원 상태·정량 정책을 한곳에 정리"}, {"title": "시나리오 QA", "text": "등록부터 환불·급여까지 Playwright로 검증"}]},
+      },
+    ],
+    detail: {
+      oneLiner: "센터 운영과 회원 경험을 한 데이터로",
+      role: [
+        "기획 문서화",
+        "프론트엔드",
+        "백엔드",
+        "모바일 웹",
+        "QA 자동화",
+      ],
+      stack: [
+        "Next.js 16",
+        "React 19",
+        "TypeScript",
+        "Supabase",
+        "Prisma",
+        "TanStack Query",
+        "FullCalendar",
+        "Playwright",
+        "Nextra",
+      ],
+      overview:
+        "피트니스 센터 운영사를 위한 관리자 CRM과 회원용 모바일 웹앱입니다. 관리자 CRM은 회원·이용권·출석, 수업과 예약, POS 결제와 환불, 락커 등 시설, 직원 급여, 마케팅, 본사 지점 리포트를 다루고, 모바일 웹앱은 회원·트레이너·FC·직원이 각자 역할에 맞는 화면을 씁니다. 정책과 화면 기획은 별도 문서 사이트로 정리했습니다.",
+      problem:
+        "회원 상태, 환불·휴회·정지 같은 운영 정책이 화면마다 다르게 해석되기 쉬웠고, 관리자 화면과 회원앱이 같은 데이터를 서로 다른 규칙으로 다룰 위험이 있었습니다.",
+      solution:
+        "역할·회원 상태·정량 정책을 정본 문서로 먼저 고정하고, 관리자 CRM과 모바일 웹앱이 같은 Supabase 데이터를 쓰도록 만들었습니다. 회원 등록부터 결제·환불·급여까지 업무 시나리오를 Playwright 스크립트로 돌려 화면별 동작을 확인했습니다.",
+      features: [
+        "회원·이용권·QR 출석 관리",
+        "수업 일정·예약·대기·패널티",
+        "POS 결제·환불·할부·미수 관리",
+        "락커·시설·비품 관리",
+        "직원 근태와 급여 명세",
+        "리드·쿠폰·마일리지·자동 알림",
+        "본사 KPI와 지점별 리포트",
+        "회원·트레이너·FC·직원 모바일 웹앱",
+      ],
+    },
+  },
+  {
+    slug: "drivingzone-campaign",
+    name: "드라이빙존 마케팅 캠페인 API",
+    category: "client",
+    years: [2026, 2026],
+    description:
+      "운전면허 학원 지점별 캠페인 랜딩, 친구 추천·추첨·랭킹 이벤트, 상담 예약을 운영하는 NestJS 백엔드.",
+    disciplines: ["NestJS", "Marketing", "Admin API"],
+    status: "case",
+    coverKind: "brand",
+    coverMotif: "flow",
+    cover: { src: "/work/drivingzone-campaign/cover.webp", alt: "드라이빙존 마케팅 캠페인 API PLUCK 브랜드 썸네일 — 추천·추첨·랭킹을 하나의 캠페인 엔진으로" },
+    gallery: [
+      {
+        src: "/work/drivingzone-campaign/01.webp",
+        alt: "지점 캠페인 랜딩에서 추천 코드 공유, 방문·가입 추적, 추첨·랭킹, 보상 지급으로 이어지는 흐름 설명 패널",
+        diagram: {"title": "추천·추첨·랭킹을\n하나의 캠페인 엔진으로", "flow": true, "items": [{"title": "지점 랜딩", "text": "지점별 캠페인 페이지와 배너"}, {"title": "추천 공유", "text": "추천 코드 링크와 QR 공유"}, {"title": "행동 추적", "text": "방문·인증·가입을 중복 없이 기록"}, {"title": "추첨·랭킹", "text": "응모권과 순위로 당첨자 선정"}, {"title": "보상", "text": "쿠폰·포인트·경품 지급 상태 관리"}]},
+      },
+    ],
+    detail: {
+      oneLiner: "추천·추첨·랭킹을 하나의 캠페인 엔진으로",
+      role: [
+        "백엔드",
+        "데이터 설계",
+        "관리자 API",
+      ],
+      stack: [
+        "NestJS 11",
+        "TypeScript",
+        "TypeORM",
+        "MariaDB",
+        "Slack Webhook",
+      ],
+      overview:
+        "애드락(Adrock)에서 참여한 실내 운전면허 학원 드라이빙존의 백엔드 작업입니다. 기존 NestJS API에 지점별 캠페인 랜딩, 친구 추천·추첨·미션·랭킹을 묶은 마케팅 이벤트 엔진, 관리자 인증과 캠페인 관리 API를 추가했습니다.",
+      problem:
+        "지점마다 진행하는 추천·응모 이벤트를 매번 따로 만들다 보니 참여자 인증, 중복 추천, 보상 지급 상태를 일관되게 관리하기 어려웠습니다.",
+      solution:
+        "추첨·추천 보상·미션·랭킹을 한 캠페인 모델과 행동 로그로 통합하고, 공유·방문·가입을 추적해 중복 보상을 막았습니다. 지점 랜딩에서 들어온 상담 예약은 관리자 목록과 Slack 알림으로 바로 전달되게 했습니다.",
+      features: [
+        "지점별 캠페인 랜딩과 배너 관리",
+        "추첨·추천 보상·미션·랭킹 이벤트 엔진",
+        "공유·방문·가입 행동 추적과 중복 보상 방지",
+        "어뷰징 플래그와 참여자 인증",
+        "강사 칭찬 후기 수집·공개",
+        "상담 예약 접수와 Slack 알림",
+        "관리자 로그인과 캠페인 통계 API",
+      ],
+    },
+  },
+  {
     slug: "dealer-settlement",
     name: "자동차보험 딜러 정산 플랫폼",
     category: "client",
@@ -1425,7 +1531,7 @@ const projectList: readonly PortfolioProject[] = [
     category: "app",
     years: [2024, 2025],
     description:
-      "애드락의 운전면허 필기 학습 앱 운전면허 PLUS와, 면허 취득·연수 서비스 도로로의 앱 웹뷰 프론트엔드.",
+      "애드락의 운전면허 필기 학습 앱 운전면허 PLUS의 웹뷰 이벤트 화면과, 면허 취득·연수 서비스 도로로의 앱 웹뷰 프론트엔드.",
     disciplines: ["Android", "Webview", "Next.js"],
     status: "live",
     url: "https://play.google.com/store/apps/details?id=com.adrock.driverlicense300",
@@ -1439,6 +1545,7 @@ const projectList: readonly PortfolioProject[] = [
       role: [
         "프론트엔드",
         "앱-웹뷰 연동",
+        "이벤트 화면",
         "보일러플레이트",
       ],
       stack: [
@@ -1448,20 +1555,79 @@ const projectList: readonly PortfolioProject[] = [
         "TypeScript",
         "Tailwind CSS",
         "shadcn/ui",
+        "Amplitude",
       ],
       overview:
-        "애드락(Adrock)에서 참여한 운전면허 서비스입니다. 운전면허 PLUS는 필기시험 모의고사·유형별 학습·오답노트·학원찾기를 제공하는 Android 앱으로 Google Play에 배포돼 있고, 도로로는 면허 취득부터 연수까지를 다루는 서비스의 앱 내 웹뷰 화면입니다.",
+        "애드락(Adrock)에서 참여한 운전면허 서비스입니다. 운전면허 PLUS는 필기시험 모의고사·유형별 학습·오답노트·학원찾기를 제공하는 Android 앱으로 Google Play에 배포돼 있고, 도로로는 면허 취득부터 연수까지를 다루는 서비스의 앱 내 웹뷰 화면입니다. 운전면허 PLUS 앱 안에서 열리는 웹 화면(모의고사 점수로 응모하는 학과왕 이벤트, 당첨 발표, 모의고사 결과)도 맡았습니다.",
       problem:
         "네이티브 앱 안에서 자주 바뀌는 프로그램·분석 화면을 매번 앱 업데이트로 배포하기는 부담이 컸습니다.",
       solution:
-        "Next.js 14·Tailwind·shadcn/ui·Pretendard로 사내 프론트엔드 보일러플레이트를 세우고, 앱과 웹뷰가 메시지를 주고받는 통신 훅을 만들어 웹 화면에서 선택한 항목이 앱으로 전달되게 했습니다.",
+        "Next.js 14·Tailwind·shadcn/ui·Pretendard로 사내 프론트엔드 보일러플레이트를 세우고, 앱과 웹뷰가 메시지를 주고받는 통신 훅을 만들어 웹 화면에서 선택한 항목이 앱으로 전달되게 했습니다. 운전면허 PLUS 이벤트 화면에서는 같은 브리지로 앱의 보상형 광고를 띄우고, 응모·당첨 확인 흐름을 Amplitude 이벤트로 추적했습니다.",
       features: [
         "필기시험 모의고사와 유형별 학습(앱)",
         "오답노트·즐겨찾기 복습(앱)",
         "운전면허 학원찾기(앱)",
         "도로로 프로그램·그룹 상세 웹뷰",
+        "학과왕 응모 이벤트와 추첨·당첨 발표 웹뷰",
+        "나의 응모 이력·역대 당첨자 목록",
+        "웹뷰에서 앱 보상형 광고 호출",
         "앱-웹뷰 양방향 통신 훅",
         "Next.js 사내 보일러플레이트",
+      ],
+    },
+  },
+  {
+    slug: "blockpick",
+    name: "BlockPick",
+    category: "app",
+    years: [2025, 2026],
+    description:
+      "블록픽은 파트너가 연 그리드형 이벤트 판에서 블록을 골라 참여하고, 광고·미션·친구 초대로 참여 기회를 늘리는 블록체인 기반 참여형 플랫폼의 Flutter 앱.",
+    disciplines: ["Flutter", "Blockchain", "GraphQL"],
+    status: "case",
+    coverKind: "brand",
+    cover: { src: "/work/blockpick/cover.webp", alt: "BlockPick PLUCK 브랜드 썸네일 — 큰 그리드에서 블록 하나를 고르는 참여형 앱" },
+    gallery: [
+      {
+        src: "/work/blockpick/01.webp",
+        alt: "그리드 렌더링, 픽 모드, 참여 기록, 포인트 적립 네 가지로 나눈 앱 구성 설명 패널",
+        diagram: {"title": "큰 그리드에서\n블록 하나를 고르기까지", "items": [{"title": "대형 그리드", "text": "최대 1000×1000 판을 확대·축소하며 선택"}, {"title": "픽 모드", "text": "기울기·소리·그리기 등 센서를 쓰는 선택 방식"}, {"title": "참여 기록", "text": "좌표를 암호화해 Ronin 체인 트랜잭션으로 기록"}, {"title": "포인트", "text": "광고·미션·출석·친구 초대로 추가 참여"}]},
+      },
+    ],
+    detail: {
+      oneLiner: "큰 그리드에서 블록 하나를 고르는 참여형 앱",
+      role: [
+        "Flutter 앱 개발",
+        "블록체인 연동",
+        "외부 SDK 연동",
+        "테스트 자동화",
+      ],
+      stack: [
+        "Flutter",
+        "Dart",
+        "Riverpod",
+        "GraphQL",
+        "web3dart",
+        "Ronin",
+        "Firebase Messaging",
+        "AdMob",
+        "Patrol",
+      ],
+      overview:
+        "애드락(Adrock)에서 개발한 블록픽 유저앱입니다. 파트너가 만든 그리드형 이벤트 판에서 유저가 블록을 골라 참여하고, 광고 시청·미션·출석·미니게임·친구 초대로 포인트를 모아 추가로 참여하는 구조입니다. Next.js 웹 버전을 Flutter 모바일 앱으로 옮기며 시작했습니다.",
+      problem:
+        "최대 100만 칸에 이르는 그리드를 휴대폰에서 끊김 없이 보여주면서, 참여 기록은 블록체인에 남기되 사용자 지갑과 선택 좌표는 노출되지 않아야 했습니다.",
+      solution:
+        "CustomPaint 기반 렌더러에 LOD와 희소 그리드를 적용해 대형 판을 그리고, 선택 좌표는 AES로 암호화한 뒤 Ronin 체인 트랜잭션으로 기록했습니다. 포인트 적립 경로는 AdMob 보상형 광고·오퍼월·미션으로 연결하고, 주요 흐름은 Patrol E2E 테스트와 CI로 검증했습니다.",
+      features: [
+        "최대 1000×1000 그리드 렌더링과 핀치 줌",
+        "기울기·소리·그리기 등 여러 픽 모드",
+        "AES 좌표 암호화와 Ronin 체인 참여 기록",
+        "Apple·Google 로그인과 FCM 푸시",
+        "보상형 광고·오퍼월·출석·미션 포인트",
+        "친구 초대 리퍼럴과 카카오 공유",
+        "GraphQL API 연동",
+        "Patrol E2E 테스트와 CI",
       ],
     },
   },

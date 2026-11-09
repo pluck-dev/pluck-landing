@@ -8,8 +8,12 @@
 - caryoung 은 2026-10 오너 지시로 live + url(client-roan-six.vercel.app) 공개. 링크 타이틀에 브랜드 '카영'이 보이므로 브랜드 노출은 허용됐지만 카드 이름은 일반명 유지. 레포 루트의 dealer-lookup/dashboard-staff 캡처는 실명·전화번호 실데이터라 사용 금지 → 비로그인 '샘플 데이터' 프리뷰(홍길동/12가1234)만 캡처.
 - THOUSAND 는 오너 확인 결과 실제 클라이언트 작업(develop-thousand/web) → category client, live. 단 라이브 푸터가 'Design concept·실제 주문/결제 없음'이라 카피에 '결제 없이 구매 흐름 시연' 명시, 주문·매출 실적처럼 쓰지 말 것.
 - 노출 금지 링크: brochure-wine(타이틀에 '누보' 고객명), admin-farm-theta(타이틀에 개인명 '심재&오유마켓', 로그인만). 엔트리는 유지·무링크.
-- adrock-driving: 운전면허 PLUS(Play, com.adrock.driverlicense300) 저장소 android.drive 에는 오너 커밋이 없음(leemj/이미지/jdk). 오너 커밋은 web.dororo(보일러플레이트·웹뷰 통신)뿐 → role 은 그 범위로만 기재. Play 스토어 스크린샷 중 '1000만이 선택', '1,601,032,242건' 등 수치 이미지는 사용 금지.
+- adrock-driving: 운전면허 PLUS(Play, com.adrock.driverlicense300) 저장소 android.drive 에는 오너 커밋이 없음(leemj/이미지/jdk). 오너 커밋은 web.dororo(보일러플레이트·웹뷰 통신)와 web.drivingplus(2026-11 오너 업로드 압축본, 2025-02~04 학과왕 응모·당첨 웹뷰·보상형 광고 브리지·Amplitude) → role/features 는 이 범위로만. app.drivingplus.me 는 같은 레포 계열이지만 이후 타인이 바꾼 학원찾기 사이트라 링크로 쓰지 않음. Play 스토어 스크린샷 중 '1000만이 선택', '1,601,032,242건' 등 수치 이미지는 사용 금지.
 - Figma MCP 는 gethopp/figma-mcp-bridge 포크(우리 작업 = 정밀 추출 커밋) → "포크/확장"으로 표기.
+- 애드락(전 직장, 2024.07~2026.07) 작업은 오너가 올린 압축본에서만 확인 가능(GitHub adrock-dev 접근 불가). 레포에 타 작성자 커밋이 섞여 있으니 `git log --author=simjae` 범위의 도메인만 카피에 쓴다(api.drivingzone = marketing/campaign-landing/admin-auth 뿐). 오너 브리프·이력서 문구(웹 31개 미니게임, 4개 언어, PortOne 결제 등)도 압축본 코드에 없으면 쓰지 않는다.
+- fitness-crm(판도/pando, dev-spogym 레포, 제품명 FitGenie): 고객사 미공개·배포 404 → 일반명 + 브랜드 썸네일. admin-pando qa-results/client-deliverables 의 실화면 캡처는 테스트 데이터지만 'FitGenie CRM' 로고·지점명이 보여 미사용(쓰려면 오너 확인 후 로고 블러). 옛 showreel.tsx(미사용 섹션)의 'FitGenie + 스포짐' 표기를 근거로 실명 쓰지 말 것.
+- blockpick: 2026-10 인벤토리에선 '사행성' 이유로 제외했으나 2026-11-09 오너 요청으로 Flutter 유저앱만 게재. 카피는 참여·포인트·리퍼럴 구조로만, 경매·베팅·수익 표현 금지. assets 의 상품 이미지(명품·브랜드 사진)는 썸네일에 쓰지 않는다.
+- 브랜드 커버 이름에 ' · '(공백 포함)이 있으면 결합 처리가 안 돼 '·'가 줄 맨 앞에 올 수 있다(긴 영문+한글 이름). 렌더 후 반드시 눈으로 확인하고 이름을 줄이거나 바꾼다(BlockPick).
 - webtoon-voice 슬러그의 서비스명은 최신 코드(D:\dev\pluck\webtoon) 기준 "더빙고" → name "더빙고 · Voice Webtoon".
 
 ## 검증 결과 (2026-10-29)
