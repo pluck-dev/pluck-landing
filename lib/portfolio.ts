@@ -853,10 +853,15 @@ const projectList: readonly PortfolioProject[] = [
     description:
       "칼갈이 신청부터 수거·배송, 구독, 쿠폰까지 담은 모바일 웹 서비스.",
     disciplines: ["Mobile web", "Supabase", "Subscription"],
-    status: "case",
+    status: "live",
+    url: "https://칼가는곳.com",
     coverKind: "screenshot",
-    cover: { src: "/work/knife-sharpening/cover.webp", alt: "Figma 시안 화면 3장 - 내 정보 메인과 칼갈이 신청 배너, 보유 쿠폰 목록, 약관 동의 시트" },
-    gallery: [],
+    cover: { src: "/work/knife-sharpening/cover.webp", alt: "칼가는곳 사이트의 앱 화면 소개 - 사진 등록부터 AI 판독, 견적 확인, 간편 결제까지 이어지는 연마 신청 단계와 결제 화면" },
+    gallery: [
+      { src: "/work/knife-sharpening/01.webp", alt: "칼가는곳 사이트 첫 화면 - 어두운 배경 위 사시미 칼과 상단 메뉴" },
+      { src: "/work/knife-sharpening/02.webp", alt: "칼가는곳 사이트의 연마 종류 소개 구간 - 어떤 연마가 필요하신가요" },
+      { src: "/work/knife-sharpening/03.webp", alt: "초기 Figma 시안 화면 3장 - 내 정보 메인과 칼갈이 신청 배너, 보유 쿠폰 목록, 약관 동의 시트" },
+    ],
     detail: {
       oneLiner: "칼갈이를 앱으로 신청하고 문 앞에서 받는다",
       role: [

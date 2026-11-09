@@ -58,7 +58,7 @@
 - gender-reveal 라이브는 로그인 벽 → 레포 복사본을 env 없이 로컬 실행(localStorage 데모 모드)해 캡처.
 - ai-dj(D:\dev\ai-dj-navigation, Tkinter): 레포 밖 하네스(C:\Temp\djcap\cap.py)로 App 을 library.sqlite3 **복사본** 데이터 폴더로 띄워 창 클라이언트 영역 1600x1000 을 PIL ImageGrab. .venv 는 _ctypes 없음 → .venv-package 사용, 하네스는 `if __name__=='__main__'` 필수(오디오 엔진 multiprocessing spawn 이 스크립트를 재실행). 재생 버튼은 누르지 않고 GUIDE 모드 transport 위치만 옮겨 전환 구간을 찍음(소리 없음). 덱 로드 후 PERFORM 패널을 열면 행이 걸려서 04 는 빈 덱 상태 캡처. 카피: 개발 중·규칙 기반(학습 모델 아님) 명시.
 - knife-sharpening(web-kal) 이미지는 레포 public/figma 의 Figma 시안 → alt 에 'Figma 시안' 명시.
-- knife-sharpening 도메인은 오너 기준 https://칼가는곳.com (punycode www.xn--o39a1r88koy7a.com). 단 2026-11-09 확인 시 라이브는 우리 web-kal 빌드가 아닌 마케팅 랜딩(CloudFront, /client·/admin 404, 앱 com.edgecraft.kalganunplace 는 레포에 없는 견적·정밀 연마 기능) → url/live·라이브 캡처 보류, 오너 확인 대기(docs/portfolio-inventory.md '칼가는곳.com 검증'). 오너가 우리 작업이라 확인하면 url 은 표시용 'https://칼가는곳.com' 으로.
+- knife-sharpening: 2026-11-09 오너 지시로 url https://칼가는곳.com + live. 라이브는 웹앱을 앱으로 감싼 버전(CloudFront 랜딩)이라 레포 경로와 달라도 오너 확인으로 연결함. 커버=라이브 랜딩 캡처, 03=예전 Figma 시안.
 
 ## 브랜드 썸네일 (실화면이 없거나 노출 불가한 프로젝트, 2026-10-30)
 - 오너 피드백: 프로젝트마다 따로 디자인한 임시 커버(파란 배경 '룰라.' + 가짜 폰 목업 등)가 사이트와 따로 놀았다 → 한 템플릿으로 통일. 예전 docs/work-covers/*.html·panel.js·spec-*.json 은 삭제했다(재도입 금지).
