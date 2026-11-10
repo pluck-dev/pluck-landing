@@ -22,7 +22,10 @@ import {
   MAX_REFERENCE_URLS,
   projectTypeLabels,
   SOURCE_COOKIE,
+  START_FORM_SOURCE,
+  START_WANTS,
   timelineLabels,
+  type StartWant,
 } from "@/lib/crm/constants";
 import { SITE_URL } from "@/lib/site";
 import { lastTouchSummary, sanitizeTouch } from "@/lib/crm/attribution";
@@ -158,6 +161,140 @@ export async function submitInquiry(
     };
   }
 
+  const data = parsed.data;
+  const attachments = await keepUploaded(supabase, data.attachments);
+  return saveInquiry(supabase, formData, {
+    ...data,
+    email: data.email.toLowerCase(),
+    attachments,
+  });
+}
+
+const START_WANT_KEYS = Object.keys(START_WANTS) as [StartWant, ...StartWant[]];
+
+const startSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "이름을 입력해 주세요.")
+    .max(60, "이름은 60자 안으로 입력해 주세요."),
+  contact: z
+    .string()
+    .trim()
+    .min(1, "전화번호나 이메일을 입력해 주세요.")
+    .max(120, "연락처가 너무 길어요."),
+  want: z.enum(START_WANT_KEYS, "만들고 싶은 것을 골라 주세요."),
+  message: z
+    .string()
+    .trim()
+    .min(2, "한두 줄만 적어 주세요.")
+    .max(1000, "설명은 1000자 안으로 적어 주세요."),
+  consent_privacy: z.literal(true, "개인정보 수집·이용에 동의해 주세요."),
+});
+
+export type StartField = "name" | "contact" | "want" | "message" | "consent_privacy";
+export type StartState =
+  | { status: "idle" }
+  | { status: "success"; lead?: boolean }
+  | { status: "error"; message: string; fieldErrors?: Partial<Record<StartField, string>> };
+
+/**
+ * Short lead form on /lp/start (Meta ads). Same table, rate limit, Discord alert and
+ * attribution as /contact; one contact field takes either a phone number or an email.
+ */
+export async function submitStartInquiry(
+  _prev: StartState,
+  formData: FormData,
+): Promise<StartState> {
+  if (String(formData.get("website") ?? "").trim()) {
+    return { status: "success" };
+  }
+
+  const supabase = createServiceClient();
+  if (!supabase) return { status: "error", message: NOT_CONFIGURED };
+
+  const parsed = startSchema.safeParse({
+    name: formData.get("name") ?? "",
+    contact: formData.get("contact") ?? "",
+    want: formData.get("want") ?? undefined,
+    message: formData.get("message") ?? "",
+    consent_privacy: formData.get("consent_privacy") === "on",
+  });
+
+  const fieldErrors: Partial<Record<StartField, string>> = {};
+  if (!parsed.success) {
+    for (const issue of parsed.error.issues) {
+      const key = issue.path[0] as StartField;
+      if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
+    }
+  }
+  const contact = parsed.success ? splitContact(parsed.data.contact) : null;
+  if (parsed.success && !contact) {
+    fieldErrors.contact = "전화번호(숫자와 -) 또는 이메일 주소를 확인해 주세요.";
+  }
+  if (!parsed.success || !contact) {
+    return {
+      status: "error",
+      message: "입력한 내용을 한 번 더 확인해 주세요.",
+      fieldErrors,
+    };
+  }
+
+  const data = parsed.data;
+  const want = START_WANTS[data.want];
+  return saveInquiry(
+    supabase,
+    formData,
+    {
+      name: data.name,
+      company: null,
+      // email is NOT NULL in the schema; phone-only leads store an empty string.
+      email: contact.email ?? "",
+      phone: contact.phone,
+      project_type: want.type,
+      budget: null,
+      timeline: null,
+      message: `만들고 싶은 것: ${want.label}
+
+${data.message}`,
+      reference_urls: [],
+      attachments: [],
+    },
+    START_FORM_SOURCE,
+  );
+}
+
+/** Phone number or email from one field. */
+function splitContact(value: string): { email: string | null; phone: string | null } | null {
+  if (value.includes("@")) {
+    const email = z.email().safeParse(value);
+    return email.success ? { email: email.data.toLowerCase(), phone: null } : null;
+  }
+  const digits = value.replace(/\D/g, "");
+  if (!/^[0-9+\-() ]{7,30}$/.test(value) || digits.length < 8) return null;
+  return { email: null, phone: value };
+}
+
+type InquiryInsert = {
+  name: string;
+  company: string | null;
+  email: string;
+  phone: string | null;
+  project_type: (typeof PROJECT_TYPES)[number];
+  budget: (typeof BUDGETS)[number] | null;
+  timeline: (typeof TIMELINES)[number] | null;
+  message: string;
+  reference_urls: string[];
+  attachments: InquiryAttachment[];
+};
+
+/** Rate limit → insert → (after response) activity log + Discord. Shared by both public forms. */
+async function saveInquiry(
+  supabase: ServiceClient,
+  formData: FormData,
+  data: InquiryInsert,
+  form?: string,
+): Promise<{ status: "success"; lead: true } | { status: "error"; message: string }> {
   const requestHeaders = await headers();
   const ipHash = hashIp(clientIp(requestHeaders));
 
@@ -165,23 +302,13 @@ export async function submitInquiry(
     return { status: "error", message: RATE_LIMITED };
   }
 
-  const data = parsed.data;
-  const attachments = await keepUploaded(supabase, data.attachments);
   const source = await readSource(formData);
+  if (form) source.form = form;
 
   const { data: inserted, error } = await supabase
     .from("inquiries")
     .insert({
-      name: data.name,
-      company: data.company,
-      email: data.email.toLowerCase(),
-      phone: data.phone,
-      project_type: data.project_type,
-      budget: data.budget,
-      timeline: data.timeline,
-      message: data.message,
-      reference_urls: data.reference_urls,
-      attachments,
+      ...data,
       source,
       consent_privacy: true,
       ip_hash: ipHash,
@@ -201,11 +328,11 @@ export async function submitInquiry(
 
   after(async () => {
     await supabase.from("activity_log").insert({
-      actor: "public:contact-form",
+      actor: form ? `public:${form}` : "public:contact-form",
       entity: "inquiry",
       entity_id: inserted.id,
       action: "created",
-      detail: { project_type: data.project_type, attachments: attachments.length },
+      detail: { project_type: data.project_type, attachments: data.attachments.length, ...(form ? { form } : {}) },
     });
     await notifyDiscord(inserted.id, data, source);
   });
@@ -335,7 +462,7 @@ async function readSource(formData: FormData): Promise<InquirySource> {
 
 async function notifyDiscord(
   id: string,
-  data: z.infer<typeof inquirySchema>,
+  data: InquiryInsert,
   source: InquirySource,
 ) {
   const webhook = process.env.DISCORD_WEBHOOK_URL?.trim();
@@ -353,19 +480,20 @@ async function notifyDiscord(
         allowed_mentions: { parse: [] },
         embeds: [
           {
-            title: `새 문의 — ${data.company || data.name}`,
+            title: `${source.form === START_FORM_SOURCE ? "[이벤트 페이지] " : ""}새 문의 — ${data.company || data.name}`,
             url: `${SITE_URL}/admin/inquiries/${id}`,
             color: 0x335aeb,
             fields: [
               field("이름", data.name),
               field("회사/브랜드", data.company),
-              field("이메일", data.email),
+              field("이메일", data.email || null),
               field("연락처", data.phone),
               field("종류", projectTypeLabels[data.project_type]),
               field("예산", data.budget ? budgetLabels[data.budget] : null),
               field("일정", data.timeline ? timelineLabels[data.timeline] : null),
               field("첨부", data.attachments.length ? `${data.attachments.length}개` : null),
               field("유입", lastTouchSummary(source)),
+              field("접수 페이지", source.page),
               field("내용", data.message.slice(0, 500), false),
             ],
             timestamp: new Date().toISOString(),

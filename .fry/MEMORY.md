@@ -272,3 +272,13 @@
 " 필수.
 - vip-care 라이브에서 '복용 완료'를 누르면 Supabase env 누락 에러로 화면이 하얗게 된다(라이브 버그) → 녹화에서 누르지 않음.
 - threads_auto web 의 /pricing 은 플랜 필드 일부가 'undefined' 로 나온다(실버그) → 캡처 미사용.
+
+# 광고 랜딩 /lp/start (Meta 이벤트 페이지): 짧은 폼, source.form=lp-start, noindex, 크리에이티브 위치
+
+## 구조와 WHY (2026-11-11, 오너: "보통 이벤트페이지 같은 걸로 새로 만들어서 한다")
+- app/lp/start: 오퍼(기획안 초안·예상 견적·일정, 상담·견적 무료) → 할 수 있는 것 4종(포트폴리오로 뒷받침되는 것만 — 키오스크 사례는 없어 섹션엔 안 넣고 폼 칩에만 '키오스크·자동화') → pinned 8개 실화면(보령 금지) → 진행 방식 → FAQ(비용·기간은 숫자 없이 '상담 후 범위로') → 폼. 메인 nav·sitemap 에 넣지 않고 robots noindex.
+- 폼은 새 백엔드 없이 app/contact/actions.ts 의 submitStartInquiry → 공용 saveInquiry(레이트리밋·insert·activity_log·Discord). 연락처 한 칸에 전화 or 이메일 → email 컬럼이 NOT NULL 이라 전화만 남기면 email = ''(관리자 화면은 '-' 표시). 칩→project_type 매핑은 lib/crm/constants.ts START_WANTS, 원래 칩 이름은 message 첫 줄 '만들고 싶은 것: …'.
+- 태깅: inquiries.source.form = "lp-start" (+ source.page "/lp/start", UTM 은 기존 pluck_src 쿠키 last_touch). Discord 제목 '[이벤트 페이지]', 관리자 '접수 페이지 … (광고 이벤트 페이지)', activity_log actor public:lp-start, Lead 이벤트 content_name/form = lp-start.
+- "use server" 파일은 async 함수만 export 가능 → 상수(START_WANTS 등)는 constants.ts 에.
+- 모바일 하단 고정 CTA(sticky-cta.tsx)는 히어로 버튼이 화면 밖 & 폼 섹션이 화면 밖일 때만 보임.
+- 광고 크리에이티브 v3(4:5·9:16 × A 오퍼/B 증거/C 업무시스템)와 카피는 레포 밖 C:\Temp\meta\v3 (HTML 원본 _tools). 랜딩 URL utm_content=A|B|C.

@@ -121,6 +121,18 @@ export function attachmentMime(fileName: string) {
 
 export const SOURCE_COOKIE = "pluck_src";
 
+/** Chips on the /lp/start ad landing page → the shared project_type column. */
+export const START_WANTS = {
+  website: { label: "홈페이지·쇼핑몰", type: "website" },
+  app: { label: "앱", type: "app" },
+  system: { label: "관리자·업무 시스템", type: "webapp" },
+  automation: { label: "키오스크·자동화", type: "ai_automation" },
+  other: { label: "기타", type: "other" },
+} as const satisfies Record<string, { label: string; type: ProjectType }>;
+export type StartWant = keyof typeof START_WANTS;
+/** Marks inquiries from the ad landing page (inquiries.source.form). */
+export const START_FORM_SOURCE = "lp-start";
+
 const won = new Intl.NumberFormat("ko-KR");
 export function formatWon(value: number | null | undefined) {
   return `${won.format(Math.round(value ?? 0))}원`;

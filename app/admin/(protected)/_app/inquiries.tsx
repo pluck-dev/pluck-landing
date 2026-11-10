@@ -6,6 +6,7 @@ import {
   formatBytes,
   inquiryStatusLabels,
   projectTypeLabels,
+  START_FORM_SOURCE,
   timelineLabels,
 } from "@/lib/crm/constants";
 import { matches } from "@/lib/crm/derive";
@@ -103,7 +104,7 @@ export function InquiryListView() {
                     </AdminLink>
                     <span className="adm-sub">
                       {inq.company ? `${inq.name} · ` : ""}
-                      {inq.email}
+                      {inq.email || inq.phone}
                     </span>
                   </td>
                   <td>{projectTypeLabels[inq.project_type]}</td>
@@ -170,7 +171,7 @@ export function InquiryDetailView({ id }: { id: string }) {
   const rows: [string, React.ReactNode][] = [
     ["이름", inq.name],
     ["회사/브랜드", inq.company || "-"],
-    ["이메일", <a key="e" href={`mailto:${inq.email}`}>{inq.email}</a>],
+    ["이메일", inq.email ? <a key="e" href={`mailto:${inq.email}`}>{inq.email}</a> : "-"],
     ["연락처", inq.phone ? <a key="p" href={`tel:${inq.phone}`}>{inq.phone}</a> : "-"],
     ["프로젝트 종류", projectTypeLabels[inq.project_type]],
     ["예산 범위", inq.budget ? budgetLabels[inq.budget] : "-"],
@@ -284,7 +285,10 @@ export function InquiryDetailView({ id }: { id: string }) {
               </div>
               <div>
                 <dt>접수 페이지</dt>
-                <dd>{source.page || "-"}</dd>
+                <dd>
+                  {source.page || "-"}
+                  {source.form === START_FORM_SOURCE ? " (광고 이벤트 페이지)" : ""}
+                </dd>
               </div>
             </dl>
           </section>

@@ -72,10 +72,10 @@ export function trackPageView() {
 }
 
 /** Successful inquiry submission (server action confirmed the insert). */
-export function trackLead() {
+export function trackLead(form = "contact") {
   if (typeof window === "undefined") return;
-  safely(() => window.fbq?.("track", "Lead"));
-  safely(() => window.gtag?.("event", "generate_lead", { form: "contact" }));
+  safely(() => window.fbq?.("track", "Lead", { content_name: form }));
+  safely(() => window.gtag?.("event", "generate_lead", { form }));
   // 네이버 전환 스크립트(wcs.trans) — 전환 유형 "lead" = 신청완료.
   // https://naver.github.io/conversion-tracking/pages/01_script_guide_wcstrans/
   safely(() => window.wcs?.trans?.({ type: "lead" }));

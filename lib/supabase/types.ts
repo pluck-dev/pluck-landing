@@ -92,6 +92,8 @@ export type InquirySource = {
   landing?: string;
   page?: string;
   first_seen?: string;
+  /** Which public form sent it, when not /contact (e.g. "lp-start" = ad landing page). */
+  form?: string;
   /** First visit ever (components/source-tracker.tsx). */
   first_touch?: InquiryTouch;
   /** Latest visit with ad params (UTM, Naver n_*, fbclid, gclid) or an external referrer. */
