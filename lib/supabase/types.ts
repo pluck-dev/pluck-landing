@@ -92,6 +92,17 @@ export type InquirySource = {
   landing?: string;
   page?: string;
   first_seen?: string;
+  /** First visit ever (components/source-tracker.tsx). */
+  first_touch?: InquiryTouch;
+  /** Latest visit with ad params (UTM, Naver n_*, fbclid, gclid) or an external referrer. */
+  last_touch?: InquiryTouch;
+};
+
+export type InquiryTouch = {
+  at: string;
+  landing: string;
+  referrer?: string;
+  params?: Record<string, string>;
 };
 
 export type AdminRow = { email: string; created_at: string };

@@ -14,7 +14,7 @@ const COMPANY = {
   address: "",
 };
 const PRIVACY_OFFICER = { name: "PLUCK 운영 담당", email: CONTACT_EMAIL };
-const EFFECTIVE_DATE = "2026년 10월 30일";
+const EFFECTIVE_DATE = "2026년 11월 10일";
 
 export const metadata: Metadata = {
   title: "개인정보처리방침",
@@ -100,6 +100,28 @@ export default function PrivacyPage() {
             정보는 문의 접수 시 네트워크를 통해 전송되며, 위 보유 기간 동안 각
             업체의 서버에 보관됩니다. 국외 이전을 원하지 않으시면 문의 양식 대신
             메일로 문의하실 수 있습니다.
+          </p>
+        </section>
+
+        <section>
+          <h2>광고 성과 측정과 쿠키</h2>
+          <p>
+            광고를 보고 들어오신 방문이 실제 문의로 이어졌는지 확인하기 위해 아래
+            도구를 사용합니다. 이 도구들은 쿠키 등을 통해 방문한 페이지, 클릭한 광고,
+            문의 접수 여부 같은 이용 기록을 수집합니다. 이름·이메일·연락처·문의 내용은
+            이 도구들로 보내지 않습니다.
+          </p>
+          <ul>
+            <li>Meta Pixel(Meta Platforms, Inc.): 페이스북·인스타그램 광고 성과 측정</li>
+            <li>Google Analytics(Google LLC): 방문 통계 분석</li>
+            <li>네이버 애널리틱스·전환 추적(네이버 주식회사): 네이버 검색광고 성과 측정</li>
+          </ul>
+          <p>
+            어떤 광고나 사이트를 거쳐 들어오셨는지는 이 사이트의 쿠키에 최대 30일 동안
+            보관하고, 문의를 남기시면 문의 정보와 함께 저장해 위 보유 기간에 따라
+            처리합니다. 각 도구가 수집한 기록은 해당 업체의 정책에 따라 보관됩니다.
+            브라우저 설정에서 쿠키를 차단하거나 삭제하면 수집을 거부하실 수 있으며,
+            이 경우에도 사이트와 문의 양식은 그대로 이용하실 수 있습니다.
           </p>
         </section>
 

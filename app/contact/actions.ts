@@ -25,6 +25,7 @@ import {
   timelineLabels,
 } from "@/lib/crm/constants";
 import { SITE_URL } from "@/lib/site";
+import { lastTouchSummary, sanitizeTouch } from "@/lib/crm/attribution";
 
 export type InquiryField =
   | "name"
@@ -41,7 +42,8 @@ export type InquiryField =
 
 export type InquiryState =
   | { status: "idle" }
-  | { status: "success" }
+  /** `lead` is true only for a real insert (not the honeypot), so the client fires conversion events once per inquiry. */
+  | { status: "success"; lead?: boolean }
   | {
       status: "error";
       message: string;
@@ -205,10 +207,10 @@ export async function submitInquiry(
       action: "created",
       detail: { project_type: data.project_type, attachments: attachments.length },
     });
-    await notifyDiscord(inserted.id, data);
+    await notifyDiscord(inserted.id, data, source);
   });
 
-  return { status: "success" };
+  return { status: "success", lead: true };
 }
 
 export type UploadTicket = {
@@ -323,10 +325,19 @@ async function readSource(formData: FormData): Promise<InquirySource> {
   if (page) source.page = page;
   const firstSeen = clip(raw.first_seen, 40);
   if (firstSeen) source.first_seen = firstSeen;
+  // First/last touch live inside the existing source jsonb column, so no migration is needed.
+  const firstTouch = sanitizeTouch(raw.first_touch);
+  if (firstTouch) source.first_touch = firstTouch;
+  const lastTouch = sanitizeTouch(raw.last_touch);
+  if (lastTouch) source.last_touch = lastTouch;
   return source;
 }
 
-async function notifyDiscord(id: string, data: z.infer<typeof inquirySchema>) {
+async function notifyDiscord(
+  id: string,
+  data: z.infer<typeof inquirySchema>,
+  source: InquirySource,
+) {
   const webhook = process.env.DISCORD_WEBHOOK_URL?.trim();
   if (!webhook) return;
   const field = (name: string, value: string | null | undefined, inline = true) => ({
@@ -354,6 +365,7 @@ async function notifyDiscord(id: string, data: z.infer<typeof inquirySchema>) {
               field("예산", data.budget ? budgetLabels[data.budget] : null),
               field("일정", data.timeline ? timelineLabels[data.timeline] : null),
               field("첨부", data.attachments.length ? `${data.attachments.length}개` : null),
+              field("유입", lastTouchSummary(source)),
               field("내용", data.message.slice(0, 500), false),
             ],
             timestamp: new Date().toISOString(),

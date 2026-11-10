@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import { SourceTracker } from "@/components/source-tracker";
+import { Analytics } from "@/components/analytics";
 import {
   baseOpenGraph,
   BRAND,
@@ -110,6 +111,7 @@ export default function RootLayout({
       <body>
         {children}
         <SourceTracker />
+        <Analytics />
       </body>
     </html>
   );

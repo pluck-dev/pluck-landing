@@ -29,6 +29,7 @@ import {
   timelineLabels,
 } from "@/lib/crm/constants";
 import { BUDGETS, PROJECT_TYPES, TIMELINES } from "@/lib/supabase/types";
+import { trackLead } from "@/lib/analytics";
 import type { InquiryAttachment } from "@/lib/supabase/types";
 
 const initialState: InquiryState = { status: "idle" };
@@ -42,6 +43,7 @@ export function ContactForm({ email }: { email: string }) {
   const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLHeadingElement>(null);
   const fileInputId = useId();
+  const leadTracked = useRef(false);
 
   const errors = state.status === "error" ? state.fieldErrors ?? {} : {};
   const formError = clientError ?? (state.status === "error" ? state.message : null);
@@ -50,6 +52,10 @@ export function ContactForm({ email }: { email: string }) {
   useEffect(() => {
     if (state.status === "success") {
       successRef.current?.focus();
+      if (state.lead && !leadTracked.current) {
+        leadTracked.current = true;
+        trackLead();
+      }
       return;
     }
     if (state.status === "error" && state.fieldErrors) {

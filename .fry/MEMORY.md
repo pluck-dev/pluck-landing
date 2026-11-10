@@ -175,7 +175,7 @@
 - 관리자 = ADMIN_EMAILS(env, 기본 admin@pluck.co.kr) **와** public.admins 둘 다 있어야 함. admins 테이블은 RLS 가 실제로 강제하는 쪽이라, env 만 있고 테이블에 없으면 로그인돼도 데이터가 안 보이므로 UI 진입부터 막는다(lib/crm/auth.ts getAdmin). 로그인 폼은 허용 주소에만 매직링크를 보내지만 응답은 항상 같음(주소 탐지 방지).
 - proxy.ts(Next 16 의 middleware 대체)는 /admin/* 세션 갱신+미로그인 리다이렉트만 하는 낙관적 체크(getClaims = ES256 JWKS 로컬 검증, Auth 왕복 없음). 화면 진입 검사는 (protected)/layout 의 requireAdmin(React cache 로 요청당 1회, is_admin() RPC 1회). **데이터의 진짜 보호는 RLS** — 쓰기도 브라우저에서 바로 하므로 서버 액션 검사는 더 이상 없다.
 - 관리자 쓰기는 브라우저 세션 클라이언트(RLS 적용)로만, 매번 activity_log 기록(_app/mutations.ts). projects.paid_amount 는 project_payments 트리거가 재계산 → 코드에서 직접 쓰지 말 것(낙관적 표시만 paidAmountOf 로 흉내).
-- 문의 폼: zod 검증, honeypot(name=website), ip 해시(IP_HASH_SALT) 기준 시간당 5건, 첨부는 서버가 signed upload URL 발급 → 브라우저가 Storage 직접 업로드(pending/YYYY-MM/uuid/파일) → 제출 시 실제 존재하는 파일만 저장. 유입 경로는 components/source-tracker.tsx 가 pluck_src 쿠키(첫 랜딩·외부 referrer·UTM, 새 UTM 이 덮어씀)에 기록. Discord 웹훅·activity_log 는 after() 로 응답 후 실행.
+- 문의 폼: zod 검증, honeypot(name=website), ip 해시(IP_HASH_SALT) 기준 시간당 5건, 첨부는 서버가 signed upload URL 발급 → 브라우저가 Storage 직접 업로드(pending/YYYY-MM/uuid/파일) → 제출 시 실제 존재하는 파일만 저장. 유입 경로는 components/source-tracker.tsx 가 pluck_src 쿠키에 기록(아래 '광고 전환 추적' 섹션의 first/last touch 참고). Discord 웹훅·activity_log 는 after() 로 응답 후 실행.
 
 ## 함정
 - env 없이도 빌드돼야 함. /contact 는 정적 페이지라 isInquiryConfigured() 가 **빌드 시점** 값 → Vercel 에 키 추가 후 재배포해야 폼이 켜짐(그 전엔 mailto 폴백 카드).
@@ -185,6 +185,20 @@
 - 칩(chip)은 투명 radio 가 칩 위에 덮인 구조 → Playwright 에선 getByText 클릭 대신 check("input[name=project_type][value=…]").
 - 개인정보처리방침(app/privacy) 회사 정보는 상단 상수로 채우는 자리. 보유기간 1년은 purge_expired_inquiries() 와 맞춰져 있음.
 - 검증: `npm run verify:supabase`(.env.local 읽음) — 테이블 7개, admins seed, private 버킷, anon 차단, 테스트 문의 insert→delete.
+
+# 광고 전환 추적: Meta Pixel·GA4·네이버 wcslog(env 선택), Lead/Contact 이벤트, first/last touch 유입 기록
+
+## 구조와 WHY (2026-11-10, 네이버 검색광고+Meta 2주 테스트, 목표 = 상담 문의)
+- components/analytics.tsx(client, layout 에 마운트) + lib/analytics.ts. 각 트래커는 env(NEXT_PUBLIC_META_PIXEL_ID / NEXT_PUBLIC_GA_ID / NEXT_PUBLIC_NAVER_WCS_ID)가 있고 정규식 검증을 통과할 때만 렌더 → env 없으면 스크립트·noscript 0개. 빌드 시점 인라인이라 Vercel 에 값 넣은 뒤 **재배포** 필요. /admin 은 추적 안 함.
+- 페이지뷰: Meta 는 `fbq.disablePushState=true` 로 픽셀의 자동 history PV 를 끄고 RouteTracker(usePathname+useSearchParams, Suspense)가 라우트 변경 때 직접 PageView(첫 화면은 베이스 코드가 보냄). 네이버는 wcslog.js onLoad 에서 wa 설정 → wcs.inflow("pluck.co.kr") → wcs_do(), 이후 라우트 변경마다 wcs_do(). **GA4 는 수동 page_view 를 안 보낸다** — 향상된 측정의 history 변경 PV 와 중복되기 때문.
+- 전환: 문의 서버 액션이 실제 insert 했을 때만 `{status:"success", lead:true}`(honeypot 은 lead 없음) → contact-form 이 1회 trackLead(): fbq Lead, gtag generate_lead, 네이버 `wcs.trans({type:"lead"})`(공식 신 스크립트 유형 '신청완료', naver.github.io/conversion-tracking 01_script_guide_wcstrans). 구 `wcs.cnv("4","1")` 은 trans 와 중복 필터링 대상이라 쓰지 않음.
+- 클릭: document 위임 리스너가 /contact 링크(cta)·tel:·mailto:·kakao.com 링크 클릭 → fbq Contact + gtag contact_click{method}. 개별 컴포넌트 수정 불필요, 새 CTA 는 /contact 로 링크만 걸면 자동 집계(또는 data-track-contact 속성). 네이버에는 클릭 전환을 안 보냄(전환 = 폼 접수만, 수치 오염 방지).
+- 유입 기록: pluck_src 쿠키(30일)에 레거시 필드 + first_touch(첫 방문, 고정) + last_touch(UTM·n_*·fbclid·gclid 가 있거나 외부 referrer 인 마지막 방문; 직접 재방문은 안 덮음). 서버(lib/crm/attribution.ts sanitizeTouch)가 화이트리스트로 정리해 **기존 inquiries.source jsonb 안에** 저장 → 마이그레이션 불필요. 관리자 문의 상세 '유입 경로'와 Discord 알림 '유입' 필드에 touchSummary 표시.
+
+## 함정
+- 쿠키 4KB: 한글 n_query/n_keyword 는 인코딩 시 9배 → 3600자 넘으면 first_touch 파라미터를 버린다.
+- 검증은 Playwright 로 외부 트래커 요청을 가로채 스텁(wcslog.js 는 가짜 wcs 객체) 후 fbq.queue/dataLayer/스텁 로그 확인(스크립트 C:\Temp\pluck-track). 테스트 문의는 e2e-test@pluck.co.kr 로 넣고 activity_log 와 함께 삭제.
+- 개인정보처리방침에 '광고 성과 측정과 쿠키' 섹션 있음 — 트래커를 추가/교체하면 같이 갱신.
 
 # Admin 실시간 클라이언트 구조: 단일 셸 + pushState 라우터, TanStack Query 캐시, Realtime, icn1 리전
 

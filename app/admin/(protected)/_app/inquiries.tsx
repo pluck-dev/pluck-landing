@@ -9,6 +9,7 @@ import {
   timelineLabels,
 } from "@/lib/crm/constants";
 import { matches } from "@/lib/crm/derive";
+import { touchSummary } from "@/lib/crm/attribution";
 import { memoShape, parseForm } from "@/lib/crm/validation";
 import { INQUIRY_STATUSES, type InquiryRow, type InquiryStatus } from "@/lib/supabase/types";
 import { countBy } from "./dashboard";
@@ -247,6 +248,22 @@ export function InquiryDetailView({ id }: { id: string }) {
 
             <h3 className="adm-h3">유입 경로</h3>
             <dl className="adm-dl adm-dl-compact">
+              {source.last_touch && (
+                <div>
+                  <dt>마지막 유입</dt>
+                  <dd className="adm-break" title={source.last_touch.landing}>
+                    {touchSummary(source.last_touch)} ({fmtDateTime(source.last_touch.at)})
+                  </dd>
+                </div>
+              )}
+              {source.first_touch && (
+                <div>
+                  <dt>첫 유입</dt>
+                  <dd className="adm-break" title={source.first_touch.landing}>
+                    {touchSummary(source.first_touch)} ({fmtDateTime(source.first_touch.at)})
+                  </dd>
+                </div>
+              )}
               <div>
                 <dt>UTM</dt>
                 <dd>
