@@ -100,10 +100,10 @@ const services = [
 
 /** Live client work shown large. `detail` = gallery index for the inset frame. */
 const featured = [
-  { slug: "boryoung", detail: 3 },
   { slug: "rba", detail: 3 },
   { slug: "dealer-settlement", detail: 0 },
   { slug: "dvia", detail: 0 },
+  { slug: "boryoung", detail: 3 },
 ] as const;
 
 const steps = [

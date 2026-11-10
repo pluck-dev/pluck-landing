@@ -747,53 +747,6 @@ const projectList: readonly PortfolioProject[] = [
     },
   },
   {
-    slug: "lulla",
-    name: "Lulla · AI 동화책",
-    category: "client",
-    years: [2026, 2026],
-    description:
-      "짧은 음성 녹음으로 부모의 목소리를 복제해 동화를 읽어주는 AI 동화책 앱.",
-    disciplines: ["Mobile app", "Voice AI", "Backend"],
-    status: "development",
-    coverKind: "brand",
-    coverMotif: "phone",
-    cover: { src: "/work/lulla/cover.webp", alt: "Lulla · AI 동화책 PLUCK 브랜드 썸네일 — 부모의 목소리로 읽어주는 AI 동화" },
-    gallery: [],
-    detail: {
-      oneLiner: "부모의 목소리로 읽어주는 AI 동화",
-      role: [
-        "아키텍처 설계",
-        "모바일 앱",
-        "백엔드",
-        "음성 AI",
-        "인프라",
-      ],
-      stack: [
-        "Flutter",
-        "Riverpod",
-        "Rust FFI",
-        "FastAPI",
-        "Celery",
-        "PostgreSQL",
-        "Qwen3-TTS",
-      ],
-      overview:
-        "부모가 짧게 녹음한 목소리로 음성을 합성해, 아이에게 동화를 부모 목소리로 읽어주는 모바일 서비스입니다. Flutter 앱과 인증·콘텐츠·구독·프로모션·TTS 서비스로 나눈 백엔드를 하나의 저장소에서 설계했습니다.",
-      problem:
-        "매일 밤 동화를 읽어주고 싶어도 시간이 부족한 부모가 많고, 일반 TTS 동화는 아이에게 낯선 목소리라는 한계가 있었습니다.",
-      solution:
-        "제로샷 음성 복제 모델(Qwen3-TTS)을 GPU 서버의 TTS 서비스로 분리하고, 앱에서는 녹음·라이브러리·플레이어 흐름에 집중했습니다. 오디오 처리와 암호화는 Rust FFI로 분리해 성능과 보안을 챙겼습니다.",
-      features: [
-        "부모 음성 녹음과 음성 복제",
-        "연령·주제별 동화 라이브러리",
-        "동화 플레이어와 스트리밍",
-        "카메라로 실물 동화책 스캔(로드맵)",
-        "구독·프로모션 서비스",
-        "서비스별로 나눈 백엔드 구조",
-      ],
-    },
-  },
-  {
     slug: "d2c-store",
     name: "자동차용품 자사몰",
     category: "client",
@@ -895,54 +848,6 @@ const projectList: readonly PortfolioProject[] = [
       ],
     },
   },
-  {
-    slug: "proposal-brochure",
-    name: "AI 의사결정 시스템 제안서",
-    category: "client",
-    years: [2026, 2026],
-    description:
-      "AI 의사결정 시스템 도입을 설명하는 웹 슬라이드 제안서와 인쇄용 버전.",
-    disciplines: ["Interactive deck", "Print"],
-    status: "case",
-    coverKind: "screenshot",
-    cover: { src: "/work/proposal-brochure/cover.webp", alt: "웹 슬라이드 제안서 표지 - PLUCK 블록 로고와 'AI 의사결정 지원 시스템 구축 제안서' 타이틀" },
-    gallery: [
-      { src: "/work/proposal-brochure/01.webp", alt: "제안 개요 슬라이드 - 결정 속도 개선, 자료 정리·비교 기준·쉬운 설명, 최종 판단은 사람 세 가지 핵심 카드" },
-      { src: "/work/proposal-brochure/02.webp", alt: "'플럭은 이렇게 일합니다' 슬라이드 - 단계별 확인, 실제로 쓰는 화면, 최종 결정은 고객사, 벤더 종속 방지 4가지 원칙" },
-      { src: "/work/proposal-brochure/03.webp", alt: "제안 범위 슬라이드 - 내부 의사결정 지원과 의사결정 회의 보조 화면 범위 카드" },
-      { src: "/work/proposal-brochure/04.webp", alt: "제안서 마지막 슬라이드 - 블루 배경의 '감사합니다' 클로징 카드" },
-    ],
-    detail: {
-      oneLiner: "AI 도입 제안을 웹 슬라이드로 설계하다",
-      role: [
-        "제안 기획",
-        "카피라이팅",
-        "UI 디자인",
-        "프론트엔드",
-      ],
-      stack: [
-        "Next.js",
-        "React",
-        "TypeScript",
-        "Tailwind CSS",
-      ],
-      overview:
-        "ERP 데이터와 외부 시황 정보를 함께 보고 판매·구매·생산 판단을 돕는 AI 의사결정 지원 시스템을 제안하기 위해, 12장 분량의 웹 슬라이드 제안서와 인쇄용 레이아웃을 함께 제작했습니다.",
-      problem:
-        "부서마다 우선순위가 다른 상황에서 AI 도입의 범위·단계·비용을 의사결정자가 한 번에 이해하고 비교하기 어려웠습니다.",
-      solution:
-        "제안 개요부터 범위, 단계별 일정·산출물, 진행안 비교, 후속 과제까지를 키보드로 넘기는 웹 슬라이드로 구성하고, 같은 콘텐츠를 A4 인쇄 레이아웃(/print)으로도 출력되게 만들었습니다.",
-      features: [
-        "키보드·URL 해시 기반 슬라이드 내비게이션",
-        "진행 바와 페이지 인디케이터",
-        "단계별 일정·산출물 비교표",
-        "협업 방식별 3가지 진행안 비교",
-        "인쇄 전용 레이아웃(/print)",
-      ],
-    },
-  },
-
-  // Product
   {
     slug: "myotgiya",
     name: "몇기야",
@@ -2900,8 +2805,31 @@ const statusRank: Record<ProjectStatus, number> = {
  * Display order: category order first, then live work, then the authored order.
  * Array.prototype.sort is stable, so entries keep their written order within a status.
  */
+/** Owner-picked order shown first (2026-11-10). Everything else follows by category -> status; boryoung goes last. */
+const pinnedOrder = [
+  "knife-sharpening",
+  "homecare-platform",
+  "boxon",
+  "setflow",
+  "naengkeep",
+  "dvia",
+  "dealer-settlement",
+  "drivingzone-campaign",
+  "thousand",
+  "villa-parking",
+  "gender-reveal",
+  "webtoon-voice",
+];
+const bottomOrder = ["boryoung"];
+const orderRank = (slug: string) => {
+  const pinned = pinnedOrder.indexOf(slug);
+  if (pinned !== -1) return pinned;
+  return bottomOrder.includes(slug) ? 2000 : 1000;
+};
+
 export const projects: readonly PortfolioProject[] = [...projectList].sort(
   (a, b) =>
+    orderRank(a.slug) - orderRank(b.slug) ||
     categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category) ||
     statusRank[a.status] - statusRank[b.status],
 );

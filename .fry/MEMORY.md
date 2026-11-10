@@ -71,7 +71,7 @@
 - docs/work-covers 에는 실스크린샷 합성용 compose.js(desktop/phones/blur)와 window.js(데스크톱 앱 캡처를 캔버스 중앙에)만 남김. 이 폴더에서 실행하면 sharp 가 레포 node_modules 로 해석된다.
 
 ## 함정
-- 그리드 순서: lib/portfolio.ts 의 projectList 작성 순서가 아니라 `projects` = 카테고리 순 → status(live>development>case>concept) 안정 정렬. 상세 이전/다음도 이 순서. categoryOrder 는 projects 계산 전에 선언돼야 함(TDZ).
+- 그리드 순서(2026-11-10 오너 지정): pinnedOrder(칼가는곳·바야다·박스온·setflow·냉킵·대일·카영·드라이빙존·THOUSAND·빌라주차·젠더리빌·더빙고) 먼저, boryoung 은 맨 아래(bottomOrder), featured 에서도 boryoung 마지막. lulla·proposal-brochure 는 오너 지시로 삭제. 나머지는 `projects` = 카테고리 순 → status(live>development>case>concept) 안정 정렬. 상세 이전/다음도 이 순서. categoryOrder 는 projects 계산 전에 선언돼야 함(TDZ).
 - eslint-config-next 16 의 react-hooks/set-state-in-effect 규칙: matchMedia 는 useSyncExternalStore 로 구독할 것.
 - 카드 진입 애니메이션은 필터 클릭 후에만(data-animate). 초기 로드에 걸면 풀페이지 캡처/스크롤 시 흐리게 보임.
 - 상태 pill 은 이미지 위가 아니라 카드 메타 행에 둔다.
