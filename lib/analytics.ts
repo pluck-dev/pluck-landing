@@ -81,6 +81,13 @@ export function trackLead(form = "contact") {
   safely(() => window.wcs?.trans?.({ type: "lead" }));
 }
 
+/** /lp/quote 계산기 결과 화면 도달 (전환 아님, 퍼널 확인용 커스텀 이벤트). */
+export function trackQuoteResult(kind: string) {
+  if (typeof window === "undefined") return;
+  safely(() => window.fbq?.("trackCustom", "QuoteCalculated", { kind }));
+  safely(() => window.gtag?.("event", "quote_calculated", { kind }));
+}
+
 export type ContactMethod = "cta" | "phone" | "email" | "kakao";
 
 /** Click on a 상담하기 CTA or a phone/email/kakao link. */

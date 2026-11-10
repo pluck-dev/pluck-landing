@@ -6,7 +6,7 @@ import {
   formatBytes,
   inquiryStatusLabels,
   projectTypeLabels,
-  START_FORM_SOURCE,
+  FORM_LABELS,
   timelineLabels,
 } from "@/lib/crm/constants";
 import { matches } from "@/lib/crm/derive";
@@ -287,7 +287,7 @@ export function InquiryDetailView({ id }: { id: string }) {
                 <dt>접수 페이지</dt>
                 <dd>
                   {source.page || "-"}
-                  {source.form === START_FORM_SOURCE ? " (광고 이벤트 페이지)" : ""}
+                  {source.form && FORM_LABELS[source.form] ? ` (광고 ${FORM_LABELS[source.form]})` : ""}
                 </dd>
               </div>
             </dl>

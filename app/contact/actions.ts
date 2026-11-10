@@ -22,6 +22,8 @@ import {
   MAX_REFERENCE_URLS,
   projectTypeLabels,
   SOURCE_COOKIE,
+  FORM_LABELS,
+  QUOTE_FORM_SOURCE,
   START_FORM_SOURCE,
   START_WANTS,
   timelineLabels,
@@ -29,6 +31,17 @@ import {
 } from "@/lib/crm/constants";
 import { SITE_URL } from "@/lib/site";
 import { lastTouchSummary, sanitizeTouch } from "@/lib/crm/attribution";
+import {
+  DESIGNS,
+  describeAnswers,
+  estimate,
+  FEATURES,
+  formatPrice,
+  PROJECT_KINDS,
+  SCALES,
+  TIMELINES as QUOTE_TIMELINES,
+  type QuoteAnswers,
+} from "@/lib/quote/pricing";
 
 export type InquiryField =
   | "name"
@@ -254,13 +267,116 @@ export async function submitStartInquiry(
       project_type: want.type,
       budget: null,
       timeline: null,
-      message: `만들고 싶은 것: ${want.label}
-
-${data.message}`,
+      message: `만들고 싶은 것: ${want.label}\n\n${data.message}`,
       reference_urls: [],
       attachments: [],
     },
     START_FORM_SOURCE,
+  );
+}
+
+const keysOf = <T extends object>(obj: T) => Object.keys(obj) as [keyof T & string, ...(keyof T & string)[]];
+
+const quoteSchema = z.object({
+  name: z.string().trim().min(1, "이름을 입력해 주세요.").max(60, "이름은 60자 안으로 입력해 주세요."),
+  contact: z.string().trim().min(1, "전화번호나 이메일을 입력해 주세요.").max(120, "연락처가 너무 길어요."),
+  memo: z.string().trim().max(1000, "메모는 1000자 안으로 적어 주세요."),
+  kind: z.enum(keysOf(PROJECT_KINDS)),
+  scale: z.enum(keysOf(SCALES)),
+  features: z.array(z.enum(keysOf(FEATURES))).max(Object.keys(FEATURES).length),
+  design: z.enum(keysOf(DESIGNS)),
+  timeline: z.enum(keysOf(QUOTE_TIMELINES)),
+  consent_privacy: z.literal(true, "개인정보 수집·이용에 동의해 주세요."),
+});
+
+export type QuoteField = "name" | "contact" | "memo" | "consent_privacy";
+export type QuoteState =
+  | { status: "idle" }
+  | { status: "success"; lead?: boolean }
+  | { status: "error"; message: string; fieldErrors?: Partial<Record<QuoteField, string>> };
+
+/**
+ * 개발비 계산기(/lp/quote) 결과 화면의 "상세 견적서·기획안 받기" 폼. 답변으로 서버에서 다시 계산한
+ * 참고 범위를 문의 본문에 붙여 오너가 바로 보게 한다.
+ */
+export async function submitQuoteInquiry(
+  _prev: QuoteState,
+  formData: FormData,
+): Promise<QuoteState> {
+  if (String(formData.get("website") ?? "").trim()) {
+    return { status: "success" };
+  }
+
+  const supabase = createServiceClient();
+  if (!supabase) return { status: "error", message: NOT_CONFIGURED };
+
+  const parsed = quoteSchema.safeParse({
+    name: formData.get("name") ?? "",
+    contact: formData.get("contact") ?? "",
+    memo: formData.get("memo") ?? "",
+    kind: formData.get("kind") ?? undefined,
+    scale: formData.get("scale") ?? undefined,
+    features: [...new Set(formData.getAll("features").map(String))],
+    design: formData.get("design") ?? undefined,
+    timeline: formData.get("timeline") ?? undefined,
+    consent_privacy: formData.get("consent_privacy") === "on",
+  });
+
+  const fieldErrors: Partial<Record<QuoteField, string>> = {};
+  let answersBroken = false;
+  if (!parsed.success) {
+    for (const issue of parsed.error.issues) {
+      const key = issue.path[0] as string;
+      if (key === "name" || key === "contact" || key === "memo" || key === "consent_privacy") {
+        if (!fieldErrors[key]) fieldErrors[key] = issue.message;
+      } else answersBroken = true;
+    }
+  }
+  if (answersBroken) {
+    return { status: "error", message: "계산기 답변이 비어 있어요. 처음부터 다시 골라 주세요." };
+  }
+  const contact = parsed.success ? splitContact(parsed.data.contact) : null;
+  if (parsed.success && !contact) {
+    fieldErrors.contact = "전화번호(숫자와 -) 또는 이메일 주소를 확인해 주세요.";
+  }
+  if (!parsed.success || !contact) {
+    return { status: "error", message: "입력한 내용을 한 번 더 확인해 주세요.", fieldErrors };
+  }
+
+  const data = parsed.data;
+  const answers: QuoteAnswers = {
+    kind: data.kind as QuoteAnswers["kind"],
+    scale: data.scale as QuoteAnswers["scale"],
+    features: data.features as QuoteAnswers["features"],
+    design: data.design as QuoteAnswers["design"],
+    timeline: data.timeline as QuoteAnswers["timeline"],
+  };
+  const result = estimate(answers);
+  const message = [
+    "[개발비 계산기 답변]",
+    ...describeAnswers(answers),
+    `계산기 참고 범위: ${formatPrice(result.price[0])} ~ ${formatPrice(result.price[1])}, ${result.weeks[0]}~${result.weeks[1]}주`,
+    data.memo ? `\n메모: ${data.memo}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return saveInquiry(
+    supabase,
+    formData,
+    {
+      name: data.name,
+      company: null,
+      email: contact.email ?? "",
+      phone: contact.phone,
+      project_type: PROJECT_KINDS[answers.kind].type,
+      budget: null,
+      timeline: null,
+      message,
+      reference_urls: [],
+      attachments: [],
+    },
+    QUOTE_FORM_SOURCE,
   );
 }
 
@@ -480,7 +596,7 @@ async function notifyDiscord(
         allowed_mentions: { parse: [] },
         embeds: [
           {
-            title: `${source.form === START_FORM_SOURCE ? "[이벤트 페이지] " : ""}새 문의 — ${data.company || data.name}`,
+            title: `${source.form && FORM_LABELS[source.form] ? `[${FORM_LABELS[source.form]}] ` : ""}새 문의 — ${data.company || data.name}`,
             url: `${SITE_URL}/admin/inquiries/${id}`,
             color: 0x335aeb,
             fields: [

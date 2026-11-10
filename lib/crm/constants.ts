@@ -132,6 +132,14 @@ export const START_WANTS = {
 export type StartWant = keyof typeof START_WANTS;
 /** Marks inquiries from the ad landing page (inquiries.source.form). */
 export const START_FORM_SOURCE = "lp-start";
+/** Marks inquiries from the 개발비 계산기 landing page. */
+export const QUOTE_FORM_SOURCE = "lp-quote";
+
+/** Admin/Discord label per public form tag (inquiries.source.form). */
+export const FORM_LABELS: Record<string, string> = {
+  [START_FORM_SOURCE]: "이벤트 페이지",
+  [QUOTE_FORM_SOURCE]: "견적 계산기",
+};
 
 const won = new Intl.NumberFormat("ko-KR");
 export function formatWon(value: number | null | undefined) {

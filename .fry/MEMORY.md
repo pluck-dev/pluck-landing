@@ -282,3 +282,13 @@
 - "use server" 파일은 async 함수만 export 가능 → 상수(START_WANTS 등)는 constants.ts 에.
 - 모바일 하단 고정 CTA(sticky-cta.tsx)는 히어로 버튼이 화면 밖 & 폼 섹션이 화면 밖일 때만 보임.
 - 광고 크리에이티브 v3(4:5·9:16 × A 오퍼/B 증거/C 업무시스템)와 카피는 레포 밖 C:\Temp\meta\v3 (HTML 원본 _tools). 랜딩 URL utm_content=A|B|C.
+
+# 광고 랜딩 /lp/quote: 개발비 30초 계산기, 가격표 lib/quote/pricing.ts 출처, 신뢰 문구 오너 확인 대기
+
+## 구조와 WHY (2026-11-11, 오너: "후킹이 하나도 안 끌려… 꼭 우리 프로젝트로 안 만들어도 돼")
+- 포트폴리오형(/lp/start)이 안 끌려서 훅 먼저인 퀴즈 퍼널을 따로 만듦(/lp/start 는 유지). 5문항(무엇·화면 수·기능 다중·디자인·일정) 탭만 → 결과(가격·기간 범위, 기능, 비용 요인) 즉시 공개 → 그 아래 상세 견적서 폼(이름·연락처·메모·동의).
+- 가격 근거 = 오너가 위시켓·크몽에 실제 낸 외주 제안 금액(구인구직/위시켓·크몽 지원내역.md, 상주 제외). 계약가가 아니라 제안가라 화면엔 항상 '참고 범위, 상담 후 확정'. 숫자 조정은 lib/quote/pricing.ts 한 곳. 키오스크 단가 근거는 아직 없음.
+- 서버(submitQuoteInquiry)가 답변으로 다시 계산해 message 에 '[개발비 계산기 답변]' + 참고 범위를 붙인다(클라이언트 금액 안 믿음). source.form = "lp-quote", Discord '[견적 계산기]', Lead content_name lp-quote, 결과 도달 시 fbq trackCustom QuoteCalculated / gtag quote_calculated.
+- 신뢰 문구(lib/quote/trust.ts: 개발자 직접 답장·매주 진행 화면 공유·소스코드 전부 이전)는 코디네이터 제안 문구 그대로 → **오너 확인 전**. 못 지키면 지울 것.
+- 함정: .inquiry-form input 셀렉터가 강해서 퀴즈 폼 입력 배경은 !important 로 덮음. JSX 텍스트 '\u00a0' 이스케이프는 안 먹으니 실제 NBSP 문자나 {"..."} 사용.
+- 크리에이티브 v4(Q/G/S/E + Q 캐러셀)는 C:\Temp\meta\v4.
