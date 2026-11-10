@@ -4,8 +4,9 @@
 - 링크는 "우리 레포에서 배포된 것"이 확인된 라이브 사이트만 건다 (상세 페이지의 "사이트 방문" 버튼도 url 있을 때만).
 - 연도는 각 레포 git log 첫/마지막 커밋 연도. 지표·고객사·성과·사용자 수를 지어내지 않는다. stats 스트립은 데이터에서 계산.
   - 기획 문서의 목표 수치(정푸드 매출·거래처 수 등), 로컬 시드 값(더빙고 "만들어진 버전 0")은 카피에 쓰지 않는다. 클라이언트 자사 사이트에 공개된 문구(보령 "23년 업력")만 예외.
-- 미공개/권한 불확실 클라이언트는 일반명으로 기재 (자동차보험 딜러 정산 플랫폼 = clients/caryoung, 홈헬스케어 통합 플랫폼 = clients/bayada, AI 의사결정 시스템 제안서 = clients/nousbo).
-- caryoung 은 2026-10 오너 지시로 live + url(client-roan-six.vercel.app) 공개. 링크 타이틀에 브랜드 '카영'이 보이므로 브랜드 노출은 허용됐지만 카드 이름은 일반명 유지. 레포 루트의 dealer-lookup/dashboard-staff 캡처는 실명·전화번호 실데이터라 사용 금지 → 비로그인 '샘플 데이터' 프리뷰(홍길동/12가1234)만 캡처.
+- 미공개/권한 불확실 클라이언트는 일반명으로 기재 (AI 의사결정 시스템 제안서 = clients/nousbo 등).
+- **카영(caryoung)·바야다(bayada) 브랜드 공개 승인 (2026-11-10 오너)**: 오너가 브랜드 도메인 링크를 공개하기로 해 두 고객은 실명·로고 노출 허용. 이름 '카영 딜러 정산 플랫폼'(dealer-settlement), 'BAYADA 홈헬스케어 플랫폼'(homecare-platform), 둘 다 live. 승인 URL 6개(이 외 배포 링크 금지): 카영 웹 https://www.caryoung.co.kr/ (메인 url) · 관리자 https://admin.caryoung.co.kr/ · 클라이언트 https://dealer.caryoung.co.kr/ / 바야다 홈페이지 https://54-116-157-4.sslip.io/ko (메인 url) · 아카데미 https://academy.54-116-157-4.sslip.io/ko · 관리자 https://admin.54-116-157-4.sslip.io/. 브랜드 공개 후에도 개인정보(실명·개인 전화/메일·관리자 계정명·테스트 문의자 이름·실고객/계약 데이터)는 계속 가리고, 검증 안 된 실적 수치는 우리 지표처럼 보이지 않게 크롭. 관리자 화면은 시드/QA 캡처만(운영 관리자 로그인 금지).
+- caryoung 은 2026-10 오너 지시로 live + url(client-roan-six.vercel.app) 공개 → 2026-11-10 dealer.caryoung.co.kr 로 교체(client-roan-six 는 더 이상 링크 안 함). 레포 루트의 dealer-lookup/dashboard-staff 캡처는 실명·전화번호 실데이터라 사용 금지 → 비로그인 '샘플 데이터' 프리뷰(홍길동/12가1234)만 캡처.
 - THOUSAND 는 오너 확인 결과 실제 클라이언트 작업(develop-thousand/web) → category client, live. 단 라이브 푸터가 'Design concept·실제 주문/결제 없음'이라 카피에 '결제 없이 구매 흐름 시연' 명시, 주문·매출 실적처럼 쓰지 말 것.
 - 노출 금지 링크: brochure-wine(타이틀에 '누보' 고객명), admin-farm-theta(타이틀에 개인명 '심재&오유마켓', 로그인만). 엔트리는 유지·무링크.
 - adrock-driving: 운전면허 PLUS(Play, com.adrock.driverlicense300) 저장소 android.drive 에는 오너 커밋이 없음(leemj/이미지/jdk). 오너 커밋은 web.dororo(보일러플레이트·웹뷰 통신)와 web.drivingplus(2026-11 오너 업로드 압축본, 2025-02~04 학과왕 응모·당첨 웹뷰·보상형 광고 브리지·Amplitude) → role/features 는 이 범위로만. app.drivingplus.me 는 같은 레포 계열이지만 이후 타인이 바꾼 학원찾기 사이트라 링크로 쓰지 않음. Play 스토어 스크린샷 중 '1000만이 선택', '1,601,032,242건' 등 수치 이미지는 사용 금지.
@@ -51,7 +52,7 @@
 
 ## 개인정보/식별 규칙 (하드)
 - 실명·전화번호·회원 명단·실데이터 어드민·토큰·실제 Discord/카톡 화면 금지. 블러하거나 제외. 데모 데이터 어드민은 OK.
-- caryoung/bayada/nousbo 는 브랜드명·로고·고유 통계(예: 50년/33,000+/22개국)·견적 금액이 보이면 안 됨. homecare 는 2026-11-09 오너 규칙(아래)에 따라 로고 없는 예전 실캡처(git 5cb20bb 의 cover·01-04)를 복원해 쓴다.
+- nousbo 는 브랜드명·로고·견적 금액이 보이면 안 됨. caryoung/bayada 는 2026-11-10 부터 브랜드명·로고 허용(위 승인 참고), 단 고유 통계(예: 50년/33,000+/22개국, '3,000명 이상의 에이전트')는 여전히 캡처 제외.
 - farm-sales 서비스명에 개인 실명이 들어 있어 전 이미지에서 블러. seoul-home 공고의 사업자 개인명 블러. webtoon 푸터(사업자 정보) 크롭.
 - setflow 라이브 캡처는 실사용자 작성자명이 보여 미사용 → build/shots 데모 데이터 캡처 사용.
 - v8-cal-lab(hptunermap) 데스크톱 헤더의 'CALL 010-…' 사업장 번호는 블러(1800px 캡처 기준 x1100,y12,205x54). 푸터·CTA 프레임은 번호가 보여 미사용.
@@ -87,17 +88,17 @@
 
 ## homecare-platform(바야다) 3개 앱 = pluck-dev/bayada 모노레포 apps/{web,academy,admin}
 - 배포: AWS EC2(개발·시연용, 무료 플랜) Caddy + sslip 호스트 — 웹 https://54-116-157-4.sslip.io/ko, 아카데미 https://academy.54-116-157-4.sslip.io/ko, 관리자 https://admin.54-116-157-4.sslip.io(로그인). 우리 레포 deploy/ec2 로 배포한 빌드(bayada 레포 .fry/MEMORY.md 'AWS 운영').
-- **링크 안 검**: 호스트명엔 브랜드가 없지만 페이지 타이틀·헤더에 'BAYADA' 가 그대로 노출 → bayada 브랜드 노출 금지 규칙 위반. 또 서버 이전 예정(IP 기반 주소)이라 곧 깨진다. 오너가 링크 공개를 승인하고 정식 도메인이 생기면 apps[].url 에 추가.
+- 2026-11-10 오너 승인으로 세 앱 모두 링크(project.url = 웹). 단 IP 기반 sslip 주소라 **서버 이전 시 깨진다** → 이전·정식 도메인 생기면 project.url·apps[].url 4곳을 함께 바꿀 것.
 - Vercel bayada.vercel.app(spacePluck/bayada) 은 타이틀 'Create Next App' 의 옛 빌드 + 호스트명에 브랜드 → 사용 금지.
-- 캡처: 웹 = 기존 git 5cb20bb 실캡처(01·02, cover). 아카데미 = EC2 라이브 비로그인 화면(03 홈, 04 전체 프로그램), 브랜드 텍스트 DOM 블러. 관리자 = 레포 apps/admin/.screens/redesign 의 QA 캡처(05 = 01-academy-dashboard 상단 900px, 06 = 06-website-dashboard), 로고·'b-academy' 계정명·최근 활동 대상·테스트 문의자 이름('김바야다')·'(bayada 기업 사이트)' 픽셀 블러. 운영 관리자 로그인 금지(로컬 bayada_v2 도 WP 실회원 데이터).
-- 아카데미 라이브 카드 썸네일은 이미지가 아니라 DOM 이라 텍스트 블러가 썸네일 안 'BAYADA Academy' 까지 잡는다. '숫자로 보는 아카데미'(수료자·발급 건수) 섹션은 실적 수치라 캡처 제외.
+- 캡처: 웹 = 기존 git 5cb20bb 실캡처(01·02, cover — 로고가 프레임 밖일 뿐 가린 것 없음). 아카데미 = EC2 라이브 비로그인 화면(03 홈, 04 /ko/courses), 2026-11-10 블러 없이 재캡처. 관리자 = 레포 apps/admin/.screens/redesign 의 QA 캡처(05 = 01-academy-dashboard 상단 900px, 06 = 06-website-dashboard), 로고는 그대로, 'b-academy' 계정명·최근 활동 대상·테스트 문의자 이름('김바야다','이요양')만 픽셀 블러. 운영 관리자 로그인 금지(로컬 bayada_v2 도 WP 실회원 데이터).
+- '숫자로 보는 아카데미'(수료자·발급 건수) 섹션은 실적 수치라 캡처 제외.
 
 ## dealer-settlement(카영) 3개 앱 = dev-caryoung/{landing, caryoung(admin), client}
-- 웹(소개) = www.caryoung.co.kr (landing 레포, adrock_simjae 커밋, 타이틀 일치) → **호스트명에 브랜드**라 링크 안 검(오너 확인 대기). 캡처 03(히어로)·04(#dealer 딜러 앱 소개 섹션), 'CARYOUNG/카영'·전화·이메일 DOM 블러. '3,000명 이상의 에이전트'·제휴 보험사 전화번호 섹션은 캡처 제외.
-- 관리자 = admin-psi-amber-83.vercel.app(랜딩 링크 기준 운영, 로그인 화면) / 우리 팀 Vercel 의 admin-psi-ashen.vercel.app 도 같은 앱 → 로그인뿐이고 운영 실데이터라 링크·캡처 안 함. 캡처 05·06 = 레포 복사본(C:\Temp\pmrun\cy-admin, .env·실데이터 json 제거)을 임시 docker postgres(55433) + prisma seed.ts·scripts/seed-test-data.ts + 가상 계약 36건(DEMO-1000…, 가상 보험사 '가나손해보험' 등)으로 로컬 실행. NEXT_PUBLIC_DB_PROVIDER=prisma, Supabase 는 더미. admin/admin1234!(시드 계정). 끝나면 컨테이너 삭제.
-- 클라이언트 = client-roan-six.vercel.app(기존 승인 링크, apps[].url). 우리 팀 client 프로젝트(client-theta-gray)는 404.
+- 웹(소개) = www.caryoung.co.kr (landing 레포, adrock_simjae 커밋, 타이틀 일치) → 2026-11-10 링크 + 메인 url. 캡처 03(히어로)·04(#dealer 딜러 앱 소개 섹션) 블러 없이 재캡처(04 폰 목업의 '김카영/010-0000-0000' 은 가상 placeholder). '3,000명 이상의 에이전트'·제휴 보험사 전화번호 섹션은 캡처 제외.
+- 관리자 = 링크는 https://admin.caryoung.co.kr/ (로그인 화면, 2026-11-10 승인). 예전 Vercel 배포 admin-psi-amber-83 / admin-psi-ashen 은 링크 금지. 로그인 화면 왼쪽에 제휴 보험사 담당 번호·내부 공지 보드가 공개돼 있어 캡처 안 함. 캡처 05·06 = 레포 복사본(C:\Temp\pmrun\cy-admin, .env·실데이터 json 제거)을 임시 docker postgres(55433) + prisma seed.ts·scripts/seed-test-data.ts + 가상 계약 36건(DEMO-1000…, 가상 보험사 '가나손해보험' 등)으로 로컬 실행. NEXT_PUBLIC_DB_PROVIDER=prisma, Supabase 는 더미. admin/admin1234!(시드 계정). 끝나면 컨테이너 삭제.
+- 클라이언트 = https://dealer.caryoung.co.kr/ (2026-11-10, client-roan-six.vercel.app 대체). 우리 팀 client 프로젝트(client-theta-gray)는 404.
 - 함정: 레포의 admin 폴더 루트에 db_contracts_*.json·backup_contracts_* 등 **실계약 덤프**가 있다 → 복사 실행 시 반드시 지운다. 루트 docs/dealer-settlement-assets 캡처도 실데이터라 금지.
-- 기존 cover·01(클라이언트)은 'CARYOUNG/카영 딜러' 가 그대로 보인다(2026-10 오너 승인 범위). 새로 넣은 03-06 은 가렸다 → 통일 여부는 오너 확인.
+- 2026-11-10 통일: 05·06 은 블러 없는 원본 캡처(C:\Temp\pfx\raw\cya_*.png)의 좌상단 '카영' 로고 영역만 마스킹본에 합성(원본엔 Next dev 'N' 배지가 있어 전체를 쓰지 않음). 데이터는 가상 계약(DEMO-*, 강샘플·정데모 등).
 
 # Home 디자인 규칙: 상세페이지 흐름, AI 티 금지(eyebrow·장식 번호·밑줄), 한글 폰트
 
@@ -130,7 +131,7 @@
 
 ## 적용 사례 선택 (오너 규칙)
 - boryoung(보령항공여행사)은 서비스 섹션 적용 사례에 쓰지 않는다(오너: "아래에 배치해", AI 자동화→여행사도 불일치). 후보는 오너 우선순위 목록(칼가는곳·바야다·박스온·setflow·냉킵·대일·카영·드라이빙존·THOUSAND·빌라주차·젠더리빌·더빙고)에서 coverKind screenshot 우선.
-- 현재: 기획→homecare-platform(역할 기획·IA 설계, 이름은 일반명 유지), 디자인→thousand, 개발→knife-sharpening(칼가는곳 라이브), AI 자동화→webtoon-voice(AI 컷·대사 생성). point 문구는 portfolio.ts 의 description/overview/solution 에 있는 사실만.
+- 현재: 기획→homecare-platform(역할 기획·IA 설계), 디자인→thousand, 개발→knife-sharpening(칼가는곳 라이브), AI 자동화→webtoon-voice(AI 컷·대사 생성). point 문구는 portfolio.ts 의 description/overview/solution 에 있는 사실만.
 
 # Hero 3D + PLUCK 심볼: lib/pluck-scene.ts, 스크롤 수렴 p, 폴백, 브랜드 에셋 재생성
 

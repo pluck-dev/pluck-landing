@@ -20,8 +20,8 @@
 | 보령항공여행사 | `D:\dev\clients\boryoung` | 스크린샷 |
 | DVIA · 대일시스템 | `D:\dev\clients\web-daeilsys` | 스크린샷 |
 | 정푸드 관리 시스템 | jeongfood/admin (`clients\jeongfood`) | 브랜드 썸네일 + 설명 패널 |
-| 자동차보험 딜러 정산 플랫폼 | `clients\caryoung` 의 landing(웹)·admin(관리자)·client(딜러 웹) 3개 레포 (`_archive\cnc` 의 보험 CRM 은 같은 도메인의 이전 기획) | 스크린샷 (앱별 2장, 아래 '멀티 앱' 표) |
-| 홈헬스케어 통합 플랫폼 | `clients\bayada\bayada` = pluck-dev/bayada 모노레포 apps/web·academy·admin | 스크린샷 (앱별 2장, 아래 '멀티 앱' 표) |
+| 카영 딜러 정산 플랫폼 | `clients\caryoung` 의 landing(웹)·admin(관리자)·client(딜러 웹) 3개 레포 (`_archive\cnc` 의 보험 CRM 은 같은 도메인의 이전 기획) | 스크린샷 (앱별 2장, 아래 '멀티 앱' 표) |
+| BAYADA 홈헬스케어 플랫폼 | `clients\bayada\bayada` = pluck-dev/bayada 모노레포 apps/web·academy·admin | 스크린샷 (앱별 2장, 아래 '멀티 앱' 표) |
 | THOUSAND | develop-thousand/web | 스크린샷 |
 | ABROAD&BROAD | abroadnbroad/abroadnbroad | 스크린샷 |
 | V8 Cal Lab | carfixproj-Hwang/hptunermap | 스크린샷 |
@@ -142,12 +142,12 @@
 
 | 엔트리 | 앱 | 배포 | 링크 | 캡처 출처 |
 |---|---|---|---|---|
-| homecare-platform | 웹(고객용) | EC2 https://54-116-157-4.sslip.io/ko | 안 검(페이지 타이틀·헤더에 브랜드, 시연 서버) | git 5cb20bb 실캡처(cover, 01, 02) |
-| homecare-platform | 아카데미 | EC2 https://academy.54-116-157-4.sslip.io/ko | 안 검(같은 이유) | 라이브 비로그인 캡처 03·04, 브랜드 블러 |
-| homecare-platform | 관리자 | EC2 https://admin.54-116-157-4.sslip.io (로그인) | 안 검 | apps/admin/.screens/redesign QA 캡처 05·06, 로고·계정·테스트 이름 블러 |
-| dealer-settlement | 웹(소개) | https://www.caryoung.co.kr | 안 검(호스트명에 브랜드, 오너 확인 대기) | 라이브 캡처 03·04, 브랜드·전화·이메일 블러 |
-| dealer-settlement | 관리자 | admin-psi-amber-83.vercel.app (로그인) | 안 검(로그인뿐·운영 실데이터) | 로컬 실행 + 가상 데이터 05·06 |
-| dealer-settlement | 클라이언트(딜러 웹) | https://client-roan-six.vercel.app | 검(2026-10 승인) | 기존 cover, 01, 02 |
+| homecare-platform | 웹(고객용) | EC2 https://54-116-157-4.sslip.io/ko | 검(2026-11-10 오너 승인, 메인 url) | git 5cb20bb 실캡처(cover, 01, 02) |
+| homecare-platform | 아카데미 | EC2 https://academy.54-116-157-4.sslip.io/ko | 검(2026-11-10) | 라이브 비로그인 캡처 03·04, 블러 없음 |
+| homecare-platform | 관리자 | EC2 https://admin.54-116-157-4.sslip.io/ (로그인) | 검(2026-11-10) | apps/admin/.screens/redesign QA 캡처 05·06, 계정명·테스트 문의자 이름만 블러 |
+| dealer-settlement | 웹(소개) | https://www.caryoung.co.kr/ | 검(2026-11-10, 메인 url) | 라이브 캡처 03·04, 블러 없음 |
+| dealer-settlement | 관리자 | https://admin.caryoung.co.kr/ (로그인) | 검(2026-11-10). 옛 Vercel admin-psi-amber-83·admin-psi-ashen 은 링크 금지 | 로컬 실행 + 가상 데이터 05·06, 로고 노출 |
+| dealer-settlement | 클라이언트(딜러 웹) | https://dealer.caryoung.co.kr/ (client-roan-six.vercel.app 대체) | 검(2026-11-10) | 기존 cover, 01, 02 |
 
 ### 칼가는곳.com 검증 (2026-11-09, knife-sharpening)
 
