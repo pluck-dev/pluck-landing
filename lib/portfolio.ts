@@ -68,6 +68,12 @@ export type ProjectDetail = {
   features: readonly string[];
 };
 
+export type ProjectApp = {
+  name: string;
+  summary: string;
+  url?: string;
+};
+
 export type PortfolioProject = {
   slug: string;
   name: string;
@@ -80,6 +86,11 @@ export type PortfolioProject = {
   disciplines: readonly string[];
   status: ProjectStatus;
   url?: string;
+  /**
+   * Separate apps that make up one project (e.g. web / academy / admin).
+   * `url` only when that app's deployment is verified and cleared for linking.
+   */
+  apps?: readonly ProjectApp[];
   coverKind: CoverKind;
   coverMotif?: CoverMotif;
   /** Real screenshot when one exists; otherwise a generated brand cover (see MEMORY). */
@@ -493,20 +504,34 @@ const projectList: readonly PortfolioProject[] = [
     category: "client",
     years: [2026, 2026],
     description:
-      "딜러의 계약·추천·수수료 정산을 다루는 딜러 모바일 웹과 운영 어드민. 실서비스 운영 중.",
-    disciplines: ["Dealer web", "Admin", "Settlement"],
+      "소개 웹 · 운영 관리자 · 딜러용 클라이언트, 세 개 앱으로 딜러의 계약·추천·수수료 정산을 다루는 플랫폼. 실서비스 운영 중.",
+    disciplines: ["Website", "Admin", "Dealer web", "Settlement"],
     status: "live",
     url: "https://client-roan-six.vercel.app/",
-    coverKind: "screenshot",
-    cover: { src: "/work/dealer-settlement/cover.webp", alt: "딜러 웹 데스크톱 화면 - 소개 수수료 등급표와 추천 코드 카드 옆에 샘플 데이터로 채운 모바일 대시보드 미리보기" },
-    gallery: [
-      { src: "/work/dealer-settlement/01.webp", alt: "딜러 모바일 웹 3장 - 추천 수수료 온보딩, 샘플 데이터 홈 대시보드, 딜러 등록 신청 양식" },
-      { src: "/work/dealer-settlement/02.webp", alt: "딜러 모바일 웹의 내 계약 목록, 상태·정산 필터 바텀시트, 갱신 예정월 필터 화면 (테스트 데이터)" },
+    apps: [
       {
-        src: "/work/dealer-settlement/03.webp",
-        alt: "정산대기, 월말정산, 지급보류·미지급, 정산완료로 이어지는 정산 상태 모델 설명 패널",
-        diagram: {"title": "정산 상태를\n데이터로 정의하다", "flow": true, "items": [{"title": "정산대기", "text": "계약이 등록되면 수수료 정산 대상"}, {"title": "월말정산", "text": "월 단위로 모아 한 번에 처리"}, {"title": "지급보류·미지급", "text": "확인이 필요한 건은 따로 분리"}, {"title": "정산완료", "text": "지급이 끝난 건은 이력으로 남음"}]},
+        name: "웹 · 소개 사이트",
+        summary: "플랫폼 소개, 딜러 앱·관리자 소개 섹션, 제휴 보험사 안내와 문의를 담은 공개 사이트.",
       },
+      {
+        name: "관리자",
+        summary: "딜러·계약·갱신·정산·추천인·리포트를 다루는 운영 어드민. 엑셀 가져오기·내보내기와 역할별 권한.",
+      },
+      {
+        name: "클라이언트 · 딜러 웹",
+        summary: "딜러가 내 계약·수익·추천을 확인하는 모바일 웹. 로그인 전에는 샘플 데이터로 미리 볼 수 있습니다.",
+        url: "https://client-roan-six.vercel.app/",
+      },
+    ],
+    coverKind: "screenshot",
+    cover: { src: "/work/dealer-settlement/cover.webp", alt: "클라이언트(딜러 웹) 데스크톱 화면 - 소개 수수료 등급표와 추천 코드 카드 옆에 샘플 데이터로 채운 모바일 대시보드 미리보기" },
+    gallery: [
+      { src: "/work/dealer-settlement/01.webp", alt: "클라이언트(딜러 웹) 모바일 3장 - 추천 수수료 온보딩, 샘플 데이터 홈 대시보드, 딜러 등록 신청 양식", caption: "클라이언트 · 딜러 모바일 웹 (샘플 데이터)" },
+      { src: "/work/dealer-settlement/02.webp", alt: "클라이언트(딜러 웹)의 내 계약 목록, 상태·정산 필터 바텀시트, 갱신 예정월 필터 화면 (테스트 데이터)", caption: "클라이언트 · 계약 목록과 필터 (테스트 데이터)" },
+      { src: "/work/dealer-settlement/03.webp", alt: "웹(소개 사이트) 첫 화면 - '다이렉트 자동차보험 영업의 미래를 설계합니다' 헤드라인과 플랫폼 알아보기 버튼 (브랜드 로고 가림)", caption: "웹 · 소개 사이트 첫 화면 (브랜드 가림)" },
+      { src: "/work/dealer-settlement/04.webp", alt: "웹(소개 사이트)의 딜러 앱 소개 섹션 - '내 수익을 한눈에' 문구 옆 딜러 대시보드 미리보기 (브랜드·연락처 가림)", caption: "웹 · 딜러 앱 소개 섹션" },
+      { src: "/work/dealer-settlement/05.webp", alt: "관리자 계약 관리 화면 - 계약상태·정산상태 필터, 엑셀 내보내기·가져오기, 계약 목록 (로컬 실행, 가상 데이터)", caption: "관리자 · 계약 관리 (로컬 실행, 가상 데이터)" },
+      { src: "/work/dealer-settlement/06.webp", alt: "관리자 정산 관리 화면 - 미정산 건수 요약 카드와 정산 대상 목록 (로컬 실행, 가상 데이터)", caption: "관리자 · 정산 대상 목록 (로컬 실행, 가상 데이터)" },
     ],
     detail: {
       oneLiner: "딜러 계약·추천·수수료 정산을 한 곳에서",
@@ -528,7 +553,7 @@ const projectList: readonly PortfolioProject[] = [
         "Tailwind CSS",
       ],
       overview:
-        "자동차보험 딜러가 자신의 계약·추천 실적·수수료를 확인하는 모바일 딜러 웹과, 운영팀이 딜러·계약·정산을 관리하는 어드민, 소개 랜딩으로 구성된 정산 플랫폼입니다. 로그인 전에는 샘플 데이터로 화면을 미리 볼 수 있고, 운영 중인 서비스로 현업 수정요청을 반영하며 고도화하고 있습니다.",
+        "세 개 앱으로 구성된 자동차보험 딜러 정산 플랫폼입니다. 회사와 플랫폼을 알리는 소개 웹, 운영팀이 딜러·계약·정산을 관리하는 관리자, 딜러가 자신의 계약·추천 실적·수수료를 확인하는 클라이언트(딜러 모바일 웹)로 나뉘고, 관리자와 클라이언트는 하나의 DB 를 함께 씁니다. 로그인 전에는 샘플 데이터로 화면을 미리 볼 수 있고, 운영 중인 서비스로 현업 수정요청을 반영하며 고도화하고 있습니다.",
       problem:
         "엑셀로 관리되던 대량의 계약과 딜러별 수수료·추천 수당을 사람이 대조해야 해 누락과 불일치가 생기기 쉬웠습니다.",
       solution:
@@ -549,19 +574,35 @@ const projectList: readonly PortfolioProject[] = [
     category: "client",
     years: [2026, 2026],
     description:
-      "방문간호·돌봄 기업을 위한 고객 웹사이트, 교육 플랫폼, 통합 관리자를 잇는 플랫폼.",
+      "방문간호·돌봄 기업을 위한 고객용 웹 · 교육 아카데미 · 통합 관리자, 세 개 앱을 하나로 잇는 플랫폼.",
     disciplines: ["Website", "LMS", "Admin"],
     status: "development",
+    apps: [
+      {
+        name: "웹 · 고객용 사이트",
+        summary: "연령대별 서비스 탐색, 센터 찾기·상담 신청, 멤버십, 홈헬스케어 용품 쇼핑몰, 블로그를 담은 공개 사이트.",
+      },
+      {
+        name: "아카데미 · 교육 플랫폼",
+        summary: "직군별 교육 프로그램 탐색과 수강, 진도·퀴즈, 수료증 발급·진위 확인, 기관 단위 수강 배정.",
+      },
+      {
+        name: "관리자 · 통합 어드민",
+        summary: "아카데미 프로그램 승인·회원·수강·인증 심사와 웹사이트 문의 CRM·콘텐츠를 한 화면에서 전환해 관리.",
+      },
+    ],
     coverKind: "screenshot",
-    cover: { src: "/work/homecare-platform/cover.webp", alt: "홈헬스케어 웹 서비스 화면 - 대표 서비스 Skilled Nursing 소개와 맞춤 요양·호스피스 등 서비스 카드 (고객사 로고 제외)" },
+    cover: { src: "/work/homecare-platform/cover.webp", alt: "웹(고객용 사이트) 화면 - 대표 서비스 Skilled Nursing 소개와 맞춤 요양·호스피스 등 서비스 카드 (고객사 로고 제외)" },
     gallery: [
-      { src: "/work/homecare-platform/02.webp", alt: "연령대 맞춤 서비스 찾기 - 노인·성인·소아 케어 탭과 동행 돌봄·방문 건강관리·호스피스 서비스 카드" },
-      { src: "/work/homecare-platform/01.webp", alt: "홈헬스케어 쇼핑몰 - 의료기기·건강관리 용품·재활보조기구 등 카테고리" },
-      { src: "/work/homecare-platform/03.webp", alt: "서비스 시작 절차 - 상담, 평가, 플랜, 시작 4단계" },
-      { src: "/work/homecare-platform/04.webp", alt: "모바일 화면 3장 - 대표 서비스, 멤버십 혜택, 파트너 쇼핑몰(제휴처명 제외)" },
+      { src: "/work/homecare-platform/01.webp", alt: "웹(고객용 사이트) 연령대 맞춤 서비스 찾기 - 노인·성인·소아 케어 탭과 동행 돌봄·방문 건강관리·호스피스 서비스 카드", caption: "웹 · 연령대별 서비스 찾기" },
+      { src: "/work/homecare-platform/02.webp", alt: "웹(고객용 사이트) 모바일 화면 3장 - 대표 서비스, 멤버십 혜택, 파트너 쇼핑몰(제휴처명 제외)", caption: "웹 · 모바일" },
+      { src: "/work/homecare-platform/03.webp", alt: "아카데미 첫 화면 - '돌봄의 전문성, 커리어가 되다' 헤드라인과 지금 많이 듣는 프로그램 순위 (기관명 가림)", caption: "아카데미 · 첫 화면 (기관명 가림)" },
+      { src: "/work/homecare-platform/04.webp", alt: "아카데미 전체 프로그램 목록 - 분야 탭, 대상 직군·상품 유형 필터, 프로그램 카드 (기관명 가림)", caption: "아카데미 · 전체 프로그램" },
+      { src: "/work/homecare-platform/05.webp", alt: "관리자 아카데미 대시보드 - 승인 대기·신규 수강·수료 요약 카드, 프로그램 상태별 막대, 처리 대기 목록 (계정·기관명 가림)", caption: "관리자 · 아카데미 대시보드 (QA 캡처, 계정·기관명 가림)" },
+      { src: "/work/homecare-platform/06.webp", alt: "관리자 웹사이트 대시보드 - 신규·진행 중 문의 카드, 최근 문의, 홈페이지 콘텐츠 현황 (테스트 문의, 이름 가림)", caption: "관리자 · 웹사이트 대시보드 (테스트 문의)" },
     ],
     detail: {
-      oneLiner: "방문간호·돌봄 기업의 웹·교육·관리를 하나로",
+      oneLiner: "방문간호·돌봄 기업의 웹·교육·관리를 세 개 앱으로",
       role: [
         "기획",
         "IA 설계",
@@ -578,20 +619,23 @@ const projectList: readonly PortfolioProject[] = [
         "Prisma",
         "PostgreSQL",
         "NextAuth",
+        "Docker",
       ],
       overview:
-        "방문간호·요양·호스피스 등 홈헬스케어 서비스를 운영하는 기업을 위해 고객용 웹사이트, 요양보호사·간호 인력 교육 플랫폼, 통합 관리자를 하나의 모노레포로 설계·개발하고 있습니다.",
+        "방문간호·요양·호스피스 등 홈헬스케어 서비스를 운영하는 기업을 위한 플랫폼입니다. 고객용 웹사이트, 요양보호사·간호 인력을 위한 교육 아카데미, 두 서비스를 함께 운영하는 통합 관리자, 세 개 앱을 하나의 모노레포로 설계·개발했고, 세 앱 모두 서버에 배포해 검수하고 있습니다.",
       problem:
         "서비스 안내, 상담 접수, 인력 교육, 멤버십이 서로 다른 채널에 흩어져 있어 이용자 여정과 운영 데이터가 끊겨 있었습니다.",
       solution:
-        "웹·아카데미·어드민 3개 앱이 공통 DB·UI 패키지를 공유하는 Turborepo 구조로 묶고, 연령대별 서비스 탐색·상담 신청·멤버십·교육 과정을 한 흐름으로 연결했습니다.",
+        "웹·아카데미·관리자 3개 앱이 공통 DB·UI 패키지를 공유하는 Turborepo 구조로 묶고, 연령대별 서비스 탐색·상담 신청·멤버십·교육 과정을 한 흐름으로 연결했습니다. 관리자에서는 아카데미와 웹사이트를 전환하며 한 계정으로 운영합니다.",
       features: [
-        "연령대·유형별 홈헬스케어 서비스 탐색",
-        "센터 찾기와 온라인 상담 신청",
-        "이용자·제공자 멤버십 비교",
-        "홈헬스케어 용품 쇼핑몰",
-        "직군별 교육 과정·수료 관리(LMS)",
-        "다국어(i18n) 라우팅",
+        "연령대·유형별 서비스 탐색 (웹)",
+        "센터 찾기와 온라인 상담 신청 (웹)",
+        "멤버십 비교와 용품 쇼핑몰 (웹)",
+        "직군별 교육 프로그램·진도·퀴즈 (아카데미)",
+        "수료증 발급과 진위 확인 (아카데미)",
+        "기관 단위 수강 배정·이수 현황 (아카데미)",
+        "프로그램 승인 워크플로·인증 심사 (관리자)",
+        "웹사이트 문의 CRM·콘텐츠 관리 (관리자)",
       ],
     },
   },

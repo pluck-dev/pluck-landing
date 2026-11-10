@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -233,10 +234,36 @@ export default async function WorkPage({ params }: Props) {
 
         <section className="shell work-body" aria-label="프로젝트 설명">
           {sections.map(([label, text]) => (
-            <div className="work-block" key={label}>
-              <h2>{label}</h2>
-              <p>{text}</p>
-            </div>
+            <Fragment key={label}>
+              <div className="work-block">
+                <h2>{label}</h2>
+                <p>{text}</p>
+              </div>
+              {label === "개요" && project.apps?.length ? (
+                <div className="work-block">
+                  <h2>구성</h2>
+                  <ul className="work-apps">
+                    {project.apps.map((app) => (
+                      <li key={app.name}>
+                        <h3>{app.name}</h3>
+                        <p>{app.summary}</p>
+                        {app.url ? (
+                          <a
+                            className="work-app-link"
+                            href={app.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            열어 보기 <ArrowUpRight size={16} aria-hidden="true" />
+                            <span className="sr-only"> ({app.name}, 새 탭에서 열림)</span>
+                          </a>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </Fragment>
           ))}
           <div className="work-block">
             <h2>주요 기능</h2>

@@ -79,6 +79,26 @@
 - 헤더/푸터/CTA 는 components/site-chrome.tsx 공용. 상세 페이지에선 home=false 로 "/#work" 등 홈 앵커로 연결. 홈 앵커: #work(전체 그리드) #featured #services #process #faq #contact. 상담 메일 링크는 CONTACT_MAIL/contactMail(subject).
 - docs/work-covers 는 Node CJS 스크립트라 eslint globalIgnores 에 추가돼 있음.
 
+# Portfolio 멀티 앱 엔트리: apps 필드, 바야다(웹·아카데미·관리자)·카영(웹·관리자·클라이언트) 배포·캡처 출처
+
+## 데이터·렌더 (2026-11-10, 오너: "3개 다 보여줘야 해")
+- PortfolioProject.apps?: {name, summary, url?}[] → 상세 페이지 개요 다음 '구성' 블록(3열 sage 카드, ≤700px 1열). url 은 링크가 허용된 앱에만, 카드 안 '열어 보기' pill. 히어로 '사이트 방문'(project.url)은 그대로.
+- 갤러리 alt/caption 은 앱 이름으로 시작('웹 ·', '아카데미 ·', '관리자 ·', '클라이언트 ·')해 어느 앱 화면인지 밝힌다. 갤러리 최대 6 → 앱당 2장.
+
+## homecare-platform(바야다) 3개 앱 = pluck-dev/bayada 모노레포 apps/{web,academy,admin}
+- 배포: AWS EC2(개발·시연용, 무료 플랜) Caddy + sslip 호스트 — 웹 https://54-116-157-4.sslip.io/ko, 아카데미 https://academy.54-116-157-4.sslip.io/ko, 관리자 https://admin.54-116-157-4.sslip.io(로그인). 우리 레포 deploy/ec2 로 배포한 빌드(bayada 레포 .fry/MEMORY.md 'AWS 운영').
+- **링크 안 검**: 호스트명엔 브랜드가 없지만 페이지 타이틀·헤더에 'BAYADA' 가 그대로 노출 → bayada 브랜드 노출 금지 규칙 위반. 또 서버 이전 예정(IP 기반 주소)이라 곧 깨진다. 오너가 링크 공개를 승인하고 정식 도메인이 생기면 apps[].url 에 추가.
+- Vercel bayada.vercel.app(spacePluck/bayada) 은 타이틀 'Create Next App' 의 옛 빌드 + 호스트명에 브랜드 → 사용 금지.
+- 캡처: 웹 = 기존 git 5cb20bb 실캡처(01·02, cover). 아카데미 = EC2 라이브 비로그인 화면(03 홈, 04 전체 프로그램), 브랜드 텍스트 DOM 블러. 관리자 = 레포 apps/admin/.screens/redesign 의 QA 캡처(05 = 01-academy-dashboard 상단 900px, 06 = 06-website-dashboard), 로고·'b-academy' 계정명·최근 활동 대상·테스트 문의자 이름('김바야다')·'(bayada 기업 사이트)' 픽셀 블러. 운영 관리자 로그인 금지(로컬 bayada_v2 도 WP 실회원 데이터).
+- 아카데미 라이브 카드 썸네일은 이미지가 아니라 DOM 이라 텍스트 블러가 썸네일 안 'BAYADA Academy' 까지 잡는다. '숫자로 보는 아카데미'(수료자·발급 건수) 섹션은 실적 수치라 캡처 제외.
+
+## dealer-settlement(카영) 3개 앱 = dev-caryoung/{landing, caryoung(admin), client}
+- 웹(소개) = www.caryoung.co.kr (landing 레포, adrock_simjae 커밋, 타이틀 일치) → **호스트명에 브랜드**라 링크 안 검(오너 확인 대기). 캡처 03(히어로)·04(#dealer 딜러 앱 소개 섹션), 'CARYOUNG/카영'·전화·이메일 DOM 블러. '3,000명 이상의 에이전트'·제휴 보험사 전화번호 섹션은 캡처 제외.
+- 관리자 = admin-psi-amber-83.vercel.app(랜딩 링크 기준 운영, 로그인 화면) / 우리 팀 Vercel 의 admin-psi-ashen.vercel.app 도 같은 앱 → 로그인뿐이고 운영 실데이터라 링크·캡처 안 함. 캡처 05·06 = 레포 복사본(C:\Temp\pmrun\cy-admin, .env·실데이터 json 제거)을 임시 docker postgres(55433) + prisma seed.ts·scripts/seed-test-data.ts + 가상 계약 36건(DEMO-1000…, 가상 보험사 '가나손해보험' 등)으로 로컬 실행. NEXT_PUBLIC_DB_PROVIDER=prisma, Supabase 는 더미. admin/admin1234!(시드 계정). 끝나면 컨테이너 삭제.
+- 클라이언트 = client-roan-six.vercel.app(기존 승인 링크, apps[].url). 우리 팀 client 프로젝트(client-theta-gray)는 404.
+- 함정: 레포의 admin 폴더 루트에 db_contracts_*.json·backup_contracts_* 등 **실계약 덤프**가 있다 → 복사 실행 시 반드시 지운다. 루트 docs/dealer-settlement-assets 캡처도 실데이터라 금지.
+- 기존 cover·01(클라이언트)은 'CARYOUNG/카영 딜러' 가 그대로 보인다(2026-10 오너 승인 범위). 새로 넣은 03-06 은 가렸다 → 통일 여부는 오너 확인.
+
 # Home 디자인 규칙: 상세페이지 흐름, AI 티 금지(eyebrow·장식 번호·밑줄), 한글 폰트
 
 ## 오너 피드백 (2026-10-29, WHY)

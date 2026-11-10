@@ -1495,6 +1495,52 @@ summary:focus-visible {
   margin-top: 3px;
   color: var(--blue);
 }
+.work-apps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.work-apps li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 18px 20px;
+  border-radius: 14px;
+  background: var(--sage);
+}
+.work-apps h3 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+}
+.work-apps p {
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-2);
+  word-break: keep-all;
+}
+.work-app-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 14px 10px 16px;
+  border-radius: 20px;
+  background: var(--ink);
+  color: var(--paper);
+  transition: background 0.25s;
+}
+.work-app-link:hover {
+  background: var(--blue);
+}
 .work-gallery {
   padding-block: 60px 20px;
 }
@@ -1656,6 +1702,9 @@ summary:focus-visible {
     line-height: 1.85;
   }
   .work-features {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .work-apps {
     grid-template-columns: minmax(0, 1fr);
   }
   .work-features li {

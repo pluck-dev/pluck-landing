@@ -20,8 +20,8 @@
 | 보령항공여행사 | `D:\dev\clients\boryoung` | 스크린샷 |
 | DVIA · 대일시스템 | `D:\dev\clients\web-daeilsys` | 스크린샷 |
 | 정푸드 관리 시스템 | jeongfood/admin (`clients\jeongfood`) | 브랜드 썸네일 + 설명 패널 |
-| 자동차보험 딜러 정산 플랫폼 | `clients\caryoung` (`_archive\cnc` 의 보험 CRM 은 같은 도메인의 이전 기획) | 스크린샷 + 설명 패널 |
-| 홈헬스케어 통합 플랫폼 | `clients\bayada`, pluck-dev/bayada | 브랜드 썸네일 |
+| 자동차보험 딜러 정산 플랫폼 | `clients\caryoung` 의 landing(웹)·admin(관리자)·client(딜러 웹) 3개 레포 (`_archive\cnc` 의 보험 CRM 은 같은 도메인의 이전 기획) | 스크린샷 (앱별 2장, 아래 '멀티 앱' 표) |
+| 홈헬스케어 통합 플랫폼 | `clients\bayada\bayada` = pluck-dev/bayada 모노레포 apps/web·academy·admin | 스크린샷 (앱별 2장, 아래 '멀티 앱' 표) |
 | THOUSAND | develop-thousand/web | 스크린샷 |
 | ABROAD&BROAD | abroadnbroad/abroadnbroad | 스크린샷 |
 | V8 Cal Lab | carfixproj-Hwang/hptunermap | 스크린샷 |
@@ -137,6 +137,17 @@
 | discord-bridge, browser-bridge, figma-mcp, planning-kit | 브랜드 유지 | 자체 화면 없는 봇·확장·CLI·키트. 실화면은 실제 Discord/Chrome/Figma/터미널이라 개인 대화·계정이 섞임(discord-bridge data/attachments 는 카톡·메일 등 개인 캡처라 금지). browser-bridge 팝업은 280px 상태 표시뿐이고 output 은 쿠팡 상품 이미지(타사 데이터). figma-mcp 플러그인 UI 는 업스트림(hopp) 것이라 우리 작업으로 보이면 안 됨. 필요: 데모 Discord 서버·데모 Figma 파일로 녹화 |
 | thumbnail | 브랜드 유지 | 로컬 산출물은 picsum 테스트 그리드뿐 |
 | programmatic-seo, seller-sourcing | 브랜드 유지 | DB 비어 있고 생성·수집에 외부 LLM/크롤링 필요. 필요: 샘플 데이터 시드 후 로컬 실행 |
+
+## 멀티 앱 엔트리 (2026-11-10, 오너 요청 "3개 다 보여줘")
+
+| 엔트리 | 앱 | 배포 | 링크 | 캡처 출처 |
+|---|---|---|---|---|
+| homecare-platform | 웹(고객용) | EC2 https://54-116-157-4.sslip.io/ko | 안 검(페이지 타이틀·헤더에 브랜드, 시연 서버) | git 5cb20bb 실캡처(cover, 01, 02) |
+| homecare-platform | 아카데미 | EC2 https://academy.54-116-157-4.sslip.io/ko | 안 검(같은 이유) | 라이브 비로그인 캡처 03·04, 브랜드 블러 |
+| homecare-platform | 관리자 | EC2 https://admin.54-116-157-4.sslip.io (로그인) | 안 검 | apps/admin/.screens/redesign QA 캡처 05·06, 로고·계정·테스트 이름 블러 |
+| dealer-settlement | 웹(소개) | https://www.caryoung.co.kr | 안 검(호스트명에 브랜드, 오너 확인 대기) | 라이브 캡처 03·04, 브랜드·전화·이메일 블러 |
+| dealer-settlement | 관리자 | admin-psi-amber-83.vercel.app (로그인) | 안 검(로그인뿐·운영 실데이터) | 로컬 실행 + 가상 데이터 05·06 |
+| dealer-settlement | 클라이언트(딜러 웹) | https://client-roan-six.vercel.app | 검(2026-10 승인) | 기존 cover, 01, 02 |
 
 ### 칼가는곳.com 검증 (2026-11-09, knife-sharpening)
 
