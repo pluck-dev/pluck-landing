@@ -13,7 +13,9 @@ function pick(value: string | undefined, pattern: RegExp) {
   return trimmed && pattern.test(trimmed) ? trimmed : null;
 }
 
-export const META_PIXEL_ID = pick(process.env.NEXT_PUBLIC_META_PIXEL_ID, /^\d{6,20}$/);
+/** Meta Pixel "PLUCK 웹사이트" (ad account 1213073564078217). Public pixel id; env overrides it. */
+const DEFAULT_META_PIXEL_ID = "1838757720706025";
+export const META_PIXEL_ID = pick(process.env.NEXT_PUBLIC_META_PIXEL_ID || DEFAULT_META_PIXEL_ID, /^\d{6,20}$/);
 /** GA4 "PLUCK 웹사이트" (admin@pluck.co.kr). Public measurement id; env overrides it. The live
  * site deploys from a Vercel account this PC's CLI cannot reach, so the default lives in code. */
 const DEFAULT_GA_ID = "G-D8SQBHNF5Z";
