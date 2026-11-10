@@ -87,7 +87,7 @@
 - 카피는 한국어 우선. categoryLabels/statusLabels 도 한글(클라이언트/자체 서비스/앱/AI·자동화, 라이브/개발 중/사례/콘셉트).
 
 ## 홈 흐름 = 한국 이커머스 상세페이지식 설득 구조
-- 3D 히어로(PLUCK 심볼 필드 → 스크롤로 큰 심볼 하나로 수렴) → 숫자 밴드(블루 풀블리드, getPortfolioStats) → 이런 고민(다크) → 한 팀 4분야(각 분야에 실제 적용 사례 링크) → 라이브 클라이언트 작업 크게(featured) → 전체 그리드 → 진행 방식(번호 없음) → FAQ → 상담 CTA.
+- 3D 히어로(PLUCK 심볼 필드 → 스크롤로 큰 심볼 하나로 수렴) → 숫자 밴드(블루 풀블리드, getPortfolioStats) → 이런 고민(다크) → 한 팀 4분야(스크롤 연동 스텝 + 스티키 실화면, 아래 #services 섹션 참고) → 라이브 클라이언트 작업 크게(featured) → 전체 그리드 → 진행 방식(번호 없음) → FAQ → 상담 CTA.
 - 2026-10 오너 지시로 'THE WAY WE THINK' 스테이트먼트와 NDrop/DVIA/몇기야 아트카드 섹션 삭제(재추가 금지).
 - 히어로 숫자는 getPortfolioStats 로만. live 는 "지금 접속해 볼 수 있는 서비스"로 표기(THOUSAND 처럼 실주문 없는 라이브가 있어 '운영 실적'처럼 쓰지 않기 위함). 지어낸 지표·후기·로고 금지.
 - featured 는 실제 운영 클라이언트(boryoung, rba, dealer-settlement, dvia). 콜라주(hero-collage)는 2026-10 "히어로가 얌전하다(toss.im 참고)" 피드백으로 삭제 → components/hero-reel.tsx → 2026-10 feat/hero-3d 에서 Lusion 풍 3D 히어로로 교체(hero-reel 컴포넌트·CSS 삭제, public/reel 이미지는 남겨둠).
@@ -96,6 +96,21 @@
 - Geist 는 한글이 없어 Windows 에서 맑은고딕으로 떨어져 헤드라인이 약해 보였음 → layout.tsx 에 Noto_Sans_KR(preload:false, --font-noto-kr)을 Geist 다음 폴백으로 추가.
 - ScrollExperience 의 --progress 는 이제 모든 data-scene 에 같은 공식(뷰포트 통과율). 예전 hero 전용 핀 공식은 hero 가 고정 높이가 아니면 0→1로 튀어서 제거.
 - next/image `priority` 는 Next 16 에서 deprecated → `preload` 또는 loading="eager"+fetchPriority.
+
+# Home 서비스 섹션(#services): 스크롤 연동 스텝 + 스티키 실화면, 적용 사례 선택 규칙
+
+## 구조와 WHY (2026-11-10, 오너 피드백)
+- 오너가 폰으로 보고 "지금 이 섹션 다르게 안되나? 칼가는곳 랜딩 보니까 잘했던데" → 칼가는곳 랜딩의 '이용 방법' 블록(왼쪽 스텝 하이라이트 + 오른쪽 실제 화면 교체 + '실제 … 화면입니다' 캡션) 패턴만 재현. 칼가는곳의 에셋·카피·브랜드는 가져오지 않음. 오너는 이 칼가는곳 랜딩 스타일(차분·큰 타이포·강한 대비)을 좋아함.
+- components/services-showcase.tsx(client). 데이터는 app/page.tsx 의 services(example 슬러그 + point = 포트폴리오 데이터로 뒷받침되는 한 줄). 캡션은 status 로 생성(live="지금 접속해 볼 수 있는 실제 화면입니다." / 그 외 "개발 중인 실제 화면입니다." — THOUSAND 는 실주문 없는 라이브라 '운영 중'이라 쓰지 않음).
+- 동작: 네이티브 스크롤만. JS 는 [data-on] 토글과 --svc-top(헤더 실측 높이)만 쓴다. 활성 = 읽기 선(데스크톱 55%vh, ≤960px 은 스티키 스테이지 아래 남은 영역의 30%)을 지난 마지막 스텝. 포커스가 스텝 안으로 들어오면 그 스텝 활성(키보드).
+- 데스크톱: 왼쪽 스텝 카드(비활성 opacity .34, 활성 흰 카드) + 오른쪽 sticky 스테이지(4개 figure 를 한 그리드 셀에 겹쳐 크로스페이드). ≤960px: 스테이지가 헤더 바로 아래 sticky(페이퍼 배경·그림자), 스텝은 그 아래로 스크롤. 프레임 폭은 min(100%, 34svh×1.6) — 실제 폰 Safari 는 innerHeight 가 ~660 이라 844 기준으로만 맞추면 글 영역이 없어짐.
+- 핀 고정+진행도 방식(칼가는곳처럼 리스트 전체 고정)은 버림: 폰 실가시 높이에서 프레임+전체 리스트가 안 들어가고, 접힌 스텝의 링크가 키보드로 닿지 않음.
+- reduced-motion: 스테이지 display:none, 디밍 없음, 각 스텝 안의 .svc-shot(인라인 실화면)만 표시. 인라인/스테이지 이미지는 같은 sizes 문자열(SHOT_SIZES)이라 같은 최적화 URL 을 공유.
+- 스테이지 링크는 tabIndex -1(마우스용 중복), 접근 가능한 링크는 각 스텝의 .svc-link. 비활성 figure 는 visibility hidden 이라 스크린리더에 하나만 읽힘.
+
+## 적용 사례 선택 (오너 규칙)
+- boryoung(보령항공여행사)은 서비스 섹션 적용 사례에 쓰지 않는다(오너: "아래에 배치해", AI 자동화→여행사도 불일치). 후보는 오너 우선순위 목록(칼가는곳·바야다·박스온·setflow·냉킵·대일·카영·드라이빙존·THOUSAND·빌라주차·젠더리빌·더빙고)에서 coverKind screenshot 우선.
+- 현재: 기획→homecare-platform(역할 기획·IA 설계, 이름은 일반명 유지), 디자인→thousand, 개발→knife-sharpening(칼가는곳 라이브), AI 자동화→webtoon-voice(AI 컷·대사 생성). point 문구는 portfolio.ts 의 description/overview/solution 에 있는 사실만.
 
 # Hero 3D + PLUCK 심볼: lib/pluck-scene.ts, 스크롤 수렴 p, 폴백, 브랜드 에셋 재생성
 

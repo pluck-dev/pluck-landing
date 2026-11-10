@@ -6,6 +6,7 @@ import { CountUp } from "@/components/count-up";
 import { Hero3D } from "@/components/hero-3d";
 import { ProjectIndex } from "@/components/project-index";
 import { ScrollExperience } from "@/components/scroll-experience";
+import { ServicesShowcase } from "@/components/services-showcase";
 import {
   ContactSection,
   StudioFooter,
@@ -64,7 +65,8 @@ const services = [
     description:
       "해결하려는 문제와 사용자를 정리하고, 꼭 필요한 기능과 우선순위를 나눠 개발 범위를 구체화합니다.",
     deliverables: ["기능 우선순위", "화면 흐름", "개발 범위"],
-    example: "rba",
+    example: "homecare-platform",
+    point: "흩어진 서비스 안내·상담·교육·멤버십을 한 흐름으로 설계",
   },
   {
     id: "design",
@@ -75,6 +77,7 @@ const services = [
       "브랜드의 인상과 사용 흐름을 함께 설계합니다. 고객용 화면부터 운영자가 쓰는 어드민까지 한 톤으로 만듭니다.",
     deliverables: ["UI 디자인", "디자인 시스템", "모바일 대응"],
     example: "thousand",
+    point: "진열장 자체를 상품 탐색 화면으로 만든 브랜드 쇼핑몰",
   },
   {
     id: "development",
@@ -84,7 +87,8 @@ const services = [
     description:
       "웹, 앱, 어드민, 정산 같은 실제 업무 기능까지 구현하고 배포합니다. 출시 후 운영에 필요한 구조를 처음부터 고려합니다.",
     deliverables: ["웹·앱", "운영 어드민", "배포"],
-    example: "dealer-settlement",
+    example: "knife-sharpening",
+    point: "신청부터 수거·배송, 구독, 쿠폰까지 구현한 모바일 웹",
   },
   {
     id: "ai-automation",
@@ -94,7 +98,8 @@ const services = [
     description:
       "업무 흐름을 먼저 이해한 뒤 효과가 나는 지점에만 AI와 자동화를 더합니다. 콘텐츠 작성 보조, 데이터 정리, 알림까지.",
     deliverables: ["AI 기능 연동", "업무 자동화", "콘텐츠 생성"],
-    example: "boryoung",
+    example: "webtoon-voice",
+    point: "상황 한 줄로 AI가 웹툰 컷과 대사를 만들고, 녹음은 영상으로",
   },
 ] as const;
 
@@ -346,41 +351,29 @@ export default function Home() {
               프로젝트입니다.
             </p>
           </div>
-          <ul className="service-grid">
-            {services.map((service) => {
+          <ServicesShowcase
+            items={services.map((service) => {
               const example = requireProject(service.example);
-              return (
-                <li className="service-card" key={service.title}>
-                  <h3>{service.title}</h3>
-                  <p className="service-lead">{service.lead}</p>
-                  <p>{service.description}</p>
-                  <ul className="chip-list" aria-label={`${service.title} 결과물`}>
-                    {service.deliverables.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                  <Link
-                    className="service-example"
-                    href={`/work/${example.slug}`}
-                  >
-                    <span className="service-example-thumb">
-                      <Image
-                        src={example.cover.src}
-                        alt=""
-                        fill
-                        sizes="96px"
-                      />
-                    </span>
-                    <span>
-                      적용 사례
-                      <strong>{example.name}</strong>
-                    </span>
-                    <ArrowUpRight size={18} aria-hidden="true" />
-                  </Link>
-                </li>
-              );
+              return {
+                id: service.id,
+                title: service.title,
+                lead: service.lead,
+                description: service.description,
+                deliverables: service.deliverables,
+                example: {
+                  href: `/work/${example.slug}`,
+                  name: example.name,
+                  src: example.cover.src,
+                  alt: example.cover.alt,
+                  caption:
+                    example.status === "live"
+                      ? "지금 접속해 볼 수 있는 실제 화면입니다."
+                      : "개발 중인 실제 화면입니다.",
+                  point: service.point,
+                },
+              };
             })}
-          </ul>
+          />
         </section>
 
         <section
