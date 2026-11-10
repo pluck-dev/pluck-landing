@@ -14,7 +14,10 @@ function pick(value: string | undefined, pattern: RegExp) {
 }
 
 export const META_PIXEL_ID = pick(process.env.NEXT_PUBLIC_META_PIXEL_ID, /^\d{6,20}$/);
-export const GA_ID = pick(process.env.NEXT_PUBLIC_GA_ID, /^G-[A-Z0-9]{4,20}$/);
+/** GA4 "PLUCK 웹사이트" (admin@pluck.co.kr). Public measurement id; env overrides it. The live
+ * site deploys from a Vercel account this PC's CLI cannot reach, so the default lives in code. */
+const DEFAULT_GA_ID = "G-D8SQBHNF5Z";
+export const GA_ID = pick(process.env.NEXT_PUBLIC_GA_ID || DEFAULT_GA_ID, /^G-[A-Z0-9]{4,20}$/);
 /** 네이버 공통키 (na_account_id, e.g. "s_1a2b3c4d5e6f"). */
 export const NAVER_WCS_ID = pick(process.env.NEXT_PUBLIC_NAVER_WCS_ID, /^[A-Za-z0-9_]{4,40}$/);
 
