@@ -31,22 +31,24 @@ export function GoMotion() {
       const target = Number(el.dataset.count);
       if (!Number.isFinite(target)) return;
       el.textContent = "0";
-      stops.push(
-        inView(
-          el,
-          () => {
-            const control = animate(0, target, {
-              duration: 2.2,
-              ease: "easeOut",
-              onUpdate: (value) => {
-                el.textContent = String(Math.round(value));
-              },
-            });
-            return () => control.stop();
-          },
-          { amount: 0.6 },
-        ),
+      // Count once: re-entering (or a full-page resize) must not restart from 0.
+      let done = false;
+      const stop = inView(
+        el,
+        () => {
+          if (done) return;
+          done = true;
+          animate(0, target, {
+            duration: 2.2,
+            ease: "easeOut",
+            onUpdate: (value) => {
+              el.textContent = String(Math.round(value));
+            },
+          });
+        },
+        { amount: 0.6 },
       );
+      stops.push(stop);
     });
 
     const hero = document.querySelector<HTMLElement>(".go-hero");

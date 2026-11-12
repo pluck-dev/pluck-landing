@@ -308,18 +308,21 @@
 - S6·FAQ 의 신뢰 문구는 lib/quote/trust.ts(오너 확인 전). '1인이면 바쁠 때' 답 = 동시 진행 수 제한 + 계약 전 일정 확정(오너 지시 문구). 가격표 캡션 'VAT 별도'는 오너 지시.
 - 푸터 사업자 정보는 사이트 푸터와 동일(상호·메일·GitHub) + 개인정보처리방침. 대표자·사업자번호·주소는 app/privacy COMPANY 가 비어 있어 미표시 — 채워지면 LP 푸터에도 추가할 것.
 
-# 광고 랜딩 /lp/go (상세페이지형): 480px 다크 컬럼, 네온 라임·핑크, 실숫자 증거 카드, source.form=lp-go
+# 광고 랜딩 /lp/go (v3 에디토리얼): 챕터 01–05, 네이비·페이퍼+브랜드 블루, 세리프 헤드라인, 진행선+견적 칩, source.form=lp-go
 
-## 구조와 WHY (2026-11-12, 오너: vibisolution.com/product/6 보고 "이런 느낌")
-- 레퍼런스(한국 롱스크롤 상세페이지형 판매 퍼널)의 '느낌'만 가져옴: 데스크톱에서도 가운데 480px 모바일 컬럼 + 어두운 바깥, 그라데이션 카드, 라임 #d7ff3a 강조 + 핑크 #ff2e6a CTA, 큰 숫자 증거 카드(체크 배지), 히어로 위 체크 칩 3개, 히어로 아래 sticky 탭(소개/작업물/FAQ), "아직도…라면 / 더 늦기 전에" 스토리, "+" 로 쌓는 무료 제공물, 01/02/03 카드, 전→후 화살표 사례 카드, "그런데, 왜 1인 스튜디오인가요?", 하단 고정 오퍼 바.
-- **일부러 뺀 것(재추가 금지)**: 가짜 카운트다운, 취소선 가격, 별점·후기, 수익 인증, "요청이 많아 이번만" 식 가짜 희소성. 숫자는 getPortfolioStats(total·live·client)와 pricing.ts 에서만. 업종 수는 데이터 필드가 없어 '클라이언트 프로젝트 N개'로 대체. 견적서 3장 일러스트는 "(예시)" 캡션 필수.
-- 히어로 = 3D 클레이 개발자 마스코트(public/lp/go/hero-dev.webp, preload) + 주변에 떠다니는 실화면 카드(CSS background 크롭): 노트북=dvia cover, 폰=knife cover(500% / 71.25% 44.4%), setflow cover 첫 폰(424.4% / 13.9% 50%). cover 이미지를 다시 캡처하면 이 크롭 좌표가 깨지니 같이 확인.
-- 사례 카드는 page.tsx CASES(slug·이미지·전/후 문구) — 전/후는 portfolio detail.problem/solution 요약. status !== live 면 자동으로 빠짐. 보령 금지.
-- 리드: go-quiz.tsx(useQuoteQuiz 공유 컴포넌트) → submitGoInquiry → quoteInquiry(form "lp-go", header "[광고 LP · 상세페이지형]"). FORM_LABELS 로 Discord 제목 "[광고 LP · 상세페이지형] 새 문의", Lead content_name "lp-go". 동의 고지는 dev-quiz.tsx ConsentNotice 재사용, FAQ 는 app/lp/dev/faqs.ts 공유(1번 답의 '위 체크리스트' 문장만 /lp/go 에서 치환).
-- 스타일은 app/lp/go/go.css(page 에서 import, 전부 .go- 접두사). 함정: `.go p {margin:0}` 같은 리셋은 컴포넌트 클래스보다 특이도가 높아 margin-top 이 다 죽었음 → 리셋은 `:where()` 로. 또 CSS `translate` 개별 속성이 transform 과 함께 있을 때 빌드 결과에서 안 먹어 노트북이 밀렸음 → transform 하나로 합침.
-- 하단 바는 #quiz 가 화면 30% 위로 들어오면 숨김(제출 버튼 가림 방지). 탭 활성은 스크롤 위치(섹션 top ≤ 40% vh) 기준.
+## v3 = 레퍼런스 카피 탈피 (2026-11-12, 오너: "내가 준 거랑 너무 똑같이 만들면 안 돼. 바텀이랑 구조가 아예 똑같으면 카피한 줄 아니까")
+- 레퍼런스(vibisolution.com/product/6, 스크린샷 C:\Temp\vibi\m_*.png)의 **모양을 다시 들여오지 말 것**: 480px 가운데 다크 컬럼, 라임+핫핑크, 하단 고정 바(왼쪽 작은 글씨+오른쪽 핑크 pill), 히어로 아래 sticky 탭(소개/작업물/FAQ), 체크 배지 숫자 카드 세로 스택, "+" 로 쌓는 제공물, 01/02/03 카드, 히어로 위 체크 칩 3개, "아직도…라면/더 늦기 전에" 카피 → 전부 v3 에서 제거, 재추가 금지.
+- 가져가는 건 '에너지'만: 3D 클레이 그래픽, 모션, 긴장 장면(견적서 3장·읽지 않은 1 채팅), 퀴즈.
+- 구조: 풀폭 반응형(.go-wrap max 1200) + 데스크톱 5fr/7fr 비대칭 2열(왼쪽 챕터 헤드 sticky). 히어로 split(왼 헤드라인 / 오른 마스코트+원형 디스크+브라우저 창·폰 실화면). 챕터 = data-chapter="01 문제|02 증거|03 약속|04 견적|05 질문" — 상단 바가 이 속성을 읽어 현재 챕터를 표시. 'Chapter 01' 영문 라벨은 오너가 명시 요청한 것이라 홈의 'eyebrow 금지' 규칙의 예외.
+- 02 증거 = 원장(ledger) 숫자 띠 1줄(getPortfolioStats total/live/client + 재하청 0건) + 실화면 벤토(CASES, 12열 7/5/5/4/4/4). 03 약속 = "흔한 외주 진행 vs PLUCK" 비교표(모바일은 CSS 로 행마다 2칸 카드로 재배치, ::before 라벨) + 기획안 초안 문서 미리보기(섹션 순차 슬라이드, '(예시)'). 04 견적 = 참고 가격표 + 퀴즈(흰 카드 그대로). 05 = 선 구분 FAQ.
+- 색/타입: --navy #0a1024 / --paper #f4f3ee / --blue #3558e8(강조 하나만, 네이비 위 글자는 --blue-soft #8ca0ff). 헤드라인은 page.tsx 의 next/font Noto_Serif_KR(900, preload:false, --font-go-serif). **한글에 Geist Mono 를 쓰면 자간이 벌어져 이상함** → 모노는 숫자·영문(Chapter 01, 01/05)에만.
+- 3D 이미지는 재생성하지 않고 CSS 로 블루 톤: .go-tint = grayscale(1) sepia(1) hue-rotate(185deg) saturate(3.4). 마스코트는 saturate(2.2) brightness(1.05). 부분 톤(grayscale 0.55 등)은 얼굴이 초록·청록으로 떠서 버림 — 완전 듀오톤이어야 '블루 클레이'로 보임.
+- CTA 장치: go-chrome.tsx = 상단 바 2px 스크롤 진행선 + 현재 챕터, 오른쪽 아래 떠 있는 "견적 계산 n/5" 칩(링 진행). 칩 숫자는 GoQuiz 가 step 바뀔 때 window 이벤트 "go:quiz" {answered, done} 로 보냄. #quiz 가 화면에 들어오면 칩 숨김(제출 버튼 가림 방지). #quiz 는 이제 퀴즈 래퍼(.go-quiz-wrap) id.
+- 함정: 카운트업([data-count])은 한 번만 — inView 재진입(풀페이지 스크린샷의 뷰포트 리사이즈 포함) 때 0부터 다시 세서 캡처에 20/7/6 같은 중간값이 찍혔음. go-motion.tsx 에서 done 플래그로 막음.
+- 정직성 규칙 유지: 가짜 타이머·희소성·후기·수익 문구 금지, 견적서/채팅/기획안 미리보기에 '(예시)'. 비교표 왼쪽 열은 '흔한 외주 진행'(특정 업체 주장 아님, 캡션에 '업체마다 다르지만').
+- 리드 경로는 그대로: go-quiz.tsx → submitGoInquiry → form "lp-go", Discord 제목 "[광고 LP · 상세페이지형]". noindex.
 
-## v2 그래픽·모션·긴장감 (2026-11-12, 오너: "모션이 아예 없네, 긴장감도 없고, 그래픽 이미지도 없고")
-- 3D 그래픽(public/lp/go/*.webp: hero-dev, icon-quotes/bell/check/calendar/code/magnifier/rocket/handshake/chat, glow-blob/orb)은 로컬 ComfyUI 무료 생성. **이 PC엔 이미지 체크포인트가 없고 Wan 2.2 영상 모델만 있음** → wan2.2_ti2v_5B + umt5 + wan2.2_vae 로 length=1(한 프레임) T2I, 768px, 30스텝 uni_pc cfg5 shift8, 장당 ~10초. 프롬프트·스크립트는 레포 밖 C:\Temp\lpgo\gen\tools(gen.py, cut.py). 배경 제거는 rembg isnet-general-use(기본 python=아나콘다 pip 가 깨져 있어 Python310 + pip --target C:\Temp\lpgo\gen\pylib). glow 는 검은 배경 → 밝기 알파. 노트북 프롬프트에 'no logo' 안 넣으면 사과 로고가 박혀 나옴.
-- 모션은 CSS(transform/opacity) + go-motion.tsx(motion 패키지의 inView/animate: [data-reveal] → .is-in, [data-count] 카운트업, [data-depth] 히어로 패럴랙스). 숨김 시작 상태는 `@media (prefers-reduced-motion: no-preference) and (scripting: enabled)` 안에서만 → JS 없거나 모션 감소면 전부 정적·보임. **html 에 클래스 붙이는 인라인 스크립트 게이트는 하이드레이션 불일치 에러가 나서 버림.** 히어로 입장 모션(.go-in)은 게이트 없이 로드 시 재생.
-- 긴장 장면: 경고 칩 → 견적서 3장 날아와 쌓임·가격 순서대로 번쩍·빨간 ? 펄스(+ '(예시)' 캡션 유지) → 읽지 않은 '1' 이 남는 월/수/금 채팅(이름 없음, '(예시)') → 어두운→밝은 전환 '그래서 PLUCK은' 3약속 순서대로 점등 → '+' 스택 드롭 → 검은 풀블리드 '말 말고 결과물로' + 라이브 프로젝트명 마키(보령 제외라 마키 개수는 stats.live 보다 1 적음, 정상). 가짜 타이머·희소성·후기·수익 문구는 여전히 금지.
+## 3D 그래픽 생성 레시피 (v2, 2026-11-12)
+- public/lp/go/*.webp(hero-dev, icon-*, glow-*)는 로컬 ComfyUI 무료 생성. **이 PC엔 이미지 체크포인트가 없고 Wan 2.2 영상 모델만 있음** → wan2.2_ti2v_5B + umt5 + wan2.2_vae 로 length=1(한 프레임) T2I, 768px, 30스텝 uni_pc cfg5 shift8. 스크립트 C:\Temp\lpgo\gen\tools(gen.py, cut.py). 배경 제거 rembg isnet-general-use(Python310 + C:\Temp\lpgo\gen\pylib). 원본 색은 라임/핑크라 v3 는 CSS 로 블루 톤.
+- 히어로 실화면 크롭: 폰=knife cover(500% / 71.25% 44.4%), setflow cover(424.4% / 13.9% 50%), 창=dvia cover. cover 이미지를 다시 캡처하면 좌표 확인.
+- 모션 게이트: 숨김 시작 상태는 `@media (prefers-reduced-motion: no-preference) and (scripting: enabled)` 안에서만. html 클래스 인라인 스크립트 게이트는 하이드레이션 불일치로 버림. 리셋은 `:where()` 로(특이도 0).

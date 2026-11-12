@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { submitGoInquiry } from "@/app/contact/actions";
 import { GO_FORM_SOURCE } from "@/lib/crm/constants";
@@ -15,12 +15,22 @@ import {
 } from "@/components/quote/quote-quiz";
 import { ConsentNotice } from "../dev/dev-quiz";
 import { REPLY_PROMISE } from "../dev/config";
+import { GO_QUIZ_EVENT, type GoQuizDetail } from "./go-chrome";
 
 /** /lp/go quiz: questions → result → name/contact form (form tag "lp-go"). */
 export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: string }) {
   const quiz = useQuoteQuiz(1);
   const rootRef = useRef<HTMLDivElement>(null);
   useStepFocus(quiz.step, rootRef);
+
+  // Feed the floating "견적 계산 n/5" chip in go-chrome.tsx.
+  useEffect(() => {
+    const detail: GoQuizDetail = {
+      answered: Math.min(QUIZ_STEP_COUNT, Math.max(0, quiz.step - 1)),
+      done: quiz.step > QUIZ_STEP_COUNT,
+    };
+    window.dispatchEvent(new CustomEvent(GO_QUIZ_EVENT, { detail }));
+  }, [quiz.step]);
 
   return (
     <div className="qz go-quiz" ref={rootRef}>
