@@ -307,3 +307,14 @@
 - app/lp/dev/config.ts: KAKAO_URL(빈 값이면 카카오 버튼 없음 — 채널이 없어서 지어내지 않음), REPLY_PROMISE("영업일 기준 하루 안에 답장", 문장 끝이 '답장'이어야 "…답장드립니다"로 자연스러움), PLAN_PROMISE(기획안 소요 "상담 후 영업일 기준 2~3일" — 오너 확인 전 가정값).
 - S6·FAQ 의 신뢰 문구는 lib/quote/trust.ts(오너 확인 전). '1인이면 바쁠 때' 답 = 동시 진행 수 제한 + 계약 전 일정 확정(오너 지시 문구). 가격표 캡션 'VAT 별도'는 오너 지시.
 - 푸터 사업자 정보는 사이트 푸터와 동일(상호·메일·GitHub) + 개인정보처리방침. 대표자·사업자번호·주소는 app/privacy COMPANY 가 비어 있어 미표시 — 채워지면 LP 푸터에도 추가할 것.
+
+# 광고 랜딩 /lp/go (상세페이지형): 480px 다크 컬럼, 네온 라임·핑크, 실숫자 증거 카드, source.form=lp-go
+
+## 구조와 WHY (2026-11-12, 오너: vibisolution.com/product/6 보고 "이런 느낌")
+- 레퍼런스(한국 롱스크롤 상세페이지형 판매 퍼널)의 '느낌'만 가져옴: 데스크톱에서도 가운데 480px 모바일 컬럼 + 어두운 바깥, 그라데이션 카드, 라임 #d7ff3a 강조 + 핑크 #ff2e6a CTA, 큰 숫자 증거 카드(체크 배지), 히어로 위 체크 칩 3개, 히어로 아래 sticky 탭(소개/작업물/FAQ), "아직도…라면 / 더 늦기 전에" 스토리, "+" 로 쌓는 무료 제공물, 01/02/03 카드, 전→후 화살표 사례 카드, "그런데, 왜 1인 스튜디오인가요?", 하단 고정 오퍼 바.
+- **일부러 뺀 것(재추가 금지)**: 가짜 카운트다운, 취소선 가격, 별점·후기, 수익 인증, "요청이 많아 이번만" 식 가짜 희소성. 숫자는 getPortfolioStats(total·live·client)와 pricing.ts 에서만. 업종 수는 데이터 필드가 없어 '클라이언트 프로젝트 N개'로 대체. 견적서 3장 일러스트는 "(예시)" 캡션 필수.
+- 히어로 비주얼은 실화면 크롭 합성(CSS background): 노트북=dvia cover, 폰=knife cover(500% / 71.25% 44.4%), setflow cover 첫 폰(424.4% / 13.9% 50%). cover 이미지를 다시 캡처하면 이 크롭 좌표가 깨지니 같이 확인.
+- 사례 카드는 page.tsx CASES(slug·이미지·전/후 문구) — 전/후는 portfolio detail.problem/solution 요약. status !== live 면 자동으로 빠짐. 보령 금지.
+- 리드: go-quiz.tsx(useQuoteQuiz 공유 컴포넌트) → submitGoInquiry → quoteInquiry(form "lp-go", header "[광고 LP · 상세페이지형]"). FORM_LABELS 로 Discord 제목 "[광고 LP · 상세페이지형] 새 문의", Lead content_name "lp-go". 동의 고지는 dev-quiz.tsx ConsentNotice 재사용, FAQ 는 app/lp/dev/faqs.ts 공유(1번 답의 '위 체크리스트' 문장만 /lp/go 에서 치환).
+- 스타일은 app/lp/go/go.css(page 에서 import, 전부 .go- 접두사). 함정: `.go p {margin:0}` 같은 리셋은 컴포넌트 클래스보다 특이도가 높아 margin-top 이 다 죽었음 → 리셋은 `:where()` 로. 또 CSS `translate` 개별 속성이 transform 과 함께 있을 때 빌드 결과에서 안 먹어 노트북이 밀렸음 → transform 하나로 합침.
+- 하단 바는 #quiz 가 화면 30% 위로 들어오면 숨김(제출 버튼 가림 방지). 탭 활성은 스크롤 위치(섹션 top ≤ 40% vh) 기준.

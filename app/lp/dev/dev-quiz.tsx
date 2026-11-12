@@ -138,7 +138,7 @@ export function QuizSection({
 }
 
 /** 개인정보보호법 15조 고지: 목적·항목·보유기간·거부권. The checkbox itself is never pre-checked. */
-function ConsentNotice() {
+export function ConsentNotice() {
   return (
     <div className="ld-consent">
       <p className="ld-consent-title">개인정보 수집·이용 안내</p>

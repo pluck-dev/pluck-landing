@@ -136,6 +136,8 @@ export const START_FORM_SOURCE = "lp-start";
 export const QUOTE_FORM_SOURCE = "lp-quote";
 /** Marks inquiries from the main paid-ad landing page /lp/dev (+ source.variant = ?v=). */
 export const DEV_FORM_SOURCE = "lp-dev";
+/** Marks inquiries from the 상세페이지형 ad landing page /lp/go. */
+export const GO_FORM_SOURCE = "lp-go";
 /** /lp/dev headline variants (?v=). The first one is the default. */
 export const DEV_VARIANTS = ["price", "work", "solo"] as const;
 export type DevVariant = (typeof DEV_VARIANTS)[number];
@@ -148,6 +150,7 @@ export const FORM_LABELS: Record<string, string> = {
   [START_FORM_SOURCE]: "이벤트 페이지",
   [QUOTE_FORM_SOURCE]: "견적 계산기",
   [DEV_FORM_SOURCE]: "광고 LP",
+  [GO_FORM_SOURCE]: "광고 LP · 상세페이지형",
 };
 
 /** "광고 LP · v=price" for /lp/dev, the plain label for other forms, null for /contact. */

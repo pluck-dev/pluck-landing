@@ -23,6 +23,7 @@ import {
   projectTypeLabels,
   SOURCE_COOKIE,
   DEV_FORM_SOURCE,
+  GO_FORM_SOURCE,
   devVariantOf,
   formLabel,
   QUOTE_FORM_SOURCE,
@@ -318,6 +319,14 @@ export async function submitDevInquiry(
 ): Promise<QuoteState> {
   const variant = devVariantOf(formData.get("variant"));
   return quoteInquiry(formData, DEV_FORM_SOURCE, { variant }, `[광고 LP v=${variant}]`);
+}
+
+/** 상세페이지형 ad landing page /lp/go: same calculator answers, tagged source.form = "lp-go". */
+export async function submitGoInquiry(
+  _prev: QuoteState,
+  formData: FormData,
+): Promise<QuoteState> {
+  return quoteInquiry(formData, GO_FORM_SOURCE, undefined, "[광고 LP · 상세페이지형]");
 }
 
 async function quoteInquiry(
