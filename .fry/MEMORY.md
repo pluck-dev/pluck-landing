@@ -313,8 +313,13 @@
 ## 구조와 WHY (2026-11-12, 오너: vibisolution.com/product/6 보고 "이런 느낌")
 - 레퍼런스(한국 롱스크롤 상세페이지형 판매 퍼널)의 '느낌'만 가져옴: 데스크톱에서도 가운데 480px 모바일 컬럼 + 어두운 바깥, 그라데이션 카드, 라임 #d7ff3a 강조 + 핑크 #ff2e6a CTA, 큰 숫자 증거 카드(체크 배지), 히어로 위 체크 칩 3개, 히어로 아래 sticky 탭(소개/작업물/FAQ), "아직도…라면 / 더 늦기 전에" 스토리, "+" 로 쌓는 무료 제공물, 01/02/03 카드, 전→후 화살표 사례 카드, "그런데, 왜 1인 스튜디오인가요?", 하단 고정 오퍼 바.
 - **일부러 뺀 것(재추가 금지)**: 가짜 카운트다운, 취소선 가격, 별점·후기, 수익 인증, "요청이 많아 이번만" 식 가짜 희소성. 숫자는 getPortfolioStats(total·live·client)와 pricing.ts 에서만. 업종 수는 데이터 필드가 없어 '클라이언트 프로젝트 N개'로 대체. 견적서 3장 일러스트는 "(예시)" 캡션 필수.
-- 히어로 비주얼은 실화면 크롭 합성(CSS background): 노트북=dvia cover, 폰=knife cover(500% / 71.25% 44.4%), setflow cover 첫 폰(424.4% / 13.9% 50%). cover 이미지를 다시 캡처하면 이 크롭 좌표가 깨지니 같이 확인.
+- 히어로 = 3D 클레이 개발자 마스코트(public/lp/go/hero-dev.webp, preload) + 주변에 떠다니는 실화면 카드(CSS background 크롭): 노트북=dvia cover, 폰=knife cover(500% / 71.25% 44.4%), setflow cover 첫 폰(424.4% / 13.9% 50%). cover 이미지를 다시 캡처하면 이 크롭 좌표가 깨지니 같이 확인.
 - 사례 카드는 page.tsx CASES(slug·이미지·전/후 문구) — 전/후는 portfolio detail.problem/solution 요약. status !== live 면 자동으로 빠짐. 보령 금지.
 - 리드: go-quiz.tsx(useQuoteQuiz 공유 컴포넌트) → submitGoInquiry → quoteInquiry(form "lp-go", header "[광고 LP · 상세페이지형]"). FORM_LABELS 로 Discord 제목 "[광고 LP · 상세페이지형] 새 문의", Lead content_name "lp-go". 동의 고지는 dev-quiz.tsx ConsentNotice 재사용, FAQ 는 app/lp/dev/faqs.ts 공유(1번 답의 '위 체크리스트' 문장만 /lp/go 에서 치환).
 - 스타일은 app/lp/go/go.css(page 에서 import, 전부 .go- 접두사). 함정: `.go p {margin:0}` 같은 리셋은 컴포넌트 클래스보다 특이도가 높아 margin-top 이 다 죽었음 → 리셋은 `:where()` 로. 또 CSS `translate` 개별 속성이 transform 과 함께 있을 때 빌드 결과에서 안 먹어 노트북이 밀렸음 → transform 하나로 합침.
 - 하단 바는 #quiz 가 화면 30% 위로 들어오면 숨김(제출 버튼 가림 방지). 탭 활성은 스크롤 위치(섹션 top ≤ 40% vh) 기준.
+
+## v2 그래픽·모션·긴장감 (2026-11-12, 오너: "모션이 아예 없네, 긴장감도 없고, 그래픽 이미지도 없고")
+- 3D 그래픽(public/lp/go/*.webp: hero-dev, icon-quotes/bell/check/calendar/code/magnifier/rocket/handshake/chat, glow-blob/orb)은 로컬 ComfyUI 무료 생성. **이 PC엔 이미지 체크포인트가 없고 Wan 2.2 영상 모델만 있음** → wan2.2_ti2v_5B + umt5 + wan2.2_vae 로 length=1(한 프레임) T2I, 768px, 30스텝 uni_pc cfg5 shift8, 장당 ~10초. 프롬프트·스크립트는 레포 밖 C:\Temp\lpgo\gen\tools(gen.py, cut.py). 배경 제거는 rembg isnet-general-use(기본 python=아나콘다 pip 가 깨져 있어 Python310 + pip --target C:\Temp\lpgo\gen\pylib). glow 는 검은 배경 → 밝기 알파. 노트북 프롬프트에 'no logo' 안 넣으면 사과 로고가 박혀 나옴.
+- 모션은 CSS(transform/opacity) + go-motion.tsx(motion 패키지의 inView/animate: [data-reveal] → .is-in, [data-count] 카운트업, [data-depth] 히어로 패럴랙스). 숨김 시작 상태는 `@media (prefers-reduced-motion: no-preference) and (scripting: enabled)` 안에서만 → JS 없거나 모션 감소면 전부 정적·보임. **html 에 클래스 붙이는 인라인 스크립트 게이트는 하이드레이션 불일치 에러가 나서 버림.** 히어로 입장 모션(.go-in)은 게이트 없이 로드 시 재생.
+- 긴장 장면: 경고 칩 → 견적서 3장 날아와 쌓임·가격 순서대로 번쩍·빨간 ? 펄스(+ '(예시)' 캡션 유지) → 읽지 않은 '1' 이 남는 월/수/금 채팅(이름 없음, '(예시)') → 어두운→밝은 전환 '그래서 PLUCK은' 3약속 순서대로 점등 → '+' 스택 드롭 → 검은 풀블리드 '말 말고 결과물로' + 라이브 프로젝트명 마키(보령 제외라 마키 개수는 stats.live 보다 1 적음, 정상). 가짜 타이머·희소성·후기·수익 문구는 여전히 금지.

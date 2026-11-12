@@ -69,7 +69,7 @@ export function GoBar() {
         <strong>상담·견적 무료</strong>
         <span>기획안 초안까지</span>
       </p>
-      <a className="go-bar-cta" href="#quiz" tabIndex={hidden ? -1 : undefined}>
+      <a className="go-bar-cta go-shine" href="#quiz" tabIndex={hidden ? -1 : undefined}>
         30초 견적 <ArrowRight size={18} aria-hidden="true" />
       </a>
     </div>
