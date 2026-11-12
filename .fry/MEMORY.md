@@ -292,3 +292,18 @@
 - 신뢰 문구(lib/quote/trust.ts: 개발자 직접 답장·매주 진행 화면 공유·소스코드 전부 이전)는 코디네이터 제안 문구 그대로 → **오너 확인 전**. 못 지키면 지울 것.
 - 함정: .inquiry-form input 셀렉터가 강해서 퀴즈 폼 입력 배경은 !important 로 덮음. JSX 텍스트 '\u00a0' 이스케이프는 안 먹으니 실제 NBSP 문자나 {"..."} 사용.
 - 크리에이티브 v4(Q/G/S/E + Q 캐러셀)는 C:\Temp\meta\v4.
+
+# 광고 랜딩 /lp/dev (메인 광고 LP): ?v= 헤드라인 변형, 퀴즈 공유 컴포넌트, source.form=lp-dev+variant, 오너 설정 config.ts
+
+## 구조와 WHY (2026-11-12, 근거 = C:\Temp\lpresearch\report.md 청사진 S0–S11)
+- 리서치 결론(장기 게재 경쟁 LP 공통): 광고별 전용 LP, 가격 공개, 첫 화면 안 퀴즈, 손에 쥐는 무료 결과물, 응답 시간 약속, 모바일 하단 고정 바 2버튼, 견적서 읽는 법 교육. /lp/start(포트폴리오형)·/lp/quote(계산기)는 유지하고 /lp/dev 를 메인 광고 LP 로 새로 만듦. nav·sitemap 제외, noindex.
+- 헤드라인은 광고 문구와 맞추려고 `?v=price|work|solo`(기본 price, 그 외 값은 price). searchParams 를 읽어 /lp/dev 는 동적 렌더(ƒ) — 정적+클라이언트 교체는 헤드라인 깜빡임이 생겨서 버림.
+- 퀴즈는 components/quote/quote-quiz.tsx 하나(useQuoteQuiz·QuizQuestions·KindOptions·QuoteResultCard·QuoteLeadForm). /lp/quote 의 quote-funnel 도 이걸 쓴다 → 퀴즈 UI 를 고치면 두 LP 모두 바뀜. /lp/dev 는 DevQuizProvider(context) 하나로 히어로 1번 질문과 S10 퀴즈가 상태를 공유: 히어로에서 유형을 고르면 pickKind → 2번 질문 + #quiz 로 스크롤. /lp/dev 퀴즈는 intro 없이 step 1 부터(firstStep=1, 1번에서 뒤로가기 비활성).
+- S3 는 status live + url + coverKind screenshot + 보령 제외(오너 규칙)만 자동 선별(현재 19개, 정푸드는 brand 커버라 빠짐). 탭 분류는 disciplines 키워드 정규식(page.tsx TYPE_RULES) — 새 프로젝트의 disciplines 영문 태그가 규칙에 안 걸리면 '웹사이트'로 떨어지니 확인. 데스크톱은 9개 + 더 보기, 모바일은 가로 스와이프 전부.
+- 히어로 증거 칩은 getPortfolioStats(projects) 그대로(보령·정푸드 포함 live 21) — 홈과 같은 숫자를 쓰려고. S3 개수(19)와 다른 게 정상.
+- 리드: submitDevInquiry → 공용 quoteInquiry(서버가 답변으로 다시 계산) → saveInquiry(form "lp-dev", sourceExtra {variant}). inquiries.source.variant 추가(jsonb 라 마이그레이션 없음). Discord 제목·관리자 표기는 constants.ts formLabel() = "광고 LP · v=price". Lead content_name "lp-dev". message 첫 줄 "[광고 LP v=…]".
+
+## 오너 설정 / 확인 대기
+- app/lp/dev/config.ts: KAKAO_URL(빈 값이면 카카오 버튼 없음 — 채널이 없어서 지어내지 않음), REPLY_PROMISE("영업일 기준 하루 안에 답장", 문장 끝이 '답장'이어야 "…답장드립니다"로 자연스러움), PLAN_PROMISE(기획안 소요 "상담 후 영업일 기준 2~3일" — 오너 확인 전 가정값).
+- S6·FAQ 의 신뢰 문구는 lib/quote/trust.ts(오너 확인 전). '1인이면 바쁠 때' 답 = 동시 진행 수 제한 + 계약 전 일정 확정(오너 지시 문구). 가격표 캡션 'VAT 별도'는 오너 지시.
+- 푸터 사업자 정보는 사이트 푸터와 동일(상호·메일·GitHub) + 개인정보처리방침. 대표자·사업자번호·주소는 app/privacy COMPANY 가 비어 있어 미표시 — 채워지면 LP 푸터에도 추가할 것.

@@ -6,7 +6,7 @@ import {
   formatBytes,
   inquiryStatusLabels,
   projectTypeLabels,
-  FORM_LABELS,
+  formLabel,
   timelineLabels,
 } from "@/lib/crm/constants";
 import { matches } from "@/lib/crm/derive";
@@ -287,7 +287,7 @@ export function InquiryDetailView({ id }: { id: string }) {
                 <dt>접수 페이지</dt>
                 <dd>
                   {source.page || "-"}
-                  {source.form && FORM_LABELS[source.form] ? ` (광고 ${FORM_LABELS[source.form]})` : ""}
+                  {adFormNote(source)}
                 </dd>
               </div>
             </dl>
@@ -370,4 +370,11 @@ export function InquiryDetailView({ id }: { id: string }) {
       </div>
     </>
   );
+}
+
+/** " (광고 이벤트 페이지)" / " (광고 LP · v=price)" next to the page path; empty for /contact. */
+function adFormNote(source: Parameters<typeof formLabel>[0]) {
+  const label = formLabel(source);
+  if (!label) return "";
+  return ` (${label.startsWith("광고") ? label : `광고 ${label}`})`;
 }

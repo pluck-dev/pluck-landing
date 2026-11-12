@@ -22,7 +22,9 @@ import {
   MAX_REFERENCE_URLS,
   projectTypeLabels,
   SOURCE_COOKIE,
-  FORM_LABELS,
+  DEV_FORM_SOURCE,
+  devVariantOf,
+  formLabel,
   QUOTE_FORM_SOURCE,
   START_FORM_SOURCE,
   START_WANTS,
@@ -303,6 +305,27 @@ export async function submitQuoteInquiry(
   _prev: QuoteState,
   formData: FormData,
 ): Promise<QuoteState> {
+  return quoteInquiry(formData, QUOTE_FORM_SOURCE);
+}
+
+/**
+ * Main paid-ad landing page /lp/dev: same calculator answers + name/contact/설명, tagged
+ * source.form = "lp-dev" and source.variant = the headline variant (?v=price|work|solo).
+ */
+export async function submitDevInquiry(
+  _prev: QuoteState,
+  formData: FormData,
+): Promise<QuoteState> {
+  const variant = devVariantOf(formData.get("variant"));
+  return quoteInquiry(formData, DEV_FORM_SOURCE, { variant }, `[광고 LP v=${variant}]`);
+}
+
+async function quoteInquiry(
+  formData: FormData,
+  form: string,
+  sourceExtra?: Partial<InquirySource>,
+  header = "[개발비 계산기 답변]",
+): Promise<QuoteState> {
   if (String(formData.get("website") ?? "").trim()) {
     return { status: "success" };
   }
@@ -353,7 +376,7 @@ export async function submitQuoteInquiry(
   };
   const result = estimate(answers);
   const message = [
-    "[개발비 계산기 답변]",
+    header,
     ...describeAnswers(answers),
     `계산기 참고 범위: ${formatPrice(result.price[0])} ~ ${formatPrice(result.price[1])}, ${result.weeks[0]}~${result.weeks[1]}주`,
     data.memo ? `\n메모: ${data.memo}` : "",
@@ -376,7 +399,8 @@ export async function submitQuoteInquiry(
       reference_urls: [],
       attachments: [],
     },
-    QUOTE_FORM_SOURCE,
+    form,
+    sourceExtra,
   );
 }
 
@@ -410,6 +434,7 @@ async function saveInquiry(
   formData: FormData,
   data: InquiryInsert,
   form?: string,
+  sourceExtra?: Partial<InquirySource>,
 ): Promise<{ status: "success"; lead: true } | { status: "error"; message: string }> {
   const requestHeaders = await headers();
   const ipHash = hashIp(clientIp(requestHeaders));
@@ -420,6 +445,7 @@ async function saveInquiry(
 
   const source = await readSource(formData);
   if (form) source.form = form;
+  if (sourceExtra) Object.assign(source, sourceExtra);
 
   const { data: inserted, error } = await supabase
     .from("inquiries")
@@ -448,7 +474,12 @@ async function saveInquiry(
       entity: "inquiry",
       entity_id: inserted.id,
       action: "created",
-      detail: { project_type: data.project_type, attachments: data.attachments.length, ...(form ? { form } : {}) },
+      detail: {
+        project_type: data.project_type,
+        attachments: data.attachments.length,
+        ...(form ? { form } : {}),
+        ...(source.variant ? { variant: source.variant } : {}),
+      },
     });
     await notifyDiscord(inserted.id, data, source);
   });
@@ -596,7 +627,7 @@ async function notifyDiscord(
         allowed_mentions: { parse: [] },
         embeds: [
           {
-            title: `${source.form && FORM_LABELS[source.form] ? `[${FORM_LABELS[source.form]}] ` : ""}새 문의 — ${data.company || data.name}`,
+            title: `${formLabel(source) ? `[${formLabel(source)}] ` : ""}새 문의 — ${data.company || data.name}`,
             url: `${SITE_URL}/admin/inquiries/${id}`,
             color: 0x335aeb,
             fields: [

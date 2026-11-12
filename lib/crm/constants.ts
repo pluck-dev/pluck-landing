@@ -134,12 +134,28 @@ export type StartWant = keyof typeof START_WANTS;
 export const START_FORM_SOURCE = "lp-start";
 /** Marks inquiries from the 개발비 계산기 landing page. */
 export const QUOTE_FORM_SOURCE = "lp-quote";
+/** Marks inquiries from the main paid-ad landing page /lp/dev (+ source.variant = ?v=). */
+export const DEV_FORM_SOURCE = "lp-dev";
+/** /lp/dev headline variants (?v=). The first one is the default. */
+export const DEV_VARIANTS = ["price", "work", "solo"] as const;
+export type DevVariant = (typeof DEV_VARIANTS)[number];
+export function devVariantOf(value: unknown): DevVariant {
+  return DEV_VARIANTS.find((variant) => variant === value) ?? DEV_VARIANTS[0];
+}
 
 /** Admin/Discord label per public form tag (inquiries.source.form). */
 export const FORM_LABELS: Record<string, string> = {
   [START_FORM_SOURCE]: "이벤트 페이지",
   [QUOTE_FORM_SOURCE]: "견적 계산기",
+  [DEV_FORM_SOURCE]: "광고 LP",
 };
+
+/** "광고 LP · v=price" for /lp/dev, the plain label for other forms, null for /contact. */
+export function formLabel(source: { form?: string; variant?: string }) {
+  const label = source.form ? FORM_LABELS[source.form] : undefined;
+  if (!label) return null;
+  return source.variant ? `${label} · v=${source.variant}` : label;
+}
 
 const won = new Intl.NumberFormat("ko-KR");
 export function formatWon(value: number | null | undefined) {
