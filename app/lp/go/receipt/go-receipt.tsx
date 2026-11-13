@@ -293,7 +293,7 @@ export function GoReceipt({ answers, onRestart }: { answers: QuoteAnswers; onRes
               ),
             )}
             <p className="rc-row rc-note" data-line="note">
-              참고 범위예요. 상담하고 범위를 정하면 확정돼요. VAT 별도.
+              참고 범위 · 상담 후 확정 · VAT 별도
             </p>
           </div>
           <canvas ref={inkCanvas} className="rc-ink" aria-hidden="true" />
@@ -305,7 +305,7 @@ export function GoReceipt({ answers, onRestart }: { answers: QuoteAnswers; onRes
         </button>
       )}
       {result.tightTimeline && (
-        <p className="rc-warn">원하시는 일정보다 길게 나왔어요. 꼭 필요한 기능만 먼저 여는 1차 오픈으로 나눌 수 있어요.</p>
+        <p className="rc-warn">일정보다 길어요. 1차 오픈으로 나눌 수 있어요.</p>
       )}
       <button type="button" className="qz-restart rc-restart" onClick={onRestart}>
         <RotateCcw size={16} aria-hidden="true" /> 다시 계산하기

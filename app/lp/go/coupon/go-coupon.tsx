@@ -323,24 +323,23 @@ export function GoCoupon() {
 
   const title = (
     <h2 id="go-coupon-title" className="cpn-title">
-      광고 보고 오셨으면,
+      {COUPON.percent}% 할인권,
       <br />
-      이거 하나 뜯어 가세요
+      뜯어 가세요
     </h2>
   );
 
   const lead = (
     <p className="cpn-lead">
-      첫 계약 금액에서 {COUPON.percent}% 빼 드리는 할인권이 들어 있어요. 추첨이 아니라 여시는 분 모두 똑같이{" "}
-      {COUPON.percent}%예요.
+      추첨 아니에요. 모두 똑같이 {COUPON.percent}%.
     </p>
   );
 
   const after = (
     <div className="cpn-after" role="status">
-      <p>받았어요. 아래에서 견적 계산하고 신청하시면 코드가 같이 접수돼요. 따로 말씀 안 하셔도 돼요.</p>
-      <a className="button button-ink go-btn-sm" href="#quiz">
-        견적 계산하고 신청하기 <ArrowDown size={16} aria-hidden="true" />
+      <p>신청하면 자동 적용돼요.</p>
+      <a className="button button-primary go-btn-sm" href="#quiz">
+        견적 받기 <ArrowDown size={16} aria-hidden="true" />
       </a>
     </div>
   );
@@ -378,11 +377,11 @@ export function GoCoupon() {
               after
             ) : (
               <div className="cpn-actions" aria-hidden={phase === "opening" ? true : undefined}>
-                <p className="cpn-hint">파란 띠를 잡고 오른쪽으로 당기거나, 봉투를 세 번 톡톡 두드려 보세요.</p>
+                <p className="cpn-hint">띠를 당기거나 세 번 톡톡</p>
                 <div className="cpn-buttons">
                   <button
                     type="button"
-                    className="button button-ink go-btn-sm"
+                    className="button button-ghost go-btn-sm"
                     onClick={() => engineRef.current?.auto()}
                     disabled={phase === "opening"}
                   >
@@ -432,11 +431,11 @@ export function GoCoupon() {
                 after
               ) : (
                 <div className="cpn-actions" aria-hidden={phase === "opening" ? true : undefined}>
-                  <p className="cpn-hint">그대로 내리면 열려요. 파란 띠를 오른쪽으로 당기거나 봉투를 톡톡 두드려도 돼요.</p>
+                  <p className="cpn-hint">내리면 열려요</p>
                   <div className="cpn-buttons">
                     <button
                       type="button"
-                      className="button button-ink go-btn-sm"
+                      className="button button-ghost go-btn-sm"
                       onClick={() => engineRef.current?.auto()}
                       disabled={phase === "opening"}
                     >
@@ -544,19 +543,19 @@ function DonePanel({
   return (
     <div className="cpn-panel cpn-done">
       <Title id={heading ? "go-coupon-title" : undefined} className="cpn-title">
-        {face.expired ? "지난번에 받은 할인권이에요" : "할인권 받아 두셨어요"}
+        {face.expired ? "지난 할인권이에요" : "할인권 받아 두셨어요"}
       </Title>
       <div className="cpn-done-card">
         <CouponFace {...face} faceRef={cardRef} className="cp-static" />
       </div>
       <div className="cpn-done-text">
         {face.expired ? (
-          <p>기간이 지나서 이번 신청에는 적용되지 않아요.</p>
+          <p>기간이 지나 적용되지 않아요.</p>
         ) : (
           <>
-            <p>아래에서 견적 계산하고 신청하시면 코드가 같이 접수돼요. 따로 말씀 안 하셔도 돼요.</p>
-            <a className="button button-ink go-btn-sm" href="#quiz">
-              견적 계산하고 신청하기 <ArrowDown size={16} aria-hidden="true" />
+            <p>신청하면 자동 적용돼요.</p>
+            <a className="button button-primary go-btn-sm" href="#quiz">
+              견적 받기 <ArrowDown size={16} aria-hidden="true" />
             </a>
           </>
         )}

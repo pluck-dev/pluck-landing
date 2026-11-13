@@ -18,13 +18,10 @@ export function GoSuccess({ focusRef, email, sheet }: { focusRef: RefObject<HTML
         <h3 ref={focusRef} tabIndex={-1}>
           신청이 접수됐어요
         </h3>
-        <p>
-          {REPLY_PROMISE}드릴게요. 남겨주신 연락처로 몇 가지 더 여쭤보고 기획안 초안이랑 견적, 일정을 정리해서
-          보내드릴게요.
-        </p>
+        <p>{REPLY_PROMISE}드릴게요.</p>
         <div className="ld-thanks-actions">
-          <Link className="button button-ink" href="/#work">
-            포트폴리오 전체 보기 <ArrowRight size={18} aria-hidden="true" />
+          <Link className="button button-primary" href="/#work">
+            작업 더 보기 <ArrowRight size={18} aria-hidden="true" />
           </Link>
           <a className="contact-email" href={`mailto:${email}`}>
             {email}

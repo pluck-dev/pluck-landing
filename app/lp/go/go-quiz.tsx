@@ -46,11 +46,7 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
         <div className="qz-result">
           <GoReceipt answers={quiz.answers} onRestart={quiz.restart} />
           <div className="qz-card qz-lead go-lead" id="apply" onInput={onType}>
-            <h2>이 조건으로 기획안·견적 받기</h2>
-            <p>
-              고르신 답을 보고 기획안 초안이랑 기능별 견적, 일정을 정리해서 보내드려요. 받아 보시고 할지 말지
-              정하시면 돼요.
-            </p>
+            <h2>무료 기획안·견적 받기</h2>
             <p className="go-promise">
               <Check size={16} aria-hidden="true" /> {REPLY_PROMISE}드립니다
             </p>

@@ -173,122 +173,228 @@
   }
 }
 
-/* ---------- 1. Intro ---------- */
-.go-intro {
-  display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-  gap: 40px 64px;
-  align-items: start;
-  padding-block: 72px 40px;
+/* Tiny honesty/legal labels: visible, out of the way. */
+.go-tiny {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-3);
 }
-.go-intro h1 {
-  grid-column: 1 / -1;
-  font-size: clamp(32px, 4.1vw, 60px);
+.go-tiny a {
+  font-weight: 600;
+  color: var(--blue);
+}
+/* One primary CTA style on the whole page: the site's blue button. The header link follows it. */
+.go .header-contact {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* ---------- Device-framed loops (go-video.tsx) ---------- */
+.gv {
+  margin: 0;
+}
+.gv-screen {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+.gv-screen img,
+.gv-screen video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.gv-screen video {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gv-screen[data-playing] video {
+  opacity: 1;
+}
+.gv-phone .gv-screen {
+  aspect-ratio: 360 / 780;
+  border: 7px solid #1d201f;
+  border-radius: 30px;
+  background: #1d201f;
+}
+.gv-phone .gv-screen img {
+  height: 100%;
+  object-fit: cover;
+  border-radius: 23px;
+}
+.gv-phone .gv-screen video {
+  border-radius: 23px;
+}
+.gv-browser .gv-screen {
+  aspect-ratio: 960 / 600;
+  border-radius: 0 0 12px 12px;
+  box-shadow: inset 0 0 0 1px #2025231a;
+}
+.gv-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 30px;
+  padding-inline: 12px;
+  border-radius: 12px 12px 0 0;
+  background: #e6e9e1;
+}
+.gv-url {
+  overflow: hidden;
+  padding: 1px 10px;
+  border-radius: 6px;
+  background: #f7f7f2;
+  font-size: 11.5px;
+  color: var(--text-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gv-toggle {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: #1d201fb3;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.2s;
+}
+.gv-toggle:hover,
+.gv-toggle:focus-visible {
+  opacity: 1;
+}
+
+/* ---------- 1. Hero: one line, two numbers, one button, real loops ---------- */
+.gh {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 24px 56px;
+  align-items: center;
+  padding-block: 64px 48px;
+}
+.gh h1 {
+  font-size: clamp(34px, 4.6vw, 64px);
   font-weight: 700;
-  line-height: 1.24;
+  line-height: 1.18;
   letter-spacing: -0.045em;
   word-break: keep-all;
 }
-.go-intro-copy {
-  padding-top: 6px;
-}
-.go-intro-copy > p {
-  max-width: 30em;
-  font-size: 17px;
-  line-height: 1.8;
+.gh-sub {
+  margin-top: 14px;
+  font-size: 18px;
+  font-weight: 600;
   color: var(--text-2);
 }
-.go-intro-copy > p + p {
-  margin-top: 12px;
-}
-.go-intro-actions {
+.gh-stats {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 34px;
+  gap: 36px;
+  margin: 28px 0 0;
 }
-
-/* ---------- 2. Work stories ---------- */
-.go-work {
-  padding-top: 120px;
-}
-.go-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  gap: 18px 64px;
-  align-items: end;
-}
-.go-head > p {
-  max-width: 30em;
-  font-size: 17px;
-  line-height: 1.8;
-  color: var(--text-2);
-}
-.go-story {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-  gap: 40px 72px;
-  align-items: start;
-  margin-top: 104px;
-}
-.go-story:first-of-type {
-  margin-top: 64px;
-}
-.go-story.is-flip {
-  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
-}
-.go-story.is-flip .go-story-media {
-  order: 2;
-}
-.go-story-text {
-  padding-top: 28px;
-}
-.go-story:nth-of-type(2) .go-story-text {
-  padding-top: 72px;
-}
-.go-story.is-tall {
-  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-}
-.go-story.is-tall.is-flip {
-  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-}
-/* Narrow phone crops: notes sit to the right of the screen, so leave room there. */
-.go-story.is-tall .go-story-media {
+.gh-stats div {
   display: flex;
-  padding-right: 11.5em;
+  flex-direction: column-reverse;
 }
-.go-story.is-tall:not(.is-flip) .go-story-media {
-  justify-content: flex-end;
+.gh-stats dd {
+  margin: 0;
+  font-size: clamp(52px, 5.6vw, 76px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
 }
-.go-story.is-tall .go-story-media .shot {
-  flex: none;
-  width: min(330px, 100%);
-}
-.go-story-meta {
-  font-size: 14px;
+.gh-stats dt {
+  margin-top: 6px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--text-3);
 }
-.go-story h3 {
-  margin-top: 8px;
-  font-size: clamp(26px, 2.3vw, 34px);
+.gh-cta {
+  margin-top: 32px;
+}
+.gh-collage {
+  position: relative;
+  padding: 0 0 22% 0;
+}
+.gh-browser {
+  width: 88%;
+  margin-left: auto;
+}
+.gh-phone {
+  position: absolute;
+  bottom: 0;
+  width: 27%;
+}
+.gh-phone-a {
+  left: 0;
+  rotate: -3deg;
+}
+.gh-phone-b {
+  left: 29%;
+  bottom: -4%;
+  rotate: 2deg;
+}
+.gh-note {
+  grid-column: 2;
+  text-align: right;
+}
+
+/* ---------- 2. Work reel ---------- */
+.gr {
+  padding-top: 112px;
+}
+.gr-item {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: 28px 64px;
+  align-items: center;
+  margin-top: 88px;
+}
+.gr-item:first-of-type {
+  margin-top: 48px;
+}
+.gr-item.is-flip {
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+}
+.gr-item.is-flip .gr-media {
+  order: 2;
+}
+.gr-item.is-phone .gr-media {
+  width: min(300px, 100%);
+  justify-self: center;
+}
+.gr-body h3 {
+  font-size: clamp(30px, 3vw, 44px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+}
+.gr-result {
+  margin-top: 10px;
+  font-size: clamp(19px, 1.7vw, 23px);
   font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.04em;
+  line-height: 1.4;
+  color: var(--blue);
+  word-break: keep-all;
 }
-.go-story-text > p:not(.go-story-meta):not(.go-story-links) {
-  margin-top: 14px;
-  font-size: 16.5px;
-  line-height: 1.85;
-  color: var(--text-2);
-}
-.go-story-links {
+.gr-links {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 22px;
+  margin-top: 18px;
 }
-.go-story-links a {
+.gr-links a {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -300,98 +406,85 @@
   font-weight: 600;
   transition: box-shadow 0.2s;
 }
-.go-story-links a:hover {
+.gr-links a:hover {
   box-shadow: inset 0 0 0 1.5px var(--ink);
 }
-.go-story-side {
-  margin-top: 40px;
-}
-.go-story.is-tall .go-story-side {
-  max-width: 230px;
-}
-.go-after {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px 32px;
-  margin-top: 112px;
-  padding: 28px 32px;
-  border-radius: 22px;
-  background: var(--sage);
-}
-.go-after p {
-  max-width: 34em;
-  font-size: 16.5px;
-  font-weight: 600;
-  line-height: 1.7;
-}
-.go-after-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.gr-crumple {
+  margin-top: 28px;
 }
 
-/* ---------- 3. Price ---------- */
-.go-price {
+/* ---------- 3. Price: the receipt is the anchor ---------- */
+.gp {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-  gap: 40px 72px;
-  align-items: start;
-  padding-top: 140px;
+  justify-items: center;
+  padding-top: 132px;
+  text-align: center;
 }
-.go-price-copy > p {
-  max-width: 30em;
-  margin-top: 20px;
-  font-size: 17px;
-  line-height: 1.8;
-  color: var(--text-2);
+.gp-receipt {
+  width: min(440px, 100%);
+  margin-top: 36px;
+  padding: 26px 26px 34px;
+  background: #fffefa;
+  color: var(--ink);
+  rotate: -1.2deg;
+  box-shadow: 0 1px 0 #2025231f, 0 18px 30px -24px #20252366;
+  /* Torn bottom edge. */
+  --tear: 7px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--tear)) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(2 * var(--tear)) var(--tear) repeat-x;
+  mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--tear)) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(2 * var(--tear)) var(--tear) repeat-x;
+  text-align: left;
 }
-.go-price-copy > p + p {
-  margin-top: 12px;
-}
-.go-price-table {
-  padding: 10px 30px 30px;
-  border-radius: 22px;
-  background: #fff;
-  box-shadow: inset 0 0 0 1px var(--line);
-}
-.go-price-table table {
+.gp-receipt table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 16.5px;
+  font-variant-numeric: tabular-nums;
 }
-.go-price-table th,
-.go-price-table td {
-  padding: 17px 0;
-  border-bottom: 1px solid var(--sage-2);
+.gp-receipt caption {
+  padding-bottom: 12px;
+  border-bottom: 2px dashed #20252340;
+  font-size: 15px;
+  font-weight: 800;
+  text-align: left;
+}
+.gp-receipt caption span {
+  float: right;
+  font-weight: 600;
+  color: var(--text-3);
+}
+.gp-receipt th,
+.gp-receipt td {
+  padding: 11px 0;
+  border-bottom: 1px dashed #2025232b;
   text-align: left;
   vertical-align: baseline;
 }
-.go-price-table thead th {
-  padding-block: 14px;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text-3);
-}
-.go-price-table tbody th {
+.gp-receipt tbody th {
+  font-size: 14.5px;
   font-weight: 600;
   word-break: keep-all;
 }
-.go-price-table td {
-  padding-left: 16px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
+.gp-receipt td {
+  padding-left: 10px;
+  font-size: 17px;
+  font-weight: 800;
   white-space: nowrap;
-}
-.go-price-table td:last-child,
-.go-price-table thead th:last-child {
   text-align: right;
+}
+.gp-receipt td:last-child {
+  width: 4.6em;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--text-3);
 }
-.go-price-table .button {
-  margin-top: 22px;
+.gp-receipt .go-tiny {
+  margin-top: 12px;
+}
+.gp-cta {
+  margin-top: 30px;
 }
 
 /* ---------- 4. Process ---------- */
@@ -401,6 +494,7 @@
 }
 /* ---------- 5. Quiz ---------- */
 .go-quiz-sec {
+  padding-bottom: 120px;
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   gap: 32px 72px;
@@ -448,31 +542,46 @@
   }
 }
 
-/* ---------- 6. FAQ ---------- */
+/* ---------- 6. FAQ: four questions, collapsed ---------- */
 .go-faq {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-  gap: 32px 72px;
+  gap: 24px 72px;
   align-items: start;
-  padding-block: 140px 120px;
+  padding-top: 120px;
 }
-.go-faq dl {
-  display: grid;
-  gap: 30px;
-  margin: 0;
+.go-faq details {
+  border-bottom: 1px solid var(--line);
 }
-.go-faq dt {
-  font-size: 17.5px;
+.go-faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 60px;
+  font-size: 17px;
   font-weight: 700;
   letter-spacing: -0.02em;
+  list-style: none;
+  cursor: pointer;
 }
-.go-faq dd {
-  max-width: 36em;
-  margin: 8px 0 0;
+.go-faq summary::-webkit-details-marker {
+  display: none;
+}
+.go-faq summary::after {
+  content: "+";
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-3);
+}
+.go-faq details[open] summary::after {
+  content: "−";
+}
+.go-faq details p {
+  padding-bottom: 18px;
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 1.7;
   color: var(--text-2);
-  word-break: keep-all;
 }
 
 /* ---------- 7. Footer ---------- */
@@ -482,98 +591,129 @@
 
 /* ---------- Mobile ---------- */
 @media (max-width: 900px) {
-  .go-intro,
-  .go-head,
-  .go-story,
-  .go-story.is-flip,
-  .go-story.is-tall,
-  .go-story.is-tall.is-flip,
-  .go-price,
+  .gh,
+  .gr-item,
+  .gr-item.is-flip,
   .go-quiz-sec,
   .go-faq {
     grid-template-columns: minmax(0, 1fr);
   }
-  .go-intro {
-    gap: 22px;
-    padding-block: 44px 24px;
-  }
-  .go-intro-copy {
-    padding-top: 0;
-  }
-  .go-intro-shot {
-    margin-top: 18px;
-  }
-  .go-story,
-  .go-story:first-of-type {
+  .gh {
     gap: 26px;
-    margin-top: 80px;
+    padding-block: 36px 20px;
   }
-  .go-story:first-of-type {
-    margin-top: 44px;
+  .gh-note {
+    grid-column: 1;
   }
-  .go-story.is-flip .go-story-media {
+  .gr-item.is-flip .gr-media {
     order: 0;
   }
-  .go-story-text,
-  .go-story:nth-of-type(2) .go-story-text {
-    padding-top: 0;
+  .gr-item,
+  .gr-item:first-of-type {
+    gap: 18px;
+    margin-top: 64px;
   }
-  .go-story.is-tall .go-story-media,
-  .go-story.is-tall:not(.is-flip) .go-story-media {
-    justify-content: flex-start;
-    padding-right: 0;
+  .gr-item:first-of-type {
+    margin-top: 36px;
   }
-  .go-story.is-tall .go-story-media .shot {
-    width: 56%;
-    max-width: 300px;
+  .gr-item.is-phone .gr-media {
+    width: 62%;
   }
-  .go-work,
-  .go-price,
+  .gr-body {
+    text-align: center;
+  }
+  .gr-links {
+    justify-content: center;
+  }
+  .gr-crumple {
+    text-align: left;
+  }
+  .gr,
+  .gp,
   .go-process,
   .go-quiz-sec {
-    padding-top: 100px;
+    padding-top: 96px;
   }
   .go-faq {
-    padding-block: 100px 88px;
+    padding-top: 96px;
   }
-  .go-after {
-    margin-top: 80px;
-    padding: 24px 22px;
+  .go-quiz-sec {
+    padding-bottom: 80px;
   }
 }
 @media (max-width: 700px) {
   .go-top-row {
     height: 60px;
   }
-  .go-intro h1 {
-    font-size: clamp(28px, 7.6vw, 34px);
+  .gh {
+    padding-top: 28px;
   }
-  .go-intro-copy > p,
-  .go-head > p,
-  .go-price-copy > p,
-  .go-quiz-copy > p:not(.go-fine) {
+  .gh h1 {
+    font-size: clamp(32px, 9vw, 38px);
+  }
+  .gh-sub {
+    margin-top: 8px;
     font-size: 16px;
   }
-  .go-intro-actions .button {
-    min-height: 52px;
-    padding-inline: 20px;
-    font-size: 15px;
+  .gh-stats {
+    gap: 28px;
+    margin-top: 18px;
+  }
+  .gh-stats dd {
+    font-size: 50px;
+  }
+  .gh-cta {
+    width: 100%;
+    margin-top: 22px;
+  }
+  .gh-collage {
+    padding-bottom: 30%;
+  }
+  .gh-browser {
+    width: 92%;
+  }
+  .gh-phone {
+    width: 30%;
+  }
+  .gh-phone-b {
+    left: 32%;
+  }
+  .gv-phone .gv-screen {
+    border-width: 5px;
+    border-radius: 22px;
+  }
+  .gv-phone .gv-screen img,
+  .gv-phone .gv-screen video {
+    border-radius: 17px;
+  }
+  .gh .gv-bar {
+    height: 22px;
+  }
+  .gh .gv-url {
+    display: none;
+  }
+  .gh .gv-toggle {
+    right: 5px;
+    bottom: 5px;
+    width: 20px;
+    height: 20px;
+  }
+  .gh .gv-toggle svg {
+    width: 10px;
+    height: 10px;
+  }
+  .gp-receipt td {
+    font-size: 15.5px;
   }
   .mk-note {
     max-width: 9.5em;
     padding: 2px 6px 3px;
     font-size: 12.5px;
   }
-  .go-price-table {
-    padding: 4px 18px 22px;
+  .gp-receipt {
+    padding: 22px 18px 30px;
   }
-  .go-price-table table {
-    font-size: 15px;
-  }
-  .go-price-table td {
-    padding-left: 10px;
-  }
-  .go-story-side {
-    margin-top: 30px;
+  .gp-cta {
+    width: 100%;
   }
 }

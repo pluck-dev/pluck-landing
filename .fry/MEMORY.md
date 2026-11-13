@@ -313,7 +313,7 @@
 ## v4 = "AI 티" 제거 (2026-11-13, 오너: "바꾸라 했더니 다시 AI 티 팍팍 나네")
 - v3(네이비 그라데이션·3D 클레이 마스코트·생성 아이콘·Chapter 01 라벨·모노 숫자·비교표·카운트업·떠 있는 견적 칩)를 전부 걷어냄. public/lp/go 생성 이미지, go-chrome.tsx, go-motion.tsx 삭제. **재도입 금지.**
 - 레퍼런스(vibisolution.com/product/6) 구조도 계속 금지: 480px 다크 컬럼, 라임+핑크, 하단 고정 바, sticky 탭, 체크 배지 카드 스택.
-- 구조: 상단 바(워드마크 + .header-contact "견적 받아보기", 불투명 페이퍼) → 소개(h1 2줄 "혼자 하는 개발 스튜디오예요. 상담한 제가 직접 만듭니다." + 실화면 브라우저 프레임 1개) → 최근에 만든 것(카영·바야다·칼가는곳·Setflow 스토리 블록, 좌우 교차, 문제→만든 것→링크) → 비용은 이 정도예요(pricing.ts 표 그대로) → 이렇게 진행해요(번호 목록, 한 칼럼) → 30초 견적(go-quiz) → FAQ(dl 평문) → 사이트 .footer.
+- (v4 구조, v5 에서 교체됨 → 아래 "v5 = 영상 우선") 소개 h1 2줄 + 실화면 1개 → 스토리 블록 4개(문제→만든 것→링크) → 가격표 → 번호 목록 → 퀴즈 → FAQ dl.
 - 실화면: app/lp/go/shot.tsx `Shot` = public/work 이미지 + crop[x,y,w,h](원본 1600x1000 픽셀 좌표) + marks(ring/arrow/note). 마크 좌표도 원본 픽셀 기준이라 crop 을 바꿔도 대상에서 안 벗어남. 메모(.mk-note)는 HTML 이라 화면 크기와 상관없이 글자 크기 고정 → 폰(390)에서 겹치는지 꼭 캡처로 확인. 세로로 긴 폰 크롭(is-tall)은 메모를 화면 오른쪽 바깥(x > crop 끝)에 두고 미디어 열에 오른쪽 여백을 준다.
 - 캡션은 portfolio 의 정직성 표기 유지: '(로컬 실행, 가상 데이터)', '(QA 캡처, 계정명 가림)', '(데모 데이터)'. 스토리 문장은 lib/portfolio.ts 의 problem/solution/overview 사실만, 오너 말투(1인칭 해요체). 바야다는 'EC2 개발·시연 서버'라고 그대로 씀.
 - 모션은 두 개뿐: 손그림 선이 한 번 그려짐(go-draw.tsx IntersectionObserver → .is-drawn, pathLength=1 dashoffset), 퀴즈 질문 전환(.go-step, step 을 key 로). 숨김 시작 상태는 `(prefers-reduced-motion: no-preference) and (scripting: enabled)` 안에서만.
@@ -324,6 +324,19 @@
 - 금지 장치: 영문 라벨(Chapter 01, eyebrow), 장식용 모노 숫자, 'PLUCK |' 같은 pill kicker 배지, 똑같은 카드 그리드, 티커/마키, 모든 블록 scroll fade-up, 버튼 shine sweep, 카운트업 숫자, 떠 있는 칩·하단 고정 바.
 - 금지 카피: "~말고, ~보세요" 슬로건, 혜택 3개 나열(triad), "흔한 외주 vs PLUCK" 비교표, em dash(—), 완벽히 평행한 문장 반복.
 - 대신: 사이트 토큰·컴포넌트(.shell .wordmark .header-contact .button* .section-title .qz* .footer, --paper/--ink/--blue/--sage) 재사용, 실제 스크린샷을 크게·일부는 디테일로 크롭, 손그림 링·화살표·짧은 메모(손글씨 웹폰트는 사이트가 안 쓰므로 Noto Sans KR 700 + 살짝 기울임), 1인칭 구어 해요체, 실제 숫자(getPortfolioStats·pricing.ts)만. 섹션마다 '왼쪽 제목/오른쪽 내용'만 반복하지 말고 한 칼럼 섹션을 섞는다.
+
+## v5 = 영상 우선 + 텍스트 다이어트 (2026-11-13, 외부 마케터: "텍스트 밀도가 너무 높아서 불필요한 거 다 날리고 이미지랑 영상 위주로. 진짜 바보도 설득될 정도로")
+- 구조: 상단 바(파란 "견적 받기") → 히어로(h1 "상담한 개발자가 / 직접 만들어요" + "홈페이지 · 앱 · 업무 시스템" + 큰 숫자 56/21(getPortfolioStats, 작은 라벨) + 버튼 1개 + 실영상 콜라주 브라우저 1 + 폰 2) → 쿠폰 무대 → 최근에 만든 것 = 릴(카영·BAYADA·칼가는곳·DVIA: 기기 프레임 영상 + 이름 + 결과 한 줄 + 공개 링크, 카영은 엑셀 구김 샷 유지) → 비용 = 찢긴 종이 영수증(pricing.ts 숫자 그대로) → 도장 카드(단계 문구 ≤ 15자) → FAQ 4개(details, 접힘) → 30초 견적(마지막 화면이 퀴즈 카드라 텍스트만인 화면 없음) → 푸터. Setflow 는 빠짐(Flutter 라 라이브 녹화가 로딩 화면뿐).
+- 영상: public/lp/go/video/<name>.{mp4,webm,jpg} (knife·dealer 폰 360x780, bayada·academy·dvia 브라우저 960x600, 8–10s, 각 0.1–0.8MB). 녹화 하네스 C:\Temp\lp-v5ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 addInitScript 로 막음, 트래커 차단) → ffmpeg x264 crf30 / vp9 crf42. dealer 는 로그인 전 샘플 데이터라 "로그인 전 샘플 데이터" 라벨 필수. BAYADA 는 "개발·시연 서버" 라벨. DVIA(WebGL)는 swiftshader 플래그 필요.
+- go-video.tsx: <source> 는 400px 근처에서만 붙임(preload none 만으론 일부 브라우저가 메타데이터를 받음) → 첫 로드엔 히어로 3개만. 보일 때만 play, 화면 밖 pause, reduced-motion 이면 <video> 자체를 안 그림(포스터만). 포스터는 next/image(지연 로드) — video poster 속성은 안 씀(즉시 로드돼서). 작은 일시정지 버튼 유지(WCAG 2.2.2).
+- CTA 스타일은 파란 button-primary 하나만(헤더 .header-contact 도 .go 범위에서 파랑). 쿠폰의 '자동으로 열기'는 조작 버튼이라 ghost.
+- 링크는 공개 페이지만: apps 중 summary 에 "로그인 화면" 이 있는 관리자 앱은 릴 링크에서 뺌.
+
+## 텍스트 밀도 규칙 (모든 광고 LP, 오너 승인 v5 기준)
+- 섹션당 제목 1개(가능하면 14자 이하) + 보조 한 줄 최대 1개(30자 이하, 정보가 늘 때만). 설명 문단·스토리 문단·같은 주장 반복·긴 캡션 금지. 설득은 실화면 영상·큰 실제 숫자·종이 연출이 한다.
+- 모바일 한 화면마다 시각 요소가 있어야 함(텍스트만인 화면 금지) → FAQ 같은 글 섹션은 접어서 짧게, 시각 섹션 사이에 둔다.
+- 남기는 필수 문구(작게 .go-tiny 12px, 숨기지 않음): 동의 안내, 쿠폰 조건, (예시)/가상·샘플 데이터 정직성 라벨, "참고 범위 · VAT 별도".
+- 측정: 페이지 innerText 단어 수(C:\Temp\lp-v5\snap.mjs). v4 902 → v5 약 300(퀴즈·폼·쿠폰 조건·푸터 포함). 새 LP 도 이 수준을 기준으로.
 
 # /lp/go 할인권 봉투 이벤트: 10% 쿠폰, render(t) 씬, 4경로, 전체 화면 무대(sticky 핀·스크롤 당김·settle), 리드 연결(source.coupon), 오너 편집 상수 lib/coupon.ts
 
