@@ -308,21 +308,19 @@
 - S6·FAQ 의 신뢰 문구는 lib/quote/trust.ts(오너 확인 전). '1인이면 바쁠 때' 답 = 동시 진행 수 제한 + 계약 전 일정 확정(오너 지시 문구). 가격표 캡션 'VAT 별도'는 오너 지시.
 - 푸터 사업자 정보는 사이트 푸터와 동일(상호·메일·GitHub) + 개인정보처리방침. 대표자·사업자번호·주소는 app/privacy COMPANY 가 비어 있어 미표시 — 채워지면 LP 푸터에도 추가할 것.
 
-# 광고 랜딩 /lp/go (v3 에디토리얼): 챕터 01–05, 네이비·페이퍼+브랜드 블루, 세리프 헤드라인, 진행선+견적 칩, source.form=lp-go
+# 광고 랜딩 /lp/go (v4 수제 톤): 실화면+손그림 메모, 1인칭 해요체, 사이트 토큰 재사용, source.form=lp-go
 
-## v3 = 레퍼런스 카피 탈피 (2026-11-12, 오너: "내가 준 거랑 너무 똑같이 만들면 안 돼. 바텀이랑 구조가 아예 똑같으면 카피한 줄 아니까")
-- 레퍼런스(vibisolution.com/product/6, 스크린샷 C:\Temp\vibi\m_*.png)의 **모양을 다시 들여오지 말 것**: 480px 가운데 다크 컬럼, 라임+핫핑크, 하단 고정 바(왼쪽 작은 글씨+오른쪽 핑크 pill), 히어로 아래 sticky 탭(소개/작업물/FAQ), 체크 배지 숫자 카드 세로 스택, "+" 로 쌓는 제공물, 01/02/03 카드, 히어로 위 체크 칩 3개, "아직도…라면/더 늦기 전에" 카피 → 전부 v3 에서 제거, 재추가 금지.
-- 가져가는 건 '에너지'만: 3D 클레이 그래픽, 모션, 긴장 장면(견적서 3장·읽지 않은 1 채팅), 퀴즈.
-- 구조: 풀폭 반응형(.go-wrap max 1200) + 데스크톱 5fr/7fr 비대칭 2열(왼쪽 챕터 헤드 sticky). 히어로 split(왼 헤드라인 / 오른 마스코트+원형 디스크+브라우저 창·폰 실화면). 챕터 = data-chapter="01 문제|02 증거|03 약속|04 견적|05 질문" — 상단 바가 이 속성을 읽어 현재 챕터를 표시. 'Chapter 01' 영문 라벨은 오너가 명시 요청한 것이라 홈의 'eyebrow 금지' 규칙의 예외.
-- 02 증거 = 원장(ledger) 숫자 띠 1줄(getPortfolioStats total/live/client + 재하청 0건) + 실화면 벤토(CASES, 12열 7/5/5/4/4/4). 03 약속 = "흔한 외주 진행 vs PLUCK" 비교표(모바일은 CSS 로 행마다 2칸 카드로 재배치, ::before 라벨) + 기획안 초안 문서 미리보기(섹션 순차 슬라이드, '(예시)'). 04 견적 = 참고 가격표 + 퀴즈(흰 카드 그대로). 05 = 선 구분 FAQ.
-- 색/타입: --navy #0a1024 / --paper #f4f3ee / --blue #3558e8(강조 하나만, 네이비 위 글자는 --blue-soft #8ca0ff). 헤드라인은 page.tsx 의 next/font Noto_Serif_KR(900, preload:false, --font-go-serif). **한글에 Geist Mono 를 쓰면 자간이 벌어져 이상함** → 모노는 숫자·영문(Chapter 01, 01/05)에만.
-- 3D 이미지는 재생성하지 않고 CSS 로 블루 톤: .go-tint = grayscale(1) sepia(1) hue-rotate(185deg) saturate(3.4). 마스코트는 saturate(2.2) brightness(1.05). 부분 톤(grayscale 0.55 등)은 얼굴이 초록·청록으로 떠서 버림 — 완전 듀오톤이어야 '블루 클레이'로 보임.
-- CTA 장치: go-chrome.tsx = 상단 바 2px 스크롤 진행선 + 현재 챕터, 오른쪽 아래 떠 있는 "견적 계산 n/5" 칩(링 진행). 칩 숫자는 GoQuiz 가 step 바뀔 때 window 이벤트 "go:quiz" {answered, done} 로 보냄. #quiz 가 화면에 들어오면 칩 숨김(제출 버튼 가림 방지). #quiz 는 이제 퀴즈 래퍼(.go-quiz-wrap) id.
-- 함정: 카운트업([data-count])은 한 번만 — inView 재진입(풀페이지 스크린샷의 뷰포트 리사이즈 포함) 때 0부터 다시 세서 캡처에 20/7/6 같은 중간값이 찍혔음. go-motion.tsx 에서 done 플래그로 막음.
-- 정직성 규칙 유지: 가짜 타이머·희소성·후기·수익 문구 금지, 견적서/채팅/기획안 미리보기에 '(예시)'. 비교표 왼쪽 열은 '흔한 외주 진행'(특정 업체 주장 아님, 캡션에 '업체마다 다르지만').
-- 리드 경로는 그대로: go-quiz.tsx → submitGoInquiry → form "lp-go", Discord 제목 "[광고 LP · 상세페이지형]". noindex.
+## v4 = "AI 티" 제거 (2026-11-13, 오너: "바꾸라 했더니 다시 AI 티 팍팍 나네")
+- v3(네이비 그라데이션·3D 클레이 마스코트·생성 아이콘·Chapter 01 라벨·모노 숫자·비교표·카운트업·떠 있는 견적 칩)를 전부 걷어냄. public/lp/go 생성 이미지, go-chrome.tsx, go-motion.tsx 삭제. **재도입 금지.**
+- 레퍼런스(vibisolution.com/product/6) 구조도 계속 금지: 480px 다크 컬럼, 라임+핑크, 하단 고정 바, sticky 탭, 체크 배지 카드 스택.
+- 구조: 상단 바(워드마크 + .header-contact "견적 받아보기", 불투명 페이퍼) → 소개(h1 2줄 "혼자 하는 개발 스튜디오예요. 상담한 제가 직접 만듭니다." + 실화면 브라우저 프레임 1개) → 최근에 만든 것(카영·바야다·칼가는곳·Setflow 스토리 블록, 좌우 교차, 문제→만든 것→링크) → 비용은 이 정도예요(pricing.ts 표 그대로) → 이렇게 진행해요(번호 목록, 한 칼럼) → 30초 견적(go-quiz) → FAQ(dl 평문) → 사이트 .footer.
+- 실화면: app/lp/go/shot.tsx `Shot` = public/work 이미지 + crop[x,y,w,h](원본 1600x1000 픽셀 좌표) + marks(ring/arrow/note). 마크 좌표도 원본 픽셀 기준이라 crop 을 바꿔도 대상에서 안 벗어남. 메모(.mk-note)는 HTML 이라 화면 크기와 상관없이 글자 크기 고정 → 폰(390)에서 겹치는지 꼭 캡처로 확인. 세로로 긴 폰 크롭(is-tall)은 메모를 화면 오른쪽 바깥(x > crop 끝)에 두고 미디어 열에 오른쪽 여백을 준다.
+- 캡션은 portfolio 의 정직성 표기 유지: '(로컬 실행, 가상 데이터)', '(QA 캡처, 계정명 가림)', '(데모 데이터)'. 스토리 문장은 lib/portfolio.ts 의 problem/solution/overview 사실만, 오너 말투(1인칭 해요체). 바야다는 'EC2 개발·시연 서버'라고 그대로 씀.
+- 모션은 두 개뿐: 손그림 선이 한 번 그려짐(go-draw.tsx IntersectionObserver → .is-drawn, pathLength=1 dashoffset), 퀴즈 질문 전환(.go-step, step 을 key 로). 숨김 시작 상태는 `(prefers-reduced-motion: no-preference) and (scripting: enabled)` 안에서만.
+- 리드 경로는 그대로: go-quiz.tsx → submitGoInquiry → form "lp-go", 동의 안내(ConsentNotice)·허니팟은 QuoteLeadForm 안. noindex.
 
-## 3D 그래픽 생성 레시피 (v2, 2026-11-12)
-- public/lp/go/*.webp(hero-dev, icon-*, glow-*)는 로컬 ComfyUI 무료 생성. **이 PC엔 이미지 체크포인트가 없고 Wan 2.2 영상 모델만 있음** → wan2.2_ti2v_5B + umt5 + wan2.2_vae 로 length=1(한 프레임) T2I, 768px, 30스텝 uni_pc cfg5 shift8. 스크립트 C:\Temp\lpgo\gen\tools(gen.py, cut.py). 배경 제거 rembg isnet-general-use(Python310 + C:\Temp\lpgo\gen\pylib). 원본 색은 라임/핑크라 v3 는 CSS 로 블루 톤.
-- 히어로 실화면 크롭: 폰=knife cover(500% / 71.25% 44.4%), setflow cover(424.4% / 13.9% 50%), 창=dvia cover. cover 이미지를 다시 캡처하면 좌표 확인.
-- 모션 게이트: 숨김 시작 상태는 `@media (prefers-reduced-motion: no-preference) and (scripting: enabled)` 안에서만. html 클래스 인라인 스크립트 게이트는 하이드레이션 불일치로 버림. 리셋은 `:where()` 로(특이도 0).
+## AI 티 체크리스트 (모든 새 페이지·LP 에 적용, 오너 규칙)
+- 금지 그래픽: 생성 이미지 전부(3D 클레이 마스코트·아이콘·글로우 오브), 네이비→블루 그라데이션, radial glow, 그리드 라인 배경, 글래스모피즘/backdrop blur, 네온, 모든 요소에 drop-shadow.
+- 금지 장치: 영문 라벨(Chapter 01, eyebrow), 장식용 모노 숫자, 'PLUCK |' 같은 pill kicker 배지, 똑같은 카드 그리드, 티커/마키, 모든 블록 scroll fade-up, 버튼 shine sweep, 카운트업 숫자, 떠 있는 칩·하단 고정 바.
+- 금지 카피: "~말고, ~보세요" 슬로건, 혜택 3개 나열(triad), "흔한 외주 vs PLUCK" 비교표, em dash(—), 완벽히 평행한 문장 반복.
+- 대신: 사이트 토큰·컴포넌트(.shell .wordmark .header-contact .button* .section-title .qz* .footer, --paper/--ink/--blue/--sage) 재사용, 실제 스크린샷을 크게·일부는 디테일로 크롭, 손그림 링·화살표·짧은 메모(손글씨 웹폰트는 사이트가 안 쓰므로 Noto Sans KR 700 + 살짝 기울임), 1인칭 구어 해요체, 실제 숫자(getPortfolioStats·pricing.ts)만. 섹션마다 '왼쪽 제목/오른쪽 내용'만 반복하지 말고 한 칼럼 섹션을 섞는다.

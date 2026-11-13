@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { submitGoInquiry } from "@/app/contact/actions";
 import { GO_FORM_SOURCE } from "@/lib/crm/constants";
@@ -15,7 +15,6 @@ import {
 } from "@/components/quote/quote-quiz";
 import { ConsentNotice } from "../dev/dev-quiz";
 import { REPLY_PROMISE } from "../dev/config";
-import { GO_QUIZ_EVENT, type GoQuizDetail } from "./go-chrome";
 
 /** /lp/go quiz: questions → result → name/contact form (form tag "lp-go"). */
 export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: string }) {
@@ -23,18 +22,14 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
   const rootRef = useRef<HTMLDivElement>(null);
   useStepFocus(quiz.step, rootRef);
 
-  // Feed the floating "견적 계산 n/5" chip in go-chrome.tsx.
-  useEffect(() => {
-    const detail: GoQuizDetail = {
-      answered: Math.min(QUIZ_STEP_COUNT, Math.max(0, quiz.step - 1)),
-      done: quiz.step > QUIZ_STEP_COUNT,
-    };
-    window.dispatchEvent(new CustomEvent(GO_QUIZ_EVENT, { detail }));
-  }, [quiz.step]);
-
   return (
     <div className="qz go-quiz" ref={rootRef}>
-      {quiz.step >= 1 && quiz.step <= QUIZ_STEP_COUNT && <QuizQuestions quiz={quiz} firstStep={1} />}
+      {quiz.step >= 1 && quiz.step <= QUIZ_STEP_COUNT && (
+        // Keyed by step so each question slides in (go.css .go-step; off under reduced motion).
+        <div className="go-step" key={quiz.step}>
+          <QuizQuestions quiz={quiz} firstStep={1} />
+        </div>
+      )}
 
       {quiz.step > QUIZ_STEP_COUNT && quiz.answers && (
         <div className="qz-result">
@@ -42,10 +37,10 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
           <div className="qz-card qz-lead go-lead" id="apply">
             <h2>이 조건으로 기획안·견적 받기</h2>
             <p>
-              답변을 바탕으로 기획안 초안, 기능별 견적, 단계별 일정을 정리해 보내드립니다. 받아 보신 뒤 진행 여부를
-              정하시면 됩니다.
+              고르신 답을 보고 기획안 초안이랑 기능별 견적, 일정을 정리해서 보내드려요. 받아 보시고 할지 말지
+              정하시면 돼요.
             </p>
-            <p className="ld-lead-promise">
+            <p className="go-promise">
               <Check size={16} aria-hidden="true" /> {REPLY_PROMISE}드립니다
             </p>
             {formEnabled ? (
@@ -64,8 +59,8 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
                       신청이 접수됐어요
                     </h3>
                     <p>
-                      {REPLY_PROMISE}드릴게요. 남겨주신 연락처로 내용을 한 번 더 여쭙고 기획안 초안·견적·일정을
-                      정리해 보내드립니다.
+                      {REPLY_PROMISE}드릴게요. 남겨주신 연락처로 몇 가지 더 여쭤보고 기획안 초안이랑 견적, 일정을
+                      정리해서 보내드릴게요.
                     </p>
                     <div className="ld-thanks-actions">
                       <Link className="button button-ink" href="/#work">
