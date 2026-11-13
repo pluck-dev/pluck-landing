@@ -1,0 +1,103 @@
+/*
+ * /lp/go hero split-flap board. Paper-coloured flaps on a hinge, ink digits in Paperlogy, two small
+ * metal hinge pins. Sizes are in em of the dd (hero number size), so the board takes the number's place.
+ */
+.flp {
+  display: inline-flex;
+  gap: 0.06em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.flp-m {
+  --h: 1.16em;
+  position: relative;
+  display: block;
+  width: 0.78em;
+  font-size: 0.94em;
+  height: var(--h);
+  perspective: 5em;
+}
+.flp-h {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  background: #f6f4ea;
+  border: 1px solid rgba(32, 37, 35, 0.2);
+  backface-visibility: hidden;
+}
+.flp-top {
+  top: 0;
+  border-bottom: 0;
+  border-radius: 0.09em 0.09em 0 0;
+  transform-origin: 50% 100%;
+}
+.flp-bot {
+  bottom: 0;
+  border-top: 0;
+  border-radius: 0 0 0.09em 0.09em;
+  transform-origin: 50% 0;
+  /* The lower half sits a hair darker: light comes from above, the hinge shades it. */
+  background:#eceadf;
+}
+.flp-d {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--h);
+  line-height: var(--h);
+  text-align: center;
+}
+.flp-top .flp-d {
+  top: 0;
+}
+.flp-bot .flp-d {
+  bottom: 0;
+}
+/* Leaves: shade grows as a leaf turns away from the light (set per frame as --shade). */
+.flp-lt,
+.flp-lb {
+  z-index: 2;
+  visibility: hidden;
+  will-change: transform;
+}
+.flp-lt::after,
+.flp-lb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #202523;
+  opacity: var(--shade, 0);
+}
+.flp-cast {
+  position: absolute;
+  inset: 0;
+  background: #202523;
+  opacity: 0;
+}
+/* Hinge: the split line and two metal pins at its ends. */
+.flp-m::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: calc(50% - 0.5px);
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(32, 37, 35, 0.32);
+}
+.flp-m::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: calc(50% - 0.07em);
+  left: -0.035em;
+  right: -0.035em;
+  height: 0.14em;
+  background:
+    linear-gradient(#b9beb6, #7f857d) left / 0.06em 100% no-repeat,
+    linear-gradient(#b9beb6, #7f857d) right / 0.06em 100% no-repeat;
+  border-radius: 0.02em;
+}

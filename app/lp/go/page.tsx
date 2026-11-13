@@ -10,6 +10,7 @@ import { CouponNote } from "./coupon/coupon-note";
 import { GoCoupon } from "./coupon/go-coupon";
 import { GoCrumple } from "./crumple/go-crumple";
 import { GoDraw } from "./go-draw";
+import { GoFlapStats } from "./flap/go-flap";
 import { GoQuiz } from "./go-quiz";
 import { GoHeroReel, GoVideo, type HeroClip, type Loop } from "./go-video";
 import { Shot } from "./shot";
@@ -157,16 +158,13 @@ export default function GoLandingPage() {
               직접 만들어요
             </h1>
             <p className="gh-sub">홈페이지 · 앱 · 업무 시스템</p>
-            <dl className="gh-stats">
-              <div>
-                <dt>만든 서비스</dt>
-                <dd>{stats.total}</dd>
-              </div>
-              <div>
-                <dt>지금 접속 가능</dt>
-                <dd>{stats.live}</dd>
-              </div>
-            </dl>
+            {/* The two numbers as a split-flap board: turns once on load, tap to turn again (flap/). */}
+            <GoFlapStats
+              items={[
+                { label: "만든 서비스", value: stats.total },
+                { label: "지금 접속 가능", value: stats.live },
+              ]}
+            />
             <a className="button button-primary gh-cta" href="#quiz">
               30초 견적 받기 <ArrowRight size={18} aria-hidden="true" />
             </a>

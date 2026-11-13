@@ -222,3 +222,17 @@ export function sfxSend() {
   tone(audio, { at: 0.3, dur: 0.6, gain: 0.05, freq: 784 });
   tone(audio, { at: 0.39, dur: 0.8, gain: 0.045, freq: 1175 });
 }
+
+/* ---------- split-flap counter ---------- */
+
+/**
+ * One flap dropping onto the stop: a tiny plastic "탁". `heavy` = the last flap of a module, lower and
+ * fuller (the module has settled). `index` walks the pitch a little so a run doesn't sound like a loop.
+ */
+export function sfxFlap(index: number, heavy = false) {
+  const audio = ready();
+  if (!audio) return;
+  const f = 3000 + ((index * 37) % 9) * 140;
+  burst(audio, { dur: heavy ? 0.03 : 0.014, gain: heavy ? 0.16 : 0.09, type: "bandpass", freq: heavy ? f * 0.7 : f, q: 2.4 });
+  tone(audio, { dur: heavy ? 0.07 : 0.025, gain: heavy ? 0.1 : 0.035, freq: heavy ? 260 : 420, freqTo: heavy ? 120 : 260, type: "triangle" });
+}
