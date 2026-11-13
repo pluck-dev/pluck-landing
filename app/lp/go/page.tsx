@@ -14,6 +14,7 @@ import { GoFlapStats } from "./flap/go-flap";
 import { GoQuiz } from "./go-quiz";
 import { GoHeroReel, GoVideo, type HeroClip, type Loop } from "./go-video";
 import { Shot } from "./shot";
+import { GoLamps } from "./lamps/go-lamps";
 import { GoShred } from "./shred/go-shred";
 import { GoStamps, type Step } from "./stamps/go-stamps";
 import "./go.css";
@@ -147,6 +148,11 @@ export default function GoLandingPage() {
   const reel = REEL.map((item) => ({ ...item, project: getProject(item.slug) })).filter(
     (item): item is typeof item & { project: PortfolioProject } => Boolean(item.project),
   );
+  // Every live project is a lamp, so the panel's count matches the hero's. The owner never names 보령 on
+  // ad pages: that lamp stays lit but unnamed and unlinked (the name never reaches the client).
+  const lamps = projects
+    .filter((project) => project.status === "live")
+    .map((project) => (project.slug === "boryoung" ? { name: "고객사 · 이름 비공개" } : { name: project.name, url: project.url }));
   const crumpleShot = getProject("dealer-settlement")?.gallery.find((image) => image.src === "/work/dealer-settlement/05.webp");
 
   return (
@@ -251,6 +257,15 @@ export default function GoLandingPage() {
               </article>
             ))}
           </div>
+        </section>
+
+        {/* Proof you can touch: one lamp per live project, the count is the headline. Tap one = its name + link. */}
+        <section className="lmp-sec shell" aria-labelledby="go-lamps-title">
+          <h2 id="go-lamps-title" className="section-title">
+            지금 접속 가능 <span>{lamps.length}</span>
+          </h2>
+          <p className="lmp-sub">하나 눌러 보세요</p>
+          <GoLamps lamps={lamps} />
         </section>
 
         <section className="gp shell" id="price" aria-labelledby="go-price-title">

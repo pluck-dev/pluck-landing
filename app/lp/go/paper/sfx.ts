@@ -314,3 +314,22 @@ export function sfxMotorOff() {
   tone(audio, { dur: 0.5, gain: 0.05, freq: 90, freqTo: 40, type: "sawtooth" });
   burst(audio, { at: 0.02, dur: 0.02, gain: 0.1, type: "highpass", freq: 3200 });
 }
+
+/* ---------- indicator lamp panel ---------- */
+
+/** A relay pulling in behind a panel lamp. heavy = the last one (the whole bank latched). */
+export function sfxRelay(index: number, heavy = false) {
+  const audio = ready();
+  if (!audio) return;
+  const f = 1900 + ((index * 53) % 7) * 120;
+  burst(audio, { dur: heavy ? 0.035 : 0.012, gain: heavy ? 0.2 : 0.11, type: "bandpass", freq: heavy ? 1300 : f, q: 3 });
+  tone(audio, { at: 0.004, dur: heavy ? 0.14 : 0.03, gain: heavy ? 0.12 : 0.03, freq: heavy ? 180 : 620, freqTo: heavy ? 70 : 380, type: "triangle" });
+}
+
+/** Label maker pressing one character into the tape. */
+export function sfxEmboss(index: number) {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.022, gain: 0.14, type: "bandpass", freq: 1500 + (index % 3) * 180, q: 2 });
+  tone(audio, { dur: 0.04, gain: 0.05, freq: 300, freqTo: 160, type: "triangle" });
+}

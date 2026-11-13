@@ -1,0 +1,90 @@
+/*
+ * /lp/go 램프 보드: a brushed steel panel (canvas) with a transparent button over every lamp and a
+ * strip of embossed label tape (DOM, so the name is real text and the link is a real link).
+ */
+.lmp-sec {
+  padding-top: 120px;
+}
+.lmp-sec .section-title span {
+  font-variant-numeric: tabular-nums;
+}
+.lmp {
+  position: relative;
+  width: min(560px, 100%);
+  height: 260px;
+  margin: 22px 0 0;
+}
+.lmp-canvas {
+  position: absolute;
+  inset: 0;
+}
+.lmp-btn {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.lmp-btn:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: -4px;
+}
+/* Embossed label tape: black plastic, raised pale letters. */
+.lmp-tape {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 28px;
+  padding: 0 12px 0 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  background: #1d2120;
+  color: #e7ebe3;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7), 0 -1px 0 rgba(255, 255, 255, 0.18);
+  border-radius: 2px;
+  box-shadow: 0 2px 3px rgba(32, 37, 35, 0.25);
+  transform: rotate(-0.8deg);
+  clip-path: inset(0 100% 0 0);
+}
+.lmp-tape:empty {
+  display: none;
+}
+.lmp-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lmp-link {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  background: #e7ebe3;
+  color: #1d2120;
+  text-shadow: none;
+  text-decoration: none;
+  letter-spacing: 0;
+}
+@media (max-width: 900px) {
+  .lmp-sec {
+    padding-top: 96px;
+  }
+}
+@media (max-width: 700px) {
+  .lmp-tape {
+    font-size: 13px;
+  }
+}
+.lmp-sub {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-2);
+}
