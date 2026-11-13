@@ -326,7 +326,7 @@
 - 대신: 사이트 토큰·컴포넌트(.shell .wordmark .header-contact .button* .section-title .qz* .footer, --paper/--ink/--blue/--sage) 재사용, 실제 스크린샷을 크게·일부는 디테일로 크롭, 손그림 링·화살표·짧은 메모(손글씨 웹폰트는 사이트가 안 쓰므로 Noto Sans KR 700 + 살짝 기울임), 1인칭 구어 해요체, 실제 숫자(getPortfolioStats·pricing.ts)만. 섹션마다 '왼쪽 제목/오른쪽 내용'만 반복하지 말고 한 칼럼 섹션을 섞는다.
 
 ## v5 = 영상 우선 + 텍스트 다이어트 (2026-11-13, 외부 마케터: "텍스트 밀도가 너무 높아서 불필요한 거 다 날리고 이미지랑 영상 위주로. 진짜 바보도 설득될 정도로")
-- 구조: 상단 바(파란 "견적 받기") → 히어로(h1 "상담한 개발자가 / 직접 만들어요" + "홈페이지 · 앱 · 업무 시스템" + 큰 숫자 56/21(getPortfolioStats, 작은 라벨) + 버튼 1개 + 폰 1대 히어로 릴, 아래 "히어로 비주얼 규칙") → 쿠폰 무대 → 최근에 만든 것 = 릴(카영·BAYADA·칼가는곳·DVIA: 기기 프레임 영상 + 이름 + 결과 한 줄 + 공개 링크, 카영은 엑셀 구김 샷 유지) → 비용 = 찢긴 종이 영수증(pricing.ts 숫자 그대로) → 도장 카드(단계 문구 ≤ 15자) → FAQ 4개(details, 접힘) → 30초 견적(마지막 화면이 퀴즈 카드라 텍스트만인 화면 없음) → 푸터. Setflow 는 빠짐(Flutter 라 라이브 녹화가 로딩 화면뿐).
+- 구조(v6 에서 연출 5종 추가 → 아래 "/lp/go v6 연출 5종"): 상단 바(파란 "견적 받기") → 히어로(h1 "상담한 개발자가 / 직접 만들어요" + "홈페이지 · 앱 · 업무 시스템" + 큰 숫자 56/21(getPortfolioStats, 작은 라벨, v6 부터 split-flap) + 버튼 1개 + 폰 1대 히어로 릴, 아래 "히어로 비주얼 규칙") → 쿠폰 무대 → 최근에 만든 것 = 릴(카영·BAYADA·칼가는곳·DVIA: 기기 프레임 영상 + 이름 + 결과 한 줄 + 공개 링크, 카영은 엑셀 구김 샷 유지) → 비용 = 찢긴 종이 영수증(pricing.ts 숫자 그대로) → 도장 카드(단계 문구 ≤ 15자) → FAQ 4개(details, 접힘) → 30초 견적(마지막 화면이 퀴즈 카드라 텍스트만인 화면 없음) → 푸터. Setflow 는 빠짐(Flutter 라 라이브 녹화가 로딩 화면뿐).
 - 영상: public/lp/go/video/<name>.{mp4,webm,jpg} (knife·dealer 폰 360x780, bayada·academy·dvia 브라우저 960x600, 8–10s, 각 0.1–0.8MB). 녹화 하네스 C:\Temp\lp-v5
 ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 addInitScript 로 막음, 트래커 차단) → ffmpeg x264 crf30 / vp9 crf42. dealer 는 로그인 전 샘플 데이터라 "로그인 전 샘플 데이터" 라벨 필수. BAYADA 는 "개발·시연 서버" 라벨. DVIA(WebGL)는 swiftshader 플래그 필요.
 - go-video.tsx: <source> 는 400px 근처에서만 붙임(preload none 만으론 일부 브라우저가 메타데이터를 받음) → 첫 로드엔 히어로 3개만. 보일 때만 play, 화면 밖 pause, reduced-motion 이면 <video> 자체를 안 그림(포스터만). 포스터는 next/image(지연 로드) — video poster 속성은 안 씀(즉시 로드돼서). 일시정지(WCAG 2.2.2)는 화면 전체가 버튼(.gv-tap, aria-label) + 작은 아이콘은 hover/focus/일시정지 상태에서만 보임(평소 안 보임, 2026-11-13 오너 "정지 버튼 보여서 지저분").
@@ -336,7 +336,8 @@ ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 
 ## 히어로 비주얼 규칙 (2026-11-13, 오너: "30초 견적 받기 버튼 아래 섹션 이상해")
 - 이전(브라우저 BAYADA + 폰 2대 겹친 콜라주, 칼가는곳 검은 첫 프레임, 보이는 정지 버튼, 긴 캡션)은 '지저분'으로 폐기. **겹치는 콜라주 재도입 금지.**
 - 지금: sage 패널 하나 + 폰 1대(GoHeroReel, go-video.tsx)가 실영상 3개를 순서대로 1회씩 재생 → 0.7s 크로스페이드, 아래 프로젝트 이름 탭(누르면 전환). 세로 폰 3개 나란히(옵션 b)는 390 폭에서 화면이 너무 작아 안 씀. 데스크톱은 왼쪽 카피 / 오른쪽 패널(max 520, 폰 262px)로 900px 높이 안에 들어옴.
-- 히어로 클립은 **밝고 의미 있는 첫 프레임**만: hero-bayada(모바일 390 녹화, 사이트의 우하단 고정 채팅 버튼은 녹화 때 숨김, 6.3s로 잘라 글 벽 구간 제외), hero-knife(검은 칼 인트로가 아니라 '어떤 연마가 필요하신가요' 가격 카드부터 녹화), dealer. 녹화 하네스 C:\Temp\lp-heroec2.mjs (pre 단계에서 시작 위치로 이동 후 녹화 구간 시작).
+- 히어로 클립은 **밝고 의미 있는 첫 프레임**만: hero-bayada(모바일 390 녹화, 사이트의 우하단 고정 채팅 버튼은 녹화 때 숨김, 6.3s로 잘라 글 벽 구간 제외), hero-knife(검은 칼 인트로가 아니라 '어떤 연마가 필요하신가요' 가격 카드부터 녹화), dealer. 녹화 하네스 C:\Temp\lp-hero
+ec2.mjs (pre 단계에서 시작 위치로 이동 후 녹화 구간 시작).
 - 정직성 라벨은 그 클립에만: 카영이 보일 때만 탭 아래 "카영 · 로그인 전 샘플 데이터"(자리 고정이라 점프 없음). 공용 캡션("실제 사이트 녹화 …") 없음.
 - 로드: 첫 화면에선 현재 클립만 소스, 재생 시작하면 다음 클립 소스를 붙임(preload auto). reduced-motion 이면 포스터만, 탭으로 전환.
 
@@ -401,4 +402,21 @@ ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 
 - 함정: 퀴즈 테스트에서 #quiz 로 바로 scrollIntoView 하면 쿠폰 무대를 스크롤로 통과하며 쿠폰이 열림(기존 동작) → 쿠폰 없는 경우는 무대의 '건너뛰기'를 먼저 누를 것. Windows 에서 python open('w') 는 CRLF 로 씀 → newline='
 '.
 - 확인 못 함: 실제 기기 소리·진동 체감, 스크롤만으로는 제스처가 없어 구김 소리가 안 날 수 있음(크롬 정책), 실제 서버 성공 응답에서의 봉투(mock 으로만 확인).
+
+# /lp/go v6 연출 5종: 히어로 숫자판(split-flap)·파쇄기·램프 보드·펀치 카드·작업 지시서 서명, 페이지 전체 연출 기획
+
+## 구조와 WHY (2026-11-13, 오너: "좀 더 연출 기획을 넣어줘. 부족해 아직." + 외부 마케터 "바보도 설득될 정도로")
+- 기획서: discord-codex-bridge data/outputs/1526768620972019765/2026-11-13T05-35-45-086Z/연출기획서.md. 스크롤 전체 = 의심→증거→혜택→확신→행동. 강약 배치(큰 비트 섹션 사이에 소리 없는 쉼 섹션)와 섹션 사이 '바통'(앞 장면의 마지막 움직임 방향·소리 꼬리가 다음 장면으로)을 타이밍으로만 구현 — 섹션 사이 장식 애니메이션 추가 금지(일괄 페이드업 규칙).
+- 순서: 히어로(숫자판) → 쿠폰 → **파쇄기**(shred/) → 최근에 만든 것 → **램프 보드**(lamps/) → 비용 표 → 도장 → FAQ → 퀴즈(**펀치 카드**, punch/) → 영수증 → **작업 지시서**(sign/) → 폼 → 봉투. 전부 paper/ 공용 모듈(ease·draw·stamp·sfx·runtime) 사용, 소리는 sfx.ts 에 추가(sfxFlap, shredHum/sfxChew/sfxBite/sfxSwallow/sfxMotorOff, sfxRelay/sfxEmboss, sfxPunch, sfxScribble).
+- **숫자판**(flap/go-flap.tsx, GoFlapStats 가 dl.gh-stats 를 대체): DOM 날개(transform 만 매 프레임). 서버는 최종 숫자를 렌더하고, 로드 때 각 모듈이 드럼을 **한 바퀴(10장) 돌아 같은 숫자로** 돌아옴 → 하이드레이션 깜빡임 없음·JS 없어도 정답. 탭 = 다시(소리 O, 로드 때는 제스처 전이라 무음). 키보드 경로 없음(장식이라 포커스 대상 아님). 히어로 규칙대로 기존 숫자 자리·크기만 바뀜.
+- **파쇄기**(shred/): 290svh(모바일 270) 트랙 + sticky 100svh 핀, 섹션 안에서만 sticky. p 는 앞으로만 + exp 스무딩. 3장(300만/1,200만/3,000만, 경쟁사 이름 없음, (예시) 도장) → 띠 14줄(텍스처 조각 체인: 말림=길이²에 비례하는 각도, 비틀림=|cos| 폭 단축+음영) → 철망 통 더미. 마지막 PLUCK 견적서는 트레이에 **뒷면으로** 있다가 뒤집히며 건네짐(자체 시계 land, 스크롤과 무관하게 착지) — 미리 보이면 공개가 약해서. 착지 때 뒤 책상을 페이지색으로 씻어냄(어두운 veil 은 캔버스 가장자리 박스가 보여서 안 씀). 견적서 항목·합계 = pricing.ts + estimate()(예시 답: 쇼핑몰·6~15개·회원·결제·관리자·기본형 = 590만~1,300만). 캔버스 전용이라 스크린리더용 go-sr 표를 같이 둠. 스킵 = 시작 시 트랙 top<0 이거나 트랙을 완전히 지나감(앵커) → 최종.
+- **램프 보드**(lamps/): 램프 수 = live 프로젝트 수 = 히어로 '지금 접속 가능' 숫자. **보령은 21에 포함**(실제 라이브)이라 램프는 켜되 테이프는 "고객사 · 이름 비공개", 링크 없음, 이름은 클라이언트에 안 내려감(page.tsx 에서 마스킹). 이름은 lib/portfolio.ts `name`. 램프 = 투명 button(키보드 OK). 7초 방치 = 첫 램프 라벨 자동 인쇄. 위에서 내려와 보이면 점등 체이스, 아래서 올라오면(IO entry top<0) 전부 켜진 상태.
+- **펀치 카드**(punch/): go-quiz 에서 quiz.step·draft 만 읽음(퀴즈 로직 변경 없음). answered = draft.kind 있으면 step-1, 없으면 0(restart = 새 카드). 뒤로 가기는 구멍 유지(답이 남아 있으니까). 진행 막대·n/5 는 .go-quiz 안에서 sr-only 로만 숨김(공용 QuizQuestions 는 그대로, 다른 LP 영향 없음).
+- **작업 지시서**(sign/): 법적 효력 없는 '재미 서명'(문구에 명시, 계약이라 부르지 않음). 금액은 영수증과 같은 계산(estimate − 정확히 COUPON.percent). 꾹 누르기 1.3s, 떼면 멈추고 이어짐, 완료 → 확인 도장 → 0.6s 정지 → #apply 로 스크롤 + #go-name 포커스(폼 없으면 메일 버튼). '서명 없이 입력하기' 버튼 = 같은 이동. 서명 곡선은 시드 고정 가짜 필기체(방문자 이름 아님), 데스크톱에서 폭 360 상한.
+
+## 확인 도구 (레포 밖 C:\Temp\lp-v6, lib.mjs = lp-moments 것 복사, 트래커 차단)
+- dev 훅(프로덕션 번들 제외): __flap.seek(t) / __shred.seek(p, land, motor) / __lamps.seek(t, [lamp, tapAt]) / __punch.seek(t, hits[], caret) / __sign.seek(h, since, held, clock).
+- 시트: flap-sheet / shred-sheet(+shred-zoom) / lamps-sheet / punch-sheet / sign-sheet `<url> <WxH> <out>`, DPR=2 기본. 경로: flap-drive, shred-drive `<url> [scroll,tap,idle,skip,reduced] [WxH]`, lamps-drive(+lamps-skip = 위로 휠), punch-drive, sign-drive(hold,partial,keyboard,plain,reduced → #go-name 포커스 확인).
+- 폰트: 새 문구를 넣은 파일은 C:\Temp\lp-heroontiles.txt 에 추가 후 subset2.py → out2 → public/fonts/paperlogy. v6 에서 6개 파일 추가(core 870→873자).
+- 함정: shred 의 skip 은 "멀리서 앵커 점프 후 중간으로 돌아오기"에서 처음엔 새로 갈리던 버그가 있었음 → 시작 시 top<0 = 아래서 옴. 프레임 시트에 Next dev 'N' 배지가 보이는 건 dev 서버라서(프로덕션 없음).
 
