@@ -10,6 +10,7 @@ import { sfxChime, sfxRip, sfxSlide, sfxTap, sfxTick, unlockSound, vibrate } fro
  *   auto  "자동으로 열기" button (or Enter on the strip)
  *   skip  "바로 받기": straight to the final state
  *   idle  7 s on screen untouched → tab tug → auto
+ *   scroll  full-screen stage only: page scroll progress pulls the strip (forward only, eased)
  * Sounds/vibration fire on crossings of t, so scrubbing and playback sound the same.
  */
 export type EngineEls = {
@@ -19,6 +20,15 @@ export type EngineEls = {
   coupon: HTMLElement;
   sweep: HTMLElement;
   veil: HTMLElement;
+};
+
+export type EngineOptions = {
+  /** Envelope width cap (scene makeLayout). */
+  maxEw?: number;
+  /** 7 s idle auto-open (off after the visitor chose 건너뛰기). */
+  idle?: boolean;
+  /** Full-screen stage: once out, the coupon grows toward this share of the stage width (capped 1.3x). */
+  present?: number;
 };
 
 export type EngineEvents = {
@@ -54,6 +64,14 @@ export class CouponEngine {
   private nudgeStart: number | null = null;
   private frozen = false;
   private drag: { id: number; x: number; y: number; raw0: number; at: number; moved: boolean } | null = null;
+  /** Pull target from page scroll (full-screen stage). t eases toward it, never back. */
+  private scrollTarget = 0;
+  /** Page dim floor set by the stage (entry/pinned), under the reveal veil. */
+  private dim = 0;
+  /** 0→1 hand-off of the opened coupon to the compact card (viewport rect). */
+  private settleK = 0;
+  private settleTo: DOMRect | null = null;
+  private P: ReturnType<typeof pose> | null = null;
   private cleanup: (() => void)[] = [];
 
   constructor(
@@ -62,6 +80,7 @@ export class CouponEngine {
     private font: string,
     opened: boolean,
     reduced: boolean,
+    private options: EngineOptions = {},
   ) {
     this.input.reduced = reduced;
     if (opened) {
@@ -82,7 +101,7 @@ export class CouponEngine {
     const W = stage.clientWidth;
     const H = stage.clientHeight;
     if (!W || !H) return;
-    this.L = makeLayout(W, H);
+    this.L = makeLayout(W, H, this.options.maxEw);
     this.painter = new Painter(this.els.back, this.els.front, this.L, this.font, this.input);
     coupon.style.width = `${this.L.cw}px`;
     coupon.style.height = `${this.L.ch}px`;
@@ -93,6 +112,31 @@ export class CouponEngine {
   setReduced(reduced: boolean) {
     this.input.reduced = reduced;
     this.relayout();
+  }
+
+  /** Scroll-driven pull (0→1). Forward only, like the hand: torn paper stays torn. */
+  scrub(p: number) {
+    if (this.state !== "rest" || this.frozen) return;
+    const target = Math.min(T_RIP, Math.max(0, p));
+    if (target <= this.scrollTarget + 1e-4) return;
+    this.scrollTarget = target;
+    if (target > this.t) {
+      this.resetIdle();
+      this.wake();
+    }
+  }
+
+  setDim(dim: number) {
+    if (Math.abs(dim - this.dim) < 0.002) return;
+    this.dim = dim;
+    this.paintVeil();
+  }
+
+  /** Moves the opened coupon toward the compact card (k 0→1) without redrawing the canvases. */
+  settle(k: number, to: DOMRect | null) {
+    this.settleK = k;
+    this.settleTo = to;
+    this.place();
   }
 
   setVisible(visible: boolean) {
@@ -276,7 +320,13 @@ export class CouponEngine {
       this.advance(target);
     } else if (this.state === "play") {
       this.advance(this.t + dt);
-    } else if (this.state === "rest" && this.visible && !this.drag && this.t === 0) {
+    } else if (this.state === "rest" && !this.drag && this.scrollTarget > this.t + 1e-4) {
+      // Scroll arrives in wheel/fling steps; ease toward it so the strip moves like a hand.
+      this.mode = "scroll";
+      const gap = this.scrollTarget - this.t;
+      const next = gap < 0.004 ? this.scrollTarget : this.t + gap * (1 - Math.exp(-dt * 13));
+      this.advance(this.scrollTarget >= T_RIP && next >= T_RIP - 0.002 ? T_RIP : next);
+    } else if (this.state === "rest" && this.visible && !this.drag && this.options.idle !== false) {
       this.idle += dt;
       if (this.idle >= IDLE_SECONDS && this.nudgeStart === null) this.nudgeStart = now;
     }
@@ -291,7 +341,7 @@ export class CouponEngine {
     this.input.breath = now / 1000;
     this.render();
 
-    const busy = this.tween || this.state === "play" || this.drag;
+    const busy = this.tween || this.state === "play" || this.drag || this.scrollTarget > this.t + 1e-4;
     if (this.state !== "done" && (busy || this.visible)) this.raf = requestAnimationFrame(this.tick);
   };
 
@@ -299,11 +349,10 @@ export class CouponEngine {
     if (!this.L || !this.painter) return;
     this.input.mode = this.mode;
     const P = pose(this.t, this.L, this.input);
+    this.P = P;
     this.painter.draw(P);
-    const { coupon, sweep, veil, back, front, stage } = this.els;
+    const { sweep, back, front, stage } = this.els;
     const c = P.coupon;
-    coupon.style.transform = `translate3d(${(c.x - this.L.cw / 2).toFixed(2)}px, ${(c.y - this.L.ch / 2).toFixed(2)}px, 0) rotate(${c.rot.toFixed(4)}rad) scale(${c.scale.toFixed(4)})`;
-    coupon.style.zIndex = c.front ? "3" : "1";
     const sweeping = c.sweep > 0 && c.sweep < 1;
     sweep.style.opacity = sweeping ? "1" : "0";
     sweep.style.transform = `translateX(${(-140 + 280 * c.sweep).toFixed(1)}%) skewX(-18deg)`;
@@ -311,14 +360,56 @@ export class CouponEngine {
     back.style.filter = dim;
     front.style.filter = dim;
     stage.toggleAttribute("data-lit", P.veil > 0.001);
-    veil.style.opacity = P.veil.toFixed(3);
-    if (P.veil > 0.001) {
+    this.place();
+    this.paintVeil();
+  }
+
+  private place() {
+    const P = this.P;
+    if (!P) return;
+    const { coupon, stage } = this.els;
+    const c = P.coupon;
+    let x = c.x;
+    let y = c.y;
+    let rot = c.rot;
+    let scale = c.scale;
+    if (this.options.present) {
+      // Present it: after it clears the pocket the coupon grows to fill the screen (smoothstep).
+      const boost = Math.min(1.3, Math.max(1, (this.L.W * this.options.present) / this.L.cw));
+      const k = Math.min(1, Math.max(0, (this.t - 1.55) / 0.9));
+      scale *= 1 + (boost - 1) * k * k * (3 - 2 * k);
+    }
+    if (this.settleK > 0 && this.settleTo) {
+      // Fly to the compact card: position inOutCubic, size outCubic (shrinks a touch ahead), turn out.
+      const k = this.settleK;
+      const kp = k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2;
+      const ks = outCubic(k);
+      const rect = stage.getBoundingClientRect();
+      const to = this.settleTo;
+      x += (to.left + to.width / 2 - rect.left - x) * kp;
+      y += (to.top + to.height / 2 - rect.top - y) * kp;
+      rot *= 1 - ks;
+      scale += (to.width / this.L.cw - scale) * ks;
+    }
+    coupon.style.transform = `translate3d(${(x - this.L.cw / 2).toFixed(2)}px, ${(y - this.L.ch / 2).toFixed(2)}px, 0) rotate(${rot.toFixed(4)}rad) scale(${scale.toFixed(4)})`;
+    coupon.style.zIndex = c.front ? "3" : "1";
+  }
+
+  private paintVeil() {
+    const P = this.P;
+    if (!P) return;
+    const { veil, stage } = this.els;
+    const c = P.coupon;
+    veil.style.opacity = Math.max(P.veil, this.dim).toFixed(3);
+    if (P.veil > 0.001 && P.veil >= this.dim) {
       const rect = stage.getBoundingClientRect();
       const cx = rect.left + c.x;
       const cy = rect.top + c.y;
       // Uniform dim with only a faint lift around the coupon (no bright halo).
       const r = Math.max(this.L.cw, this.L.ch) * 0.7;
       veil.style.background = `radial-gradient(circle at ${cx.toFixed(0)}px ${cy.toFixed(0)}px, rgba(18,22,20,0.34) ${r.toFixed(0)}px, rgba(18,22,20,0.5) ${(r * 2.4).toFixed(0)}px)`;
+    } else {
+      veil.style.background = "";
     }
   }
 

@@ -17,7 +17,7 @@ export const T_RISE = 1.22;
 export const T_END = 3.7;
 export const NOTCHES = 12;
 
-export type Mode = "hand" | "tap" | "auto" | "idle" | "skip";
+export type Mode = "hand" | "tap" | "auto" | "idle" | "skip" | "scroll";
 
 export type SceneInput = {
   mode: Mode;
@@ -52,9 +52,10 @@ export function rng(seed: number) {
 export type Layout = ReturnType<typeof makeLayout>;
 export const BLEED = 96;
 
-export function makeLayout(W: number, H: number) {
+/** maxEw: 420 in the in-page card, larger in the full-screen stage. */
+export function makeLayout(W: number, H: number, maxEw = 420) {
   // Room on the left for the tab (≈0.13·ew) without clipping.
-  const ew = Math.round(Math.min(W * 0.86, (W / 2 - 8) / 0.57, H * 0.98, 420));
+  const ew = Math.round(Math.min(W * 0.86, (W / 2 - 8) / 0.57, H * 0.98, maxEw));
   const eh = Math.round(ew * 0.6);
   const stripH = Math.round(eh * 0.15);
   const tabW = Math.round(stripH * 1.45);

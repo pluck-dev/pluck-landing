@@ -325,7 +325,7 @@
 - 금지 카피: "~말고, ~보세요" 슬로건, 혜택 3개 나열(triad), "흔한 외주 vs PLUCK" 비교표, em dash(—), 완벽히 평행한 문장 반복.
 - 대신: 사이트 토큰·컴포넌트(.shell .wordmark .header-contact .button* .section-title .qz* .footer, --paper/--ink/--blue/--sage) 재사용, 실제 스크린샷을 크게·일부는 디테일로 크롭, 손그림 링·화살표·짧은 메모(손글씨 웹폰트는 사이트가 안 쓰므로 Noto Sans KR 700 + 살짝 기울임), 1인칭 구어 해요체, 실제 숫자(getPortfolioStats·pricing.ts)만. 섹션마다 '왼쪽 제목/오른쪽 내용'만 반복하지 말고 한 칼럼 섹션을 섞는다.
 
-# /lp/go 할인권 봉투 이벤트: 10% 쿠폰, render(t) 씬, 4경로, 리드 연결(source.coupon), 오너 편집 상수 lib/coupon.ts
+# /lp/go 할인권 봉투 이벤트: 10% 쿠폰, render(t) 씬, 4경로, 전체 화면 무대(sticky 핀·스크롤 당김·settle), 리드 연결(source.coupon), 오너 편집 상수 lib/coupon.ts
 
 ## 구조와 WHY (2026-11-13, 오너: "광고 들어와서 저런 이벤트 하고 10% 할인권 받으면 기분 좋잖아", 10% 오너 승인)
 - 페이지의 **유일한 리치 모먼트**(reveal-craft 스킬). 나머지 v4 수제 톤은 그대로 — 이벤트가 AI 티(글로우·반짝이·마스코트)를 다시 들여오지 않게 종이·잉크·사이트 토큰만. 소개 바로 아래(최근에 만든 것 위) sage 패널 섹션.
@@ -340,6 +340,17 @@
 - 캔버스는 무대보다 96px 아래로 더 큼(BLEED) — 데스크톱에서 봉투가 떨어질 때 잘리던 문제. 캔버스·쿠폰은 섹션이 600px 안에 들어올 때 생성(lazy).
 - 4경로+: 드래그(touch-action pan-y, 80% 넘기고 놓으면 완료, 찢긴 건 안 돌아감) / 세 번 탭(각 1/3, 탭 사이 정지 프레임 흔들림 0) / '자동으로 열기' / '바로 받기'(즉시 최종) / 화면 55% 이상 보인 채 7초 방치 → 탭 당김 1초 → 자동. 키보드: 무대 포커스 후 → 키 한 칸, Enter 자동. reduced-motion: 찢김 순간 바로 최종(흔들림·섬광·조각·veil·빛 없음). 소리는 첫 제스처 전엔 AudioContext 자체를 안 만듦.
 
+## 전체 화면 무대 (2026-11-13, 오너: "스크롤 내리다가 지나칠 수 있으니까, 해당 영역 가면 저 쿠폰이 전체 영역으로 돼야")
+- 뷰 3개(go-coupon.tsx View, 페이지 로드 때 한 번 정해 고정 — 무대 도중 쿠폰이 발급돼도 뷰가 바뀌면 안 되니까): **stage**(첫 방문) / **card**(reduced-motion, 또는 '건너뛰기' 누름 = 예전 인페이지 카드, 미개봉 + '열기') / **done**(localStorage 쿠폰 있음 = 작은 발급 쿠폰 카드, 봉투 없음). 서버는 stage 를 렌더하고 hydration 직후 useSyncExternalStore 로 교정(useLayoutEffect setState 는 lint react-hooks/set-state-in-effect 에 걸림).
+- stage = .cpn-track(220svh) 안의 sticky .cpn-pin(100svh, z41 → 상단 바(z30)까지 덮음). 진입 중 veil 로 페이지 어둡게 + 시트 0.94→1 scale(레이아웃 안 바꾸는 transform 이라 엔진 relayout 없음). 고정 후 스크롤 0.04P~0.6P = engine.scrub(당김 t, 앞으로만, exp 이징 → 휠 계단도 손처럼, 눈금 틱/진동 동일, mode "scroll"). t=1 이후 찢김·공개는 시간 기반.
+- **트랙 늘이기(WHY)**: scroll-jacking 없이 "공개 중엔 안 풀리고 1초 정지"를 만들려고, 공개+HOLD 1s 끝날 때까지 트랙 높이를 화면 아래쪽에서 계속 늘린다(y+2P 확보, 0.5P 단위). 화면 밖이라 점프 없음. 정지 끝나면 settleAt=현재 y 로 고정하고 트랙을 settleAt+0.75P+P 로 맞춤(줄어드는 것도 화면 밖). MAX_GROW 6P 안전 상한. 앵커(#quiz)로 이미 지나갔으면 settle 완료로 처리 → 핀이 다시 붙지 않음.
+- settle: .cpn-done-wrap(done 패널)이 margin-top -75svh 로 트랙 마지막 SETTLE(0.75P) 구간에 겹쳐 있어 아래에서 올라오고, 핀 쿠폰이 그 .cp-static 의 실시간 rect 로 날아감(engine.settle, 캔버스 재그리기 없이 transform 만). s=1 에 핀 숨기고 static 보임(data-settled). 시트 배경·글·봉투는 s/0.22 로 빨리 사라져야 done 제목과 안 겹침. 스크롤 올리면 순수 함수라 거꾸로 재생.
+- 무대에서 쿠폰은 공개 후 화면 폭 90%까지 커짐(engine present, 최대 1.3배) — 세로 폰은 봉투가 폭에 막혀(≈314px) 안 커 보였음. 데스크톱 maxEw 700.
+- .cp-static 은 container-type inline-size + --cw:100cqw 라 글자가 카드 폭을 따라감 → 날아온 쿠폰과 바뀔 때 글자 크기 같음.
+- 건너뛰기: card 뷰로(트랙 사라짐) + 섹션이 화면 위로 지나갔으면 그 위치로 즉시 스크롤(사용자 동작이라 허용), card 뷰 엔진은 7초 자동 열기 끔(idle:false).
+- 확인되지 않음: 실제 iOS Safari·인스타 인앱 주소창 변화, 스크롤만으로는 소리·진동이 안 날 수 있음(제스처 필요; 무대를 손가락으로 끌어 스크롤하면 pointerdown 으로 unlock 시도).
+
 ## 확인 도구
 - dev 에서만 `window.__coupon.seek(t, mode, nudge)` (프로덕션 번들에 없음). 레포 밖 C:\Temp\coupon-harness: `sheet.mjs <url> <WxH> <t,...|t n nudge> <out> [cols] [mode] [scale]`(CLIP=1 이면 무대만), `drive.mjs <url> [paths]` = hand,tap,auto,skip,idle,reduced 각각 새 컨텍스트 → 쿠폰 표시·localStorage·이벤트 큐·퀴즈 클릭 가능·새로고침 후 같은 코드.
+- 전체 화면 무대: `stage.mjs <url> <WxH> <out> [cols] [scale]`(실제 스크롤 위치·시간으로 진입→당김→찢김→공개→settle→퀴즈 프레임 시트), `drive2.mjs <url> [scroll,drag,skip,returning,reduced,idle,auto,instant] [WxH]`, `jump.mjs <WxH>`(휠 60px마다 scrollY·done 카드 위치 점프 검사).
 - 이 레포는 다른 세션이 dev 서버(3107)를 띄워둘 때가 있음 — 새 next dev 는 "Another next dev server" 로 실패하니 그걸 쓴다.
