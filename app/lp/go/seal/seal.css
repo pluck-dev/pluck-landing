@@ -1,0 +1,30 @@
+/*
+ * /lp/go 보내기 = 봉투 봉하기. Stage (canvas) and thank-you text share one grid cell: the text comes
+ * up where the envelope was while the stage shrinks to the text's height.
+ */
+.seal {
+  display: grid;
+}
+.seal > * {
+  grid-area: 1 / 1;
+}
+.seal-stage {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.seal-stage canvas {
+  display: block;
+}
+.seal-text {
+  align-self: start;
+  opacity: var(--seal-text, 0);
+  transform: translateY(calc((1 - var(--seal-text, 0)) * 14px));
+}
+.seal:not([data-done]) .seal-text {
+  pointer-events: none;
+}
+.seal[data-done] .seal-text {
+  opacity: 1;
+  transform: none;
+}

@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { submitGoInquiry } from "@/app/contact/actions";
 import { GO_FORM_SOURCE } from "@/lib/crm/constants";
@@ -16,6 +15,8 @@ import { ConsentNotice } from "../dev/dev-quiz";
 import { REPLY_PROMISE } from "../dev/config";
 import { CouponNote, useActiveCoupon } from "./coupon/coupon-note";
 import { unlockSound } from "./paper/sfx";
+import { PROJECT_KINDS, SCALES } from "@/lib/quote/pricing";
+import { GoSuccess } from "./go-success";
 import { GoReceipt } from "./receipt/go-receipt";
 
 /** /lp/go quiz: questions → printed receipt (go-receipt.tsx) → name/contact form (form tag "lp-go"). */
@@ -24,6 +25,12 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
   const coupon = useActiveCoupon();
   const rootRef = useRef<HTMLDivElement>(null);
   useStepFocus(quiz.step, rootRef);
+  // What the visitor typed, for the sheet that folds into the envelope after a confirmed send.
+  const [typed, setTyped] = useState({ name: "", contact: "", memo: "" });
+  const onType = (event: FormEvent<HTMLDivElement>) => {
+    const { name, value } = event.target as HTMLInputElement;
+    if (name === "name" || name === "contact" || name === "memo") setTyped((current) => ({ ...current, [name]: value }));
+  };
 
   return (
     // Any answer tap is a gesture: let the receipt printer make sound later (no AudioContext before that).
@@ -38,7 +45,7 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
       {quiz.step > QUIZ_STEP_COUNT && quiz.answers && (
         <div className="qz-result">
           <GoReceipt answers={quiz.answers} onRestart={quiz.restart} />
-          <div className="qz-card qz-lead go-lead" id="apply">
+          <div className="qz-card qz-lead go-lead" id="apply" onInput={onType}>
             <h2>이 조건으로 기획안·견적 받기</h2>
             <p>
               고르신 답을 보고 기획안 초안이랑 기능별 견적, 일정을 정리해서 보내드려요. 받아 보시고 할지 말지
@@ -60,23 +67,15 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
                 submitLabel="무료로 기획안·견적 받기"
                 consent={<ConsentNotice />}
                 success={(focusRef) => (
-                  <div className="inquiry-success ld-thanks" role="status">
-                    <h3 ref={focusRef} tabIndex={-1}>
-                      신청이 접수됐어요
-                    </h3>
-                    <p>
-                      {REPLY_PROMISE}드릴게요. 남겨주신 연락처로 몇 가지 더 여쭤보고 기획안 초안이랑 견적, 일정을
-                      정리해서 보내드릴게요.
-                    </p>
-                    <div className="ld-thanks-actions">
-                      <Link className="button button-ink" href="/#work">
-                        포트폴리오 전체 보기 <ArrowRight size={18} aria-hidden="true" />
-                      </Link>
-                      <a className="contact-email" href={`mailto:${email}`}>
-                        {email}
-                      </a>
-                    </div>
-                  </div>
+                  <GoSuccess
+                    focusRef={focusRef}
+                    email={email}
+                    sheet={{
+                      ...typed,
+                      kind: `${PROJECT_KINDS[quiz.answers!.kind].label} · 화면 ${SCALES[quiz.answers!.scale].label}`,
+                      coupon: coupon?.code,
+                    }}
+                  />
                 )}
               />
             ) : (
