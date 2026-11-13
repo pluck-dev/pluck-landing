@@ -328,13 +328,13 @@
 # /lp/go 할인권 봉투 이벤트: 10% 쿠폰, render(t) 씬, 4경로, 전체 화면 무대(sticky 핀·스크롤 당김·settle), 리드 연결(source.coupon), 오너 편집 상수 lib/coupon.ts
 
 ## 구조와 WHY (2026-11-13, 오너: "광고 들어와서 저런 이벤트 하고 10% 할인권 받으면 기분 좋잖아", 10% 오너 승인)
-- 페이지의 **유일한 리치 모먼트**(reveal-craft 스킬). 나머지 v4 수제 톤은 그대로 — 이벤트가 AI 티(글로우·반짝이·마스코트)를 다시 들여오지 않게 종이·잉크·사이트 토큰만. 소개 바로 아래(최근에 만든 것 위) sage 패널 섹션.
+- 처음엔 페이지의 유일한 리치 모먼트였음 → 오너 "이런 연출 더 있어야 해" 후 같은 종이 세계로 4개 추가(아래 '/lp/go 종이 연출 4종'). 나머지 v4 수제 톤은 그대로 — 이벤트가 AI 티(글로우·반짝이·마스코트)를 다시 들여오지 않게 종이·잉크·사이트 토큰만. 소개 바로 아래(최근에 만든 것 위) sage 패널 섹션.
 - 정직성: 모두 같은 10%, 추첨·확률·다른 상품·카운트다운 금지. 조건 문구·기간·퍼센트는 **lib/coupon.ts `COUPON`** 한 곳(오너 편집). validDays 와 terms 의 '30일' 문구를 같이 바꿀 것.
 - 코드: 브라우저에서 1회 생성 `PLK-` + 6자(0/O/1/I/L 제외), localStorage `pluck_coupon_v1` {code, issuedAt}. 이미 있으면 봉투가 열린 상태로 시작 → 새로고침해도 같은 코드(파밍 방지). 서버는 **형식만** 검사(isCouponCode/isCouponIssuedAt) — 실제 할인은 계약 때 오너가 적용.
 - 리드: go-quiz → QuoteLeadForm extra {coupon, coupon_issued} → submitGoInquiry 가 inquiries.source.coupon {code, issued_at} + message 첫 줄 "[10% 할인권 PLK-… · YYYY. MM. DD 발급]". Discord 필드 "🎟️ 할인권", 관리자 문의 상세 '유입 경로'에 '할인권' 행. jsonb 라 마이그레이션 없음. Lead 이벤트는 그대로, 공개 시 fbq trackCustom CouponOpened / gtag coupon_opened {path}(새로 발급될 때 1회, 전환 아님).
 
 ## 씬 구조 (app/lp/go/coupon/)
-- scene.ts `pose(t)` 순수 함수: t 0→1 = 찢은 정도(손이 scrub), t=1 찢김(흔들림·종이 섬광·조각 낙하·봉투 squash), 1.22~2.5 쿠폰이 빠져나오고 봉투는 떨어졌다 뒤로 들어감, 1.0~3.6 veil, 2.5~3.05 쿠폰 위 빛 한 번, T_END 3.7. engine.ts 가 t 를 움직이고 **t 교차로** 소리(sfx.ts WebAudio 합성)·진동을 낸다 → 손/자동이 같은 소리.
+- scene.ts `pose(t)` 순수 함수: t 0→1 = 찢은 정도(손이 scrub), t=1 찢김(흔들림·종이 섬광·조각 낙하·봉투 squash), 1.22~2.5 쿠폰이 빠져나오고 봉투는 떨어졌다 뒤로 들어감, 1.0~3.6 veil, 2.5~3.05 쿠폰 위 빛 한 번, T_END 3.7. engine.ts 가 t 를 움직이고 **t 교차로** 소리(paper/sfx.ts WebAudio 합성)·진동을 낸다 → 손/자동이 같은 소리.
 - 레이어: back 캔버스(그림자·뒷판) < 쿠폰 DOM(코드 선택·복사 가능) < front 캔버스(앞면·띠·조각). 쿠폰이 주머니를 완전히 벗어난 순간(cleared(): t 이전 구간 샘플링)부터 맨 앞 z — 봉투가 다시 올라와도 래치. veil 은 fixed z40, 무대는 veil 동안만 z41(data-lit) → 쿠폰만 밝게, 봉투는 brightness 필터로 살짝만 어둡게. veil 구멍을 크게 밝히면 '라디얼 글로우'로 보여서 0.34→0.5 로 약하게만.
 - 찢긴 띠는 정면에서 보이는 그대로 그림: 폭은 항상 세로, 접힘(θ)·말림은 깊이 방향이라 단축·음영 + 손끝의 작은 종이 롤 + 집힌 파란 탭. 화면 평면에서 휘는 띠(처음 버전)는 종이로 안 읽혔음.
 - 캔버스는 무대보다 96px 아래로 더 큼(BLEED) — 데스크톱에서 봉투가 떨어질 때 잘리던 문제. 캔버스·쿠폰은 섹션이 600px 안에 들어올 때 생성(lazy).
@@ -354,3 +354,22 @@
 - dev 에서만 `window.__coupon.seek(t, mode, nudge)` (프로덕션 번들에 없음). 레포 밖 C:\Temp\coupon-harness: `sheet.mjs <url> <WxH> <t,...|t n nudge> <out> [cols] [mode] [scale]`(CLIP=1 이면 무대만), `drive.mjs <url> [paths]` = hand,tap,auto,skip,idle,reduced 각각 새 컨텍스트 → 쿠폰 표시·localStorage·이벤트 큐·퀴즈 클릭 가능·새로고침 후 같은 코드.
 - 전체 화면 무대: `stage.mjs <url> <WxH> <out> [cols] [scale]`(실제 스크롤 위치·시간으로 진입→당김→찢김→공개→settle→퀴즈 프레임 시트), `drive2.mjs <url> [scroll,drag,skip,returning,reduced,idle,auto,instant] [WxH]`, `jump.mjs <WxH>`(휠 60px마다 scrollY·done 카드 위치 점프 검사).
 - 이 레포는 다른 세션이 dev 서버(3107)를 띄워둘 때가 있음 — 새 next dev 는 "Another next dev server" 로 실패하니 그걸 쓴다.
+
+# /lp/go 종이 연출 4종: 견적 영수증·진행 도장 카드·엑셀 구김·봉투 봉하기, 공용 paper/ 모듈, dev 하네스 /lp/go/lab
+
+## 구조와 WHY (2026-11-13, 오너: "잘했네, 이런 연출 더 있어야 해. 그래야 랜딩이지")
+- 공용 모듈 **app/lp/go/paper/**: ease.ts(구간 이징·ring 감쇠사인·rng), draw.ts(종이 섬유·손때 테두리·rubberStamp 잉크 마모·나무 도장 makeStampTool/drawStampTool·drawInk 번짐), stamp.ts(도장 한 번 = stampPose(s), 연속 도장 = carryPose), sfx.ts(쿠폰 소리 + 프린터·도장·구김·접기·보내기), runtime.ts(whenNear lazy·Loop·prefersReduced). 봉투 쿠폰도 이걸 씀 → **새 연출은 여기 헬퍼를 쓰고 복제하지 말 것**.
+- 모두 render(t)/pose(p) 순수 함수 + 교차 시 소리·진동(8ms / 큰 비트 [20,30,40] + 흔들림), dev 전용 window 훅(__receipt/__stamps/__crumple/__seal, 프로덕션 번들에서 제거 확인).
+- **견적 영수증**(receipt/): /lp/go 에서만 QuoteResultCard 대신(다른 LP 퀴즈는 그대로). 줄 = pricing.ts 값 그대로(유형 기본·화면 배수·기능 가산·디자인 배수), 합계 = estimate() → 서버가 다시 계산하는 값과 같음. 쿠폰이 열려 있으면 '합계 → 할인권 −10%(정확히 10%, 반올림 안 함) → 할인 적용 예상 금액'. 숫자는 DOM(선택 가능), 종이·프린터·도장은 캔버스. trackQuoteResult 는 GoReceipt 가 대신 호출. 레이아웃은 최종 높이를 처음부터 잡아 둠(아래 폼이 안 밀림). 도장은 금액을 가리지 않게 쿠폰 줄 아래 비워 둔 칸(padding-bottom 46px)에 찍힘. 소리: 퀴즈 클릭(onPointerDown)에서 unlockSound.
+- **진행 도장 카드**(stamps/): STEPS 에 label/when. when 은 config.ts 의 REPLY_PROMISE/PLAN_PROMISE 에서 잘라냄 → 문구를 바꾸면 도장도 따라감(정규식이 안 맞으면 when 이 빠짐). 상자가 화면 82% 선을 지나면 찍힘(앞으로만). 연속 도장은 **손 하나가 도장을 옮기는 carryPose**(0.36s 간격) — 따로 떨어뜨리면 도구가 2~3개 동시에 떠서 '손이 여러 개'로 보였음. 핀(sticky) 안 씀: 읽는 속도(≈450px/s)에선 전부 화면 안에서 찍히고, 아주 빠른 훑기(≈1300px/s)면 4·5번은 화면 밖에서 찍힘(알려진 한계).
+- **엑셀 → 실제 화면**(crumple/): 카영 스토리 main 샷만(Story.crumple). 출력물 = 가상 행 + '예시 · 가상 데이터' 도장(모서리, 펜 자국과 안 겹치게). 9x6 메시 아핀 텍스처 매핑 + 면별 법선 음영. 회전은 당김(pull)을 따라가야 함(일찍 돌리면 넓은 시트가 프레임 밖으로 크게 휘둘림). 핀 없이 스크롤 진행도(스크린샷 top 80%→25%)를 exp 로 따라감(양방향). 캔버스는 pointer-events none(옆 텍스트 링크 클릭 막지 않음 확인), 탭은 .shot-stage 에서. 손그림 마크는 data-covered 동안 숨겼다가 드러난 뒤 그려짐.
+- **봉투 봉하기**(seal/ + go-success.tsx): QuoteLeadForm 의 success 렌더 안에서만 마운트 = 서버가 success 를 돌려준 뒤에만. 시트에 방문자가 입력한 이름·연락처(가운데 마스킹)·메모·유형·쿠폰. 무대와 감사 문구가 같은 grid 칸 → 봉투가 나간 뒤 무대 높이가 문구 높이로 줄어듦(점프 없음). 실패 응답이면 봉투 없음(확인함).
+
+## 확인 도구 (레포 밖 C:\Temp\lp-moments, NODE_PATH 대신 lib.mjs 가 레포 playwright/sharp 사용, 트래커 차단)
+- 시트: receipt-sheet.mjs / stamps-sheet.mjs / crumple-sheet.mjs `<url> <WxH> <out>`, seal-sheet.mjs `<base> <WxH> <out>`(lab 폼 → mock 전송).
+- 경로: receipt-drive.mjs(auto,hand,skip,reduced,nocoupon + 폼 입력만, 제출 안 함), stamps-drive.mjs(scroll,tap,skip,reduced; WAIT=200 이 읽는 속도), crumple-drive.mjs, seal-drive.mjs(auto,tap,flick,reduced,fail), record.mjs `<url> <dir> live|lab`.
+- **/lp/go/lab** = dev 전용(프로덕션 404 확인) 실제 QuoteLeadForm + mock action(?fail 이면 에러). 실제 문의를 보내지 않고 성공 연출 확인용.
+- 함정: 퀴즈 테스트에서 #quiz 로 바로 scrollIntoView 하면 쿠폰 무대를 스크롤로 통과하며 쿠폰이 열림(기존 동작) → 쿠폰 없는 경우는 무대의 '건너뛰기'를 먼저 누를 것. Windows 에서 python open('w') 는 CRLF 로 씀 → newline='
+'.
+- 확인 못 함: 실제 기기 소리·진동 체감, 스크롤만으로는 제스처가 없어 구김 소리가 안 날 수 있음(크롬 정책), 실제 서버 성공 응답에서의 봉투(mock 으로만 확인).
+
