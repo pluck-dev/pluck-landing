@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { getPortfolioStats, getProject, projects, type PortfolioProject } from "@/lib/portfolio";
 import { baseOpenGraph, CONTACT_EMAIL, defaultOgImage, GITHUB_URL } from "@/lib/site";
 import { isInquiryConfigured } from "@/lib/supabase/env";
-import { formatPriceRange, PROJECT_KINDS, type KindKey } from "@/lib/quote/pricing";
+import { DESIGNS, estimate, FEATURES, formatPrice, formatPriceRange, PROJECT_KINDS, SCALES, type KindKey, type QuoteAnswers } from "@/lib/quote/pricing";
 import { PLAN_PROMISE, REPLY_PROMISE } from "../dev/config";
 import { CouponNote } from "./coupon/coupon-note";
 import { GoCoupon } from "./coupon/go-coupon";
@@ -14,6 +14,7 @@ import { GoFlapStats } from "./flap/go-flap";
 import { GoQuiz } from "./go-quiz";
 import { GoHeroReel, GoVideo, type HeroClip, type Loop } from "./go-video";
 import { Shot } from "./shot";
+import { GoShred } from "./shred/go-shred";
 import { GoStamps, type Step } from "./stamps/go-stamps";
 import "./go.css";
 
@@ -90,6 +91,24 @@ const REEL: Reel[] = [
     loop: { name: "dvia", device: "browser", url: "DVIA", alt: "대일시스템 사이트의 진동 파형 파티클 첫 화면과 3D 제품 섹션" },
   },
 ];
+
+/**
+ * The shredder (shred/): three total-only example quotes (generic, labelled 예시) against one itemised
+ * sheet whose every row and total come from lib/quote/pricing.ts for one example answer set.
+ */
+const SHRED_QUOTES = [300, 1200, 3000].map((manwon) => ({ total: formatPrice(manwon) }));
+const SHRED_ANSWERS: QuoteAnswers = { kind: "shop", scale: "m", features: ["auth", "payment", "admin"], design: "basic", timeline: "m2" };
+const plus = (range: readonly [number, number]) => `+${formatPriceRange(range)}`;
+const SHRED_SHEET = {
+  rows: [
+    { label: `${PROJECT_KINDS.shop.label} 기본`, amount: formatPriceRange(PROJECT_KINDS.shop.price) },
+    ...SHRED_ANSWERS.features.map((key) => ({ label: FEATURES[key].label, amount: plus(FEATURES[key].price) })),
+    { label: `화면 ${SCALES.m.label}`, amount: `×${SCALES.m.factor[0].toFixed(1)}` },
+    { label: DESIGNS.basic.label, amount: `×${DESIGNS.basic.factor[0]}` },
+  ],
+  total: formatPriceRange(estimate(SHRED_ANSWERS).price),
+  note: "(예시) 참고 범위 · VAT 별도",
+};
 
 const KIND_KEYS = Object.keys(PROJECT_KINDS) as KindKey[];
 const toWeeks = ([low, high]: readonly [number, number]) =>
@@ -173,6 +192,11 @@ export default function GoLandingPage() {
         </section>
 
         <GoCoupon />
+
+        {/* Tension before the proof: vague total-only quotes go into the shredder, an itemised one comes out. */}
+        <section className="shr shell" aria-labelledby="go-shred-title">
+          <GoShred quotes={SHRED_QUOTES} sheet={SHRED_SHEET} label="총액만 적힌 견적은 그만" />
+        </section>
 
         <section className="gr" id="work" aria-labelledby="go-work-title">
           <div className="shell">

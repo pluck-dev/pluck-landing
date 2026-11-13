@@ -236,3 +236,81 @@ export function sfxFlap(index: number, heavy = false) {
   burst(audio, { dur: heavy ? 0.03 : 0.014, gain: heavy ? 0.16 : 0.09, type: "bandpass", freq: heavy ? f * 0.7 : f, q: 2.4 });
   tone(audio, { dur: heavy ? 0.07 : 0.025, gain: heavy ? 0.1 : 0.035, freq: heavy ? 260 : 420, freqTo: heavy ? 120 : 260, type: "triangle" });
 }
+
+/* ---------- desk shredder ---------- */
+
+let hum: { gain: GainNode; osc: OscillatorNode; sub: OscillatorNode } | null = null;
+
+/**
+ * The shredder motor: a low saw + sub through a lowpass, held open while paper is being fed.
+ * level 0..1 (0 = off). Pitch sags a little under load, as a small motor does.
+ */
+export function shredHum(level: number) {
+  const audio = ready();
+  if (!audio) {
+    if (hum && ctx) hum.gain.gain.setTargetAtTime(0, ctx.currentTime, 0.03);
+    return;
+  }
+  if (!hum) {
+    const gain = audio.createGain();
+    gain.gain.value = 0;
+    const filter = audio.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 520;
+    filter.Q.value = 0.8;
+    const osc = audio.createOscillator();
+    osc.type = "sawtooth";
+    osc.frequency.value = 96;
+    const sub = audio.createOscillator();
+    sub.type = "square";
+    sub.frequency.value = 48;
+    const subGain = audio.createGain();
+    subGain.gain.value = 0.35;
+    osc.connect(filter);
+    sub.connect(subGain).connect(filter);
+    filter.connect(gain).connect(audio.destination);
+    osc.start();
+    sub.start();
+    hum = { gain, osc, sub };
+  }
+  const now = audio.currentTime;
+  hum.gain.gain.setTargetAtTime(Math.min(1, level) * 0.05, now, level > 0 ? 0.04 : 0.09);
+  hum.osc.frequency.setTargetAtTime(96 - level * 12, now, 0.08);
+  hum.sub.frequency.setTargetAtTime(48 - level * 6, now, 0.08);
+}
+
+/** Cutter teeth chewing paper: a few dry crackles. load 0..1. */
+export function sfxChew(load: number) {
+  const audio = ready();
+  if (!audio) return;
+  let at = 0;
+  for (let i = 0; i < 3; i++) {
+    const dur = 0.01 + Math.random() * 0.02;
+    burst(audio, { at, dur, gain: 0.05 + load * 0.07, type: "bandpass", freq: 2200 + Math.random() * 2400, q: 1.6 });
+    at += dur * (0.5 + Math.random());
+  }
+}
+
+/** The teeth biting the leading edge of a sheet. */
+export function sfxBite() {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.06, gain: 0.16, type: "bandpass", freq: 1500, q: 1.1 });
+  tone(audio, { dur: 0.08, gain: 0.08, freq: 140, freqTo: 80 });
+}
+
+/** The tail of a sheet sucked in, strips dropping into the basket. */
+export function sfxSwallow() {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.12, gain: 0.12, type: "bandpass", freq: 2600, freqTo: 900, q: 0.9 });
+  burst(audio, { at: 0.1, dur: 0.22, gain: 0.06, type: "lowpass", freq: 900 });
+}
+
+/** Motor winding down when the last sheet is through. */
+export function sfxMotorOff() {
+  const audio = ready();
+  if (!audio) return;
+  tone(audio, { dur: 0.5, gain: 0.05, freq: 90, freqTo: 40, type: "sawtooth" });
+  burst(audio, { at: 0.02, dur: 0.02, gain: 0.1, type: "highpass", freq: 3200 });
+}

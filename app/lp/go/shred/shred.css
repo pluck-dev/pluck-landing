@@ -1,0 +1,60 @@
+/*
+ * /lp/go 파쇄기: a tall track with a sticky stage (sticky only inside its own section, no scroll-jacking).
+ * The canvas draws tray, sheets, shredder and basket; the title is the only text.
+ */
+.shr {
+  padding-top: 72px;
+}
+.shr-track {
+  position: relative;
+  height: 290svh;
+}
+.shr-pin {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  padding-top: 92px;
+  padding-bottom: 8px;
+}
+.shr-title {
+  text-align: center;
+}
+.shr-stage {
+  position: relative;
+  flex: 1;
+  width: min(640px, 100%);
+  min-height: 0;
+  margin: 10px auto 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.shr-stage[data-done] {
+  cursor: default;
+}
+.shr-canvas {
+  position: absolute;
+  inset: 0;
+}
+@media (max-width: 700px) {
+  .shr {
+    padding-top: 48px;
+  }
+  .shr-track {
+    height: 270svh;
+  }
+  .shr-pin {
+    padding-top: 74px;
+  }
+}
+/* Reduced motion: no track to scroll through, just the final sheet on the desk. */
+@media (prefers-reduced-motion: reduce) {
+  .shr-track {
+    height: auto;
+  }
+  .shr-pin {
+    position: relative;
+    height: min(100svh, 860px);
+  }
+}
