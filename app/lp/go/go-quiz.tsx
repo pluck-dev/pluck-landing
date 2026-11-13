@@ -15,13 +15,41 @@ import { ConsentNotice } from "../dev/dev-quiz";
 import { REPLY_PROMISE } from "../dev/config";
 import { CouponNote, useActiveCoupon } from "./coupon/coupon-note";
 import { unlockSound } from "./paper/sfx";
-import { PROJECT_KINDS, SCALES } from "@/lib/quote/pricing";
+import { estimate, FEATURES, formatPriceRange, PROJECT_KINDS, SCALES, type QuoteAnswers, type Range } from "@/lib/quote/pricing";
+import { COUPON } from "@/lib/coupon";
+import { GoSign } from "./sign/go-sign";
 import { GoSuccess } from "./go-success";
 import { GoReceipt } from "./receipt/go-receipt";
 import { GoPunch } from "./punch/go-punch";
 
 /** Punch card columns, one per question (same order as QuizQuestions). */
 const PUNCH_LABELS = ["종류", "화면", "기능", "디자인", "일정"];
+
+/**
+ * The 작업 지시서 lines: the answers and the same 예상 금액 the receipt prints (estimate(), minus exactly
+ * COUPON.percent when a coupon is open, as go-receipt.tsx does).
+ */
+function orderRows(answers: QuoteAnswers, coupon: boolean): [string, string][] {
+  const result = estimate(answers);
+  let total: Range = result.price;
+  if (coupon) total = [total[0] - Math.round(total[0] * COUPON.percent) / 100, total[1] - Math.round(total[1] * COUPON.percent) / 100];
+  return [
+    ["만들 것", `${PROJECT_KINDS[answers.kind].label} · 화면 ${SCALES[answers.scale].label}`],
+    ["기능", answers.features.length ? answers.features.map((key) => FEATURES[key].label).join(", ") : "없음"],
+    ["예상 금액", formatPriceRange(total)],
+    ["예상 기간", `${result.weeks[0]}~${result.weeks[1]}주`],
+  ];
+}
+
+/** After signing (or the plain button): bring the form up and put the cursor in the name field. */
+function toForm() {
+  const card = document.getElementById("apply");
+  if (!card) return;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  card.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  const field = card.querySelector<HTMLElement>("#go-name") ?? card.querySelector<HTMLElement>("a.button, button");
+  window.setTimeout(() => field?.focus({ preventScroll: true }), reduced ? 0 : 650);
+}
 
 /** /lp/go quiz: questions → printed receipt (go-receipt.tsx) → name/contact form (form tag "lp-go"). */
 export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: string }) {
@@ -55,6 +83,8 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
       {quiz.step > QUIZ_STEP_COUNT && quiz.answers && (
         <div className="qz-result">
           <GoReceipt answers={quiz.answers} onRestart={quiz.restart} />
+          {/* A playful commitment slip between the price and the form (sign/). Not a contract. */}
+          <GoSign rows={orderRows(quiz.answers, Boolean(coupon))} onDone={toForm} />
           <div className="qz-card qz-lead go-lead" id="apply" onInput={onType}>
             <h2>무료 기획안·견적 받기</h2>
             <p className="go-promise">

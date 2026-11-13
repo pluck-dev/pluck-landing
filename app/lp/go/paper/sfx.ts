@@ -345,3 +345,12 @@ export function sfxPunch(heavy = false) {
   tone(audio, { at: 0.004, dur: heavy ? 0.22 : 0.12, gain: heavy ? 0.06 : 0.035, freq: heavy ? 1250 : 1650, freqTo: heavy ? 900 : 1300, type: "triangle" });
   if (heavy) tone(audio, { dur: 0.14, gain: 0.12, freq: 140, freqTo: 60 });
 }
+
+/* ---------- pen on paper ---------- */
+
+/** Ballpoint scratching: a short band of noise whose pitch follows the pen speed (0..1). */
+export function sfxScribble(speed: number) {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.07, gain: 0.025 + speed * 0.05, type: "bandpass", freq: 2400 + speed * 2600, q: 0.9 });
+}

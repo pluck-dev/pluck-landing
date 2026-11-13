@@ -1,0 +1,80 @@
+/*
+ * /lp/go 작업 지시서: a paper slip (canvas paper, signature, pen, stamp) with DOM text on top, a
+ * transparent press-and-hold button over the signature line, and a plain button to skip it.
+ */
+.sgn {
+  margin-top: 28px;
+}
+.sgn-hint {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.sgn-slip {
+  position: relative;
+  margin-top: 12px;
+  padding: 18px 20px 0;
+}
+.sgn-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.sgn-title {
+  position: relative;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.sgn-rows {
+  position: relative;
+  display: grid;
+  margin: 8px 0 0;
+}
+.sgn-rows div {
+  display: grid;
+  grid-template-columns: 5.5em minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  min-height: 30px;
+  padding-top: 6px;
+}
+.sgn-rows dt {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-3);
+}
+.sgn-rows dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  word-break: keep-all;
+}
+.sgn-pad {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 96px;
+  margin-top: 8px;
+  margin-bottom: 26px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.sgn-pad:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.sgn-fine {
+  margin-top: 8px;
+}
+.sgn-plain {
+  margin-top: 12px;
+}
