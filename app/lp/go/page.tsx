@@ -11,7 +11,7 @@ import { GoCoupon } from "./coupon/go-coupon";
 import { GoCrumple } from "./crumple/go-crumple";
 import { GoDraw } from "./go-draw";
 import { GoQuiz } from "./go-quiz";
-import { GoVideo, type Loop } from "./go-video";
+import { GoHeroReel, GoVideo, type HeroClip, type Loop } from "./go-video";
 import { Shot } from "./shot";
 import { GoStamps, type Step } from "./stamps/go-stamps";
 import "./go.css";
@@ -58,9 +58,18 @@ type Reel = {
   crumple?: boolean;
 };
 
-const DEALER: Loop = { name: "dealer", device: "phone", alt: "카영 딜러 웹을 넘겨 보는 화면. 로그인 전 샘플 데이터 대시보드" };
 const KNIFE: Loop = { name: "knife", device: "phone", alt: "칼가는곳 사이트를 폰으로 내려 보는 화면" };
-const BAYADA: Loop = { name: "bayada", device: "browser", url: "BAYADA", alt: "BAYADA 고객용 사이트를 내려 보는 화면" };
+const DEALER: Loop = { name: "dealer", device: "phone", alt: "카영 딜러 웹을 넘겨 보는 화면. 로그인 전 샘플 데이터 대시보드" };
+/**
+ * Hero: one phone, three real loops in turn (go-video.tsx GoHeroReel). Every clip opens on a bright,
+ * readable frame (hero-knife is re-recorded from the price cards, not the dark knife intro).
+ * Only 카영 carries a label: its screens are the pre-login sample data.
+ */
+const HERO: HeroClip[] = [
+  { name: "hero-bayada", label: "BAYADA", alt: "BAYADA 고객용 사이트를 폰으로 내려 보는 화면" },
+  { name: "hero-knife", label: "칼가는곳", alt: "칼가는곳 사이트의 연마 종류와 가격 카드를 폰으로 내려 보는 화면" },
+  { name: "dealer", label: "카영", alt: DEALER.alt, note: "카영 · 로그인 전 샘플 데이터" },
+];
 
 /** Owner rule: never 보령 on ad pages. */
 const REEL: Reel[] = [
@@ -162,18 +171,7 @@ export default function GoLandingPage() {
               30초 견적 받기 <ArrowRight size={18} aria-hidden="true" />
             </a>
           </div>
-          <div className="gh-collage">
-            <div className="gh-browser">
-              <GoVideo loop={BAYADA} eager sizes="(max-width: 900px) 92vw, 560px" />
-            </div>
-            <div className="gh-phone gh-phone-a">
-              <GoVideo loop={KNIFE} eager sizes="(max-width: 900px) 34vw, 190px" />
-            </div>
-            <div className="gh-phone gh-phone-b">
-              <GoVideo loop={DEALER} eager sizes="(max-width: 900px) 34vw, 190px" />
-            </div>
-          </div>
-          <p className="go-tiny gh-note">실제 사이트 녹화 · 카영은 샘플 데이터</p>
+          <GoHeroReel clips={HERO} />
         </section>
 
         <GoCoupon />

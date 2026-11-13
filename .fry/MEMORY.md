@@ -326,11 +326,27 @@
 - 대신: 사이트 토큰·컴포넌트(.shell .wordmark .header-contact .button* .section-title .qz* .footer, --paper/--ink/--blue/--sage) 재사용, 실제 스크린샷을 크게·일부는 디테일로 크롭, 손그림 링·화살표·짧은 메모(손글씨 웹폰트는 사이트가 안 쓰므로 Noto Sans KR 700 + 살짝 기울임), 1인칭 구어 해요체, 실제 숫자(getPortfolioStats·pricing.ts)만. 섹션마다 '왼쪽 제목/오른쪽 내용'만 반복하지 말고 한 칼럼 섹션을 섞는다.
 
 ## v5 = 영상 우선 + 텍스트 다이어트 (2026-11-13, 외부 마케터: "텍스트 밀도가 너무 높아서 불필요한 거 다 날리고 이미지랑 영상 위주로. 진짜 바보도 설득될 정도로")
-- 구조: 상단 바(파란 "견적 받기") → 히어로(h1 "상담한 개발자가 / 직접 만들어요" + "홈페이지 · 앱 · 업무 시스템" + 큰 숫자 56/21(getPortfolioStats, 작은 라벨) + 버튼 1개 + 실영상 콜라주 브라우저 1 + 폰 2) → 쿠폰 무대 → 최근에 만든 것 = 릴(카영·BAYADA·칼가는곳·DVIA: 기기 프레임 영상 + 이름 + 결과 한 줄 + 공개 링크, 카영은 엑셀 구김 샷 유지) → 비용 = 찢긴 종이 영수증(pricing.ts 숫자 그대로) → 도장 카드(단계 문구 ≤ 15자) → FAQ 4개(details, 접힘) → 30초 견적(마지막 화면이 퀴즈 카드라 텍스트만인 화면 없음) → 푸터. Setflow 는 빠짐(Flutter 라 라이브 녹화가 로딩 화면뿐).
-- 영상: public/lp/go/video/<name>.{mp4,webm,jpg} (knife·dealer 폰 360x780, bayada·academy·dvia 브라우저 960x600, 8–10s, 각 0.1–0.8MB). 녹화 하네스 C:\Temp\lp-v5ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 addInitScript 로 막음, 트래커 차단) → ffmpeg x264 crf30 / vp9 crf42. dealer 는 로그인 전 샘플 데이터라 "로그인 전 샘플 데이터" 라벨 필수. BAYADA 는 "개발·시연 서버" 라벨. DVIA(WebGL)는 swiftshader 플래그 필요.
-- go-video.tsx: <source> 는 400px 근처에서만 붙임(preload none 만으론 일부 브라우저가 메타데이터를 받음) → 첫 로드엔 히어로 3개만. 보일 때만 play, 화면 밖 pause, reduced-motion 이면 <video> 자체를 안 그림(포스터만). 포스터는 next/image(지연 로드) — video poster 속성은 안 씀(즉시 로드돼서). 작은 일시정지 버튼 유지(WCAG 2.2.2).
+- 구조: 상단 바(파란 "견적 받기") → 히어로(h1 "상담한 개발자가 / 직접 만들어요" + "홈페이지 · 앱 · 업무 시스템" + 큰 숫자 56/21(getPortfolioStats, 작은 라벨) + 버튼 1개 + 폰 1대 히어로 릴, 아래 "히어로 비주얼 규칙") → 쿠폰 무대 → 최근에 만든 것 = 릴(카영·BAYADA·칼가는곳·DVIA: 기기 프레임 영상 + 이름 + 결과 한 줄 + 공개 링크, 카영은 엑셀 구김 샷 유지) → 비용 = 찢긴 종이 영수증(pricing.ts 숫자 그대로) → 도장 카드(단계 문구 ≤ 15자) → FAQ 4개(details, 접힘) → 30초 견적(마지막 화면이 퀴즈 카드라 텍스트만인 화면 없음) → 푸터. Setflow 는 빠짐(Flutter 라 라이브 녹화가 로딩 화면뿐).
+- 영상: public/lp/go/video/<name>.{mp4,webm,jpg} (knife·dealer 폰 360x780, bayada·academy·dvia 브라우저 960x600, 8–10s, 각 0.1–0.8MB). 녹화 하네스 C:\Temp\lp-v5
+ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 addInitScript 로 막음, 트래커 차단) → ffmpeg x264 crf30 / vp9 crf42. dealer 는 로그인 전 샘플 데이터라 "로그인 전 샘플 데이터" 라벨 필수. BAYADA 는 "개발·시연 서버" 라벨. DVIA(WebGL)는 swiftshader 플래그 필요.
+- go-video.tsx: <source> 는 400px 근처에서만 붙임(preload none 만으론 일부 브라우저가 메타데이터를 받음) → 첫 로드엔 히어로 3개만. 보일 때만 play, 화면 밖 pause, reduced-motion 이면 <video> 자체를 안 그림(포스터만). 포스터는 next/image(지연 로드) — video poster 속성은 안 씀(즉시 로드돼서). 일시정지(WCAG 2.2.2)는 화면 전체가 버튼(.gv-tap, aria-label) + 작은 아이콘은 hover/focus/일시정지 상태에서만 보임(평소 안 보임, 2026-11-13 오너 "정지 버튼 보여서 지저분").
 - CTA 스타일은 파란 button-primary 하나만(헤더 .header-contact 도 .go 범위에서 파랑). 쿠폰의 '자동으로 열기'는 조작 버튼이라 ghost.
 - 링크는 공개 페이지만: apps 중 summary 에 "로그인 화면" 이 있는 관리자 앱은 릴 링크에서 뺌.
+
+## 히어로 비주얼 규칙 (2026-11-13, 오너: "30초 견적 받기 버튼 아래 섹션 이상해")
+- 이전(브라우저 BAYADA + 폰 2대 겹친 콜라주, 칼가는곳 검은 첫 프레임, 보이는 정지 버튼, 긴 캡션)은 '지저분'으로 폐기. **겹치는 콜라주 재도입 금지.**
+- 지금: sage 패널 하나 + 폰 1대(GoHeroReel, go-video.tsx)가 실영상 3개를 순서대로 1회씩 재생 → 0.7s 크로스페이드, 아래 프로젝트 이름 탭(누르면 전환). 세로 폰 3개 나란히(옵션 b)는 390 폭에서 화면이 너무 작아 안 씀. 데스크톱은 왼쪽 카피 / 오른쪽 패널(max 520, 폰 262px)로 900px 높이 안에 들어옴.
+- 히어로 클립은 **밝고 의미 있는 첫 프레임**만: hero-bayada(모바일 390 녹화, 사이트의 우하단 고정 채팅 버튼은 녹화 때 숨김, 6.3s로 잘라 글 벽 구간 제외), hero-knife(검은 칼 인트로가 아니라 '어떤 연마가 필요하신가요' 가격 카드부터 녹화), dealer. 녹화 하네스 C:\Temp\lp-heroec2.mjs (pre 단계에서 시작 위치로 이동 후 녹화 구간 시작).
+- 정직성 라벨은 그 클립에만: 카영이 보일 때만 탭 아래 "카영 · 로그인 전 샘플 데이터"(자리 고정이라 점프 없음). 공용 캡션("실제 사이트 녹화 …") 없음.
+- 로드: 첫 화면에선 현재 클립만 소스, 재생 시작하면 다음 클립 소스를 붙임(preload auto). reduced-motion 이면 포스터만, 탭으로 전환.
+
+## 폰트 = 페이퍼로지(Paperlogy), /lp/go 전용 (2026-11-13, 오너: "폰트를 페이퍼로지로")
+- 출처: 공식 freesentation.blog/paperlogyfont → github.com/Freesentation/paperlogy v1.001 TTF, 저작권 PT&N(이주임·김도균), **SIL OFL 1.1**(상업 이용·웹 임베딩·서브셋 OK, 폰트 단독 판매 금지; Reserved Font Name 없음). 라이선스 사본 public/fonts/paperlogy/OFL.txt. 눈누 CDN 파일은 v1.0 재배포라 안 씀.
+- 400/600/700/800 만 self-host. 무게별 2파일: core(이 LP 코드가 찍는 모든 글자 ≈ 870자, ≈44KB) + -ext(나머지 KS X 1001 한글, ≈84KB, unicode-range 로 한글만). go.css 에서 **ext 를 먼저, core 를 나중에** 선언 → core 가 먼저 쓰이고 ext 는 core 에 없는 글자(입력한 이름 등)가 나올 때만 받음. 첫 로드 폰트 합계 ≈175KB(4×core). 500/650/750 은 브라우저가 400/700/800 으로 매칭.
+- **문구를 추가하면 core 재생성 필요**: C:\Temp\lp-heroont\subset2.py(files.txt = 글자를 모으는 소스 목록) → public/fonts/paperlogy/. 확인: C:\Temp\lp-hero\glyph.mjs <url> 가 퀴즈까지 innerText 를 돌며 core 에 없는 글자를 출력(지금 0). 빠지면 ext 가 받아지고 그 글자는 ext 로 렌더(깨지진 않지만 바이트 증가).
+- .go 에만 font-family(--go-font) 적용, 워드마크(pluck®)는 Geist 유지, 쿠폰 코드는 Geist Mono 유지. 폼 컨트롤은 font-family: inherit.
+- 캔버스 연출(쿠폰·도장 카드·영수증·엑셀 구김·봉투)은 paper/runtime.ts `pageFont()`("Paperlogy", 사이트 스택) + **`paperFontReady()` 후에 굽는다**(최대 3s, 넘으면 폴백으로 진행). fonts.load 샘플 텍스트는 일부러 라틴('PLK56') — 한글을 넣으면 ext 의 unicode-range 에 걸려 ext 까지 받음. 영수증·봉투는 늦게 뜨므로 이미 로드돼 있지 않을 때만 로드 후 다시 굽는다. 확인: C:\Temp\lp-hero\pcheck.mjs(폰트 요청을 막은 폴백과 나란히 비교).
+- 헤드라인 자간: Paperlogy 800 은 -0.045em 이면 글자가 붙음 → -0.02em, 큰 숫자 -0.01em.
 
 ## 텍스트 밀도 규칙 (모든 광고 LP, 오너 승인 v5 기준)
 - 섹션당 제목 1개(가능하면 14자 이하) + 보조 한 줄 최대 1개(30자 이하, 정보가 늘 때만). 설명 문단·스토리 문단·같은 주장 반복·긴 캡션 금지. 설득은 실화면 영상·큰 실제 숫자·종이 연출이 한다.

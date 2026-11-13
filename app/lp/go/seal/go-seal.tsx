@@ -20,7 +20,7 @@ import {
   rubberStamp,
   type StampTool,
 } from "../paper/draw";
-import { Loop, pageFont, prefersReduced } from "../paper/runtime";
+import { Loop, pageFont, paperFontLoaded, paperFontReady, prefersReduced } from "../paper/runtime";
 import { sfxFold, sfxSend, sfxStamp, vibrate } from "../paper/sfx";
 import { sealLayout, sealPose, T_DROP, T_END, T_FLAP, T_FOLD1, T_FOLD2, T_SEND, T_STAMP, type SealLayout, type SealPose } from "./scene";
 import "./seal.css";
@@ -306,7 +306,15 @@ export function GoSeal({ sheet, children }: { sheet: SealSheet; children: React.
     const W = stage.clientWidth;
     const L = sealLayout(W);
     fitCanvas(canvas, L.W, L.H);
-    const painter = new SealPainter(L, canvas, pageFont(), sheet);
+    let painter = new SealPainter(L, canvas, pageFont(), sheet);
+    // Only mounts after a send, long after the page font loaded; if it somehow hasn't, re-bake when it does.
+    let alive = true;
+    if (!paperFontLoaded())
+      void paperFontReady().then(() => {
+        if (!alive) return;
+        painter = new SealPainter(L, canvas, pageFont(), sheet);
+        render();
+      });
     let t = 0;
     let finished = false;
 
@@ -379,6 +387,7 @@ export function GoSeal({ sheet, children }: { sheet: SealSheet; children: React.
       };
     }
     return () => {
+      alive = false;
       loop.stop();
       stage.removeEventListener("pointerdown", down);
       stage.removeEventListener("pointerup", up);

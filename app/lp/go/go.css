@@ -4,11 +4,86 @@
  * Deliberately absent: gradients, glows, blur, grid backgrounds, drop shadows on everything,
  * scroll-reveal on every block, count-ups, mono digits, English labels.
  */
+/*
+ * Paperlogy (페이퍼로지, PT&N, SIL OFL 1.1 — public/fonts/paperlogy/OFL.txt), self-hosted for /lp/go only.
+ * Per weight: a core file with every character this page's code prints (~44KB) and an -ext file with the
+ * rest of KS X 1001 Hangul. The core face is declared last so it is tried first; -ext is fetched only when
+ * a character outside core shows up (a typed name, say).
+ */
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/paperlogy/paperlogy-400-ext.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+3131-318E, U+AC00-D7A3;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/paperlogy/paperlogy-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/paperlogy/paperlogy-600-ext.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+3131-318E, U+AC00-D7A3;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/paperlogy/paperlogy-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/paperlogy/paperlogy-700-ext.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+3131-318E, U+AC00-D7A3;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/paperlogy/paperlogy-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/paperlogy/paperlogy-800-ext.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+3131-318E, U+AC00-D7A3;
+}
+@font-face {
+  font-family: "Paperlogy";
+  src: url("/fonts/paperlogy/paperlogy-800.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
 .go {
   --mk: var(--blue);
+  --go-font: "Paperlogy", var(--font-noto-kr), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  font-family: var(--go-font);
   overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
+}
+/* Form controls don't inherit fonts by default; the brand wordmark stays in the site's Geist. */
+.go :is(button, input, textarea, select) {
+  font-family: inherit;
+}
+.go .wordmark {
+  font-family: var(--font-geist-sans), sans-serif;
 }
 .go-sr {
   position: absolute;
@@ -254,53 +329,70 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.gv-toggle {
+/* Pause: the whole screen is the button; the icon is small and only shows on hover, focus or while paused. */
+.gv-tap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+.gv-icon {
   position: absolute;
   right: 8px;
   bottom: 8px;
-  z-index: 2;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border: 0;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: #1d201fb3;
+  background: #1d201f59;
   color: #fff;
-  cursor: pointer;
-  opacity: 0.55;
+  opacity: 0;
   transition: opacity 0.2s;
 }
-.gv-toggle:hover,
-.gv-toggle:focus-visible {
-  opacity: 1;
+.gv-tap:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+.gv-tap[data-paused] .gv-icon,
+.gv-tap:focus-visible .gv-icon {
+  opacity: 0.9;
+}
+@media (hover: hover) {
+  .gv-tap:hover .gv-icon {
+    opacity: 0.75;
+  }
 }
 
-/* ---------- 1. Hero: one line, two numbers, one button, real loops ---------- */
+/* ---------- 1. Hero: headline, two numbers, one button; one phone cycling real loops ---------- */
 .gh {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: 24px 56px;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: 24px 64px;
   align-items: center;
-  padding-block: 64px 48px;
+  padding-block: 40px 32px;
 }
 .gh h1 {
-  font-size: clamp(34px, 4.6vw, 64px);
-  font-weight: 700;
-  line-height: 1.18;
-  letter-spacing: -0.045em;
+  font-size: clamp(36px, 4.8vw, 68px);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
   word-break: keep-all;
 }
 .gh-sub {
-  margin-top: 14px;
-  font-size: 18px;
+  margin-top: 16px;
+  font-size: 19px;
   font-weight: 600;
   color: var(--text-2);
 }
 .gh-stats {
   display: flex;
-  gap: 36px;
-  margin: 28px 0 0;
+  gap: 40px;
+  margin: 36px 0 0;
 }
 .gh-stats div {
   display: flex;
@@ -308,46 +400,95 @@
 }
 .gh-stats dd {
   margin: 0;
-  font-size: clamp(52px, 5.6vw, 76px);
+  font-size: clamp(52px, 5.4vw, 76px);
   font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
 }
 .gh-stats dt {
-  margin-top: 6px;
-  font-size: 12.5px;
+  margin-top: 8px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-3);
 }
 .gh-cta {
-  margin-top: 32px;
+  margin-top: 36px;
 }
-.gh-collage {
-  position: relative;
-  padding: 0 0 22% 0;
+
+/* The phone sits on one quiet sage panel; clips crossfade inside it. */
+.ghr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: end;
+  width: 100%;
+  max-width: 520px;
+  padding: 36px 24px 14px;
+  border-radius: 28px;
+  background: var(--sage);
 }
-.gh-browser {
-  width: 88%;
-  margin-left: auto;
+.ghr-phone {
+  width: min(262px, 100%);
 }
-.gh-phone {
+.ghr-phone .gv-screen {
+  aspect-ratio: 360 / 780;
+  border: 8px solid #1d201f;
+  border-radius: 36px;
+  background: #1d201f;
+  box-shadow: 0 30px 50px -30px #1d201f73;
+}
+.ghr-slide {
   position: absolute;
-  bottom: 0;
-  width: 27%;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 28px;
+  opacity: 0;
+  transition: opacity 0.7s ease;
 }
-.gh-phone-a {
-  left: 0;
-  rotate: -3deg;
+.ghr-slide[data-on] {
+  opacity: 1;
 }
-.gh-phone-b {
-  left: 29%;
-  bottom: -4%;
-  rotate: 2deg;
+.ghr-slide img,
+.ghr-slide video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.gh-note {
-  grid-column: 2;
-  text-align: right;
+.ghr-slide video {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.ghr-slide video[data-playing] {
+  opacity: 1;
+}
+.ghr-tabs {
+  display: flex;
+  gap: 4px;
+  margin-top: 20px;
+}
+.ghr-tabs button {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.ghr-tabs button[aria-pressed="true"] {
+  background: var(--paper);
+  color: var(--ink);
+}
+.ghr-note {
+  min-height: 1.5em;
+  margin-top: 6px;
+  text-align: center;
 }
 
 /* ---------- 2. Work reel ---------- */
@@ -599,11 +740,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
   .gh {
-    gap: 26px;
+    gap: 32px;
     padding-block: 36px 20px;
-  }
-  .gh-note {
-    grid-column: 1;
   }
   .gr-item.is-flip .gr-media {
     order: 0;
@@ -666,17 +804,24 @@
     width: 100%;
     margin-top: 22px;
   }
-  .gh-collage {
-    padding-bottom: 30%;
+  .ghr {
+    justify-self: stretch;
+    max-width: none;
+    padding: 28px 16px 10px;
+    border-radius: 24px;
   }
-  .gh-browser {
-    width: 92%;
+  .ghr-phone {
+    width: 64%;
   }
-  .gh-phone {
-    width: 30%;
+  .ghr-phone .gv-screen {
+    border-width: 6px;
+    border-radius: 30px;
   }
-  .gh-phone-b {
-    left: 32%;
+  .ghr-slide {
+    border-radius: 24px;
+  }
+  .ghr-tabs {
+    margin-top: 16px;
   }
   .gv-phone .gv-screen {
     border-width: 5px;
@@ -685,22 +830,6 @@
   .gv-phone .gv-screen img,
   .gv-phone .gv-screen video {
     border-radius: 17px;
-  }
-  .gh .gv-bar {
-    height: 22px;
-  }
-  .gh .gv-url {
-    display: none;
-  }
-  .gh .gv-toggle {
-    right: 5px;
-    bottom: 5px;
-    width: 20px;
-    height: 20px;
-  }
-  .gh .gv-toggle svg {
-    width: 10px;
-    height: 10px;
   }
   .gp-receipt td {
     font-size: 15.5px;

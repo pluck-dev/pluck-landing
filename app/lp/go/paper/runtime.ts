@@ -50,5 +50,33 @@ export class Loop {
   };
 }
 
-/** Font the canvases print with: the page's own (Noto Sans KR via the site font stack). */
-export const pageFont = () => getComputedStyle(document.body).fontFamily;
+/** The page font (go.css @font-face). Canvas text names it first so the paper moments print in it too. */
+export const PAPER_FONT = "Paperlogy";
+const PAPER_WEIGHTS = [400, 600, 700, 800];
+
+/** Font stack the canvases print with: Paperlogy, then the site stack for anything it lacks. */
+export const pageFont = () => `"${PAPER_FONT}", ${getComputedStyle(document.body).fontFamily}`;
+
+let fontReady: Promise<void> | null = null;
+/**
+ * Resolves once every Paperlogy weight the canvases use is loaded (or after `timeout`, so a slow network
+ * still gets its moment, in the fallback font). Canvas text is baked once, so bake after this.
+ * Sample text is Latin on purpose: Hangul would also match the -ext faces' unicode-range and fetch them.
+ */
+export function paperFontReady(timeout = 3000): Promise<void> {
+  if (!fontReady) {
+    const fonts = typeof document !== "undefined" ? document.fonts : undefined;
+    const load = fonts
+      ? Promise.all(PAPER_WEIGHTS.map((w) => fonts.load(`${w} 16px "${PAPER_FONT}"`, "PLK56"))).then(
+          () => undefined,
+          () => undefined,
+        )
+      : Promise.resolve();
+    fontReady = Promise.race([load, new Promise<void>((done) => window.setTimeout(done, timeout))]);
+  }
+  return fontReady;
+}
+
+/** True when Paperlogy is already usable (then there is nothing to wait for). */
+export const paperFontLoaded = () =>
+  typeof document !== "undefined" && Boolean(document.fonts?.check(`800 16px "${PAPER_FONT}"`, "PLK"));

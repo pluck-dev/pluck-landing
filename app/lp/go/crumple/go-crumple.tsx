@@ -3,7 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { DEG, ring, rng } from "../paper/ease";
 import { begin, BLUE, dprOf, fibers, fitCanvas, INK, offscreen, rubberStamp } from "../paper/draw";
-import { Loop, pageFont, prefersReduced, whenNear } from "../paper/runtime";
+import { Loop, pageFont, paperFontReady, prefersReduced, whenNear } from "../paper/runtime";
 import { sfxCrumple, sfxSettle, sfxToss, vibrate } from "../paper/sfx";
 import { BEAT, makeMesh, pose, type CrumplePose, type Mesh } from "./scene";
 import "./crumple.css";
@@ -332,7 +332,7 @@ export function GoCrumple({ children }: { children: ReactNode }) {
       loop.wake();
     };
 
-    const stopNear = whenNear(root, () => {
+    const arrive = () => {
       measure();
       target = progress();
       // Skip: arriving from below (already scrolled past) → the screenshot is just there.
@@ -341,7 +341,10 @@ export function GoCrumple({ children }: { children: ReactNode }) {
         lastCrackle = 1;
       } else p = target;
       render();
-    });
+    };
+    let alive = true;
+    // The printout's text is baked into the sheet once, so it waits for Paperlogy.
+    const stopNear = whenNear(root, () => void paperFontReady().then(() => alive && arrive()));
     window.addEventListener("scroll", onScroll, { passive: true });
     stage.addEventListener("click", onTap);
     const resize = new ResizeObserver(() => {
@@ -365,6 +368,7 @@ export function GoCrumple({ children }: { children: ReactNode }) {
     }
 
     return () => {
+      alive = false;
       stopNear();
       loop.stop();
       cancelAnimationFrame(raf);

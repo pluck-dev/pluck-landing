@@ -17,7 +17,7 @@ import {
   rubberStamp,
   type StampTool,
 } from "../paper/draw";
-import { Loop, pageFont, prefersReduced, whenNear } from "../paper/runtime";
+import { Loop, pageFont, paperFontReady, prefersReduced, whenNear } from "../paper/runtime";
 import { carryPose, STAMP_LIFT, stampPose, stampShake } from "../paper/stamp";
 import { sfxStamp, unlockSound, vibrate } from "../paper/sfx";
 import "./stamps.css";
@@ -238,7 +238,9 @@ export function GoStamps({ steps }: { steps: Step[] }) {
       render();
       check();
     };
-    const stopNear = whenNear(card, start, "400px 0px");
+    let alive = true;
+    // The card's printed numbers and the stamp faces are baked once, so they wait for Paperlogy.
+    const stopNear = whenNear(card, () => void paperFontReady().then(() => alive && start()), "400px 0px");
     let raf = 0;
     const onScroll = () => {
       if (!raf)
@@ -277,6 +279,7 @@ export function GoStamps({ steps }: { steps: Step[] }) {
     }
 
     return () => {
+      alive = false;
       stopNear();
       loop.stop();
       cancelAnimationFrame(raf);

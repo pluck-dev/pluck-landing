@@ -16,7 +16,7 @@ import {
 } from "@/lib/quote/pricing";
 import { useActiveCoupon } from "../coupon/coupon-note";
 import { fitCanvas } from "../paper/draw";
-import { Loop, pageFont, prefersReduced } from "../paper/runtime";
+import { Loop, pageFont, paperFontLoaded, paperFontReady, prefersReduced } from "../paper/runtime";
 import { sfxCut, sfxFeed, sfxPrinterOn, sfxStamp, vibrate } from "../paper/sfx";
 import { BLEED, INK_BLEED, PRINTER, ReceiptPainter } from "./painter";
 import { pose, timeForLength, timeline, type ReceiptLayout, type Timeline } from "./scene";
@@ -188,6 +188,15 @@ export function GoReceipt({ answers, onRestart }: { answers: QuoteAnswers; onRes
     };
 
     measure();
+    // Shows right after the quiz, so Paperlogy is normally loaded already (the page uses all weights).
+    // If not, the paper is re-baked once it arrives; the scene is pure in t, so this is seamless.
+    let alive = true;
+    if (!paperFontLoaded())
+      void paperFontReady().then(() => {
+        if (!alive) return;
+        measure();
+        render();
+      });
     if (reduced) finish();
     else {
       root.setAttribute("data-printing", "");
@@ -255,6 +264,7 @@ export function GoReceipt({ answers, onRestart }: { answers: QuoteAnswers; onRes
     }
 
     return () => {
+      alive = false;
       loop.stop();
       seen.disconnect();
       resize.disconnect();

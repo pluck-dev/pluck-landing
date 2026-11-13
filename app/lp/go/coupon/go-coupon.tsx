@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, typ
 import { ArrowDown, Check, Copy } from "lucide-react";
 import { COUPON, formatCouponDate } from "@/lib/coupon";
 import { trackCouponOpened } from "@/lib/analytics";
+import { pageFont, paperFontReady } from "../paper/runtime";
 import { CouponEngine } from "./engine";
 import type { Mode } from "./scene";
 import { currentCoupon, isExpired, issueCoupon, useCoupon, type StoredCoupon } from "./store";
@@ -90,7 +91,7 @@ export function GoCoupon() {
     const disposers: (() => void)[] = [];
 
     const start = async () => {
-      await document.fonts?.ready;
+      await paperFontReady();
       if (cancelled || !backRef.current || !frontRef.current || !couponRef.current || !sweepRef.current || !veilRef.current) return;
       const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       engine = new CouponEngine(
@@ -114,7 +115,7 @@ export function GoCoupon() {
             window.setTimeout(() => kickRef.current(), HOLD_MS + 30);
           },
         },
-        getComputedStyle(document.body).fontFamily,
+        pageFont(),
         Boolean(currentCoupon()),
         reducedQuery.matches,
         view === "stage" ? { maxEw: 700, present: 0.9 } : { idle: !skipped },
