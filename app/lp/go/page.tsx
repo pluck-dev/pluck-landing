@@ -6,6 +6,8 @@ import { baseOpenGraph, CONTACT_EMAIL, defaultOgImage, GITHUB_URL } from "@/lib/
 import { isInquiryConfigured } from "@/lib/supabase/env";
 import { formatPriceRange, PROJECT_KINDS, type KindKey } from "@/lib/quote/pricing";
 import { PLAN_PROMISE, REPLY_PROMISE } from "../dev/config";
+import { CouponNote } from "./coupon/coupon-note";
+import { GoCoupon } from "./coupon/go-coupon";
 import { GoDraw } from "./go-draw";
 import { GoQuiz } from "./go-quiz";
 import { Shot, type Mark } from "./shot";
@@ -255,6 +257,8 @@ export default function GoLandingPage() {
           />
         </section>
 
+        <GoCoupon />
+
         <section className="go-work" id="work" aria-labelledby="go-work-title">
           <div className="shell">
             <div className="go-head">
@@ -395,6 +399,7 @@ export default function GoLandingPage() {
               먼저 볼까요?
             </h2>
             <p>다섯 개만 고르면 금액 범위랑 기간이 바로 나와요. 연락처는 결과를 본 다음에 남기셔도 되고, 안 남기셔도 돼요.</p>
+            <CouponNote />
             <p className="go-fine">
               메일이 편하시면 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </p>

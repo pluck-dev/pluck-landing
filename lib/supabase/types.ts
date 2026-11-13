@@ -96,6 +96,8 @@ export type InquirySource = {
   form?: string;
   /** Ad headline variant on /lp/dev (?v=price|work|solo). */
   variant?: string;
+  /** /lp/go 10% coupon the visitor opened (format-checked code + browser issue time). */
+  coupon?: { code: string; issued_at?: string };
   /** First visit ever (components/source-tracker.tsx). */
   first_touch?: InquiryTouch;
   /** Latest visit with ad params (UTM, Naver n_*, fbclid, gclid) or an external referrer. */

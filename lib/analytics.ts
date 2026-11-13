@@ -88,7 +88,14 @@ export function trackQuoteResult(kind: string) {
   safely(() => window.gtag?.("event", "quote_calculated", { kind }));
 }
 
-export type ContactMethod = "cta" | "phone" | "email" | "kakao";
+/** /lp/go 할인권 봉투가 처음 열림 (전환 아님). path = hand | tap | auto | idle | skip. */
+export function trackCouponOpened(path: string) {
+  if (typeof window === "undefined") return;
+  safely(() => window.fbq?.("trackCustom", "CouponOpened", { path }));
+  safely(() => window.gtag?.("event", "coupon_opened", { path }));
+}
+
+export type ContactMethod ="cta" | "phone" | "email" | "kakao";
 
 /** Click on a 상담하기 CTA or a phone/email/kakao link. */
 export function trackContact(method: ContactMethod, label: string) {

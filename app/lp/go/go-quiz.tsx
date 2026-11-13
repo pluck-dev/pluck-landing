@@ -15,10 +15,12 @@ import {
 } from "@/components/quote/quote-quiz";
 import { ConsentNotice } from "../dev/dev-quiz";
 import { REPLY_PROMISE } from "../dev/config";
+import { CouponNote, useActiveCoupon } from "./coupon/coupon-note";
 
 /** /lp/go quiz: questions → result → name/contact form (form tag "lp-go"). */
 export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: string }) {
   const quiz = useQuoteQuiz(1);
+  const coupon = useActiveCoupon();
   const rootRef = useRef<HTMLDivElement>(null);
   useStepFocus(quiz.step, rootRef);
 
@@ -43,11 +45,13 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
             <p className="go-promise">
               <Check size={16} aria-hidden="true" /> {REPLY_PROMISE}드립니다
             </p>
+            <CouponNote className="is-form" />
             {formEnabled ? (
               <QuoteLeadForm
                 answers={quiz.answers}
                 action={submitGoInquiry}
                 leadName={GO_FORM_SOURCE}
+                extra={coupon ? { coupon: coupon.code, coupon_issued: coupon.issuedAt } : undefined}
                 idPrefix="go"
                 memoLabel="한두 줄 설명 (선택)"
                 memoPlaceholder="예) 필라테스 예약 앱, 관리자 포함"

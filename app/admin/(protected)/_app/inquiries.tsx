@@ -1,5 +1,6 @@
 "use client";
 
+import { COUPON } from "@/lib/coupon";
 import { useMemo } from "react";
 import {
   budgetLabels,
@@ -290,6 +291,15 @@ export function InquiryDetailView({ id }: { id: string }) {
                   {adFormNote(source)}
                 </dd>
               </div>
+              {source.coupon && (
+                <div>
+                  <dt>할인권</dt>
+                  <dd>
+                    {source.coupon.code} · {COUPON.title}
+                    {source.coupon.issued_at ? ` (${fmtDateTime(source.coupon.issued_at)} 발급)` : ""}
+                  </dd>
+                </div>
+              )}
             </dl>
           </section>
 

@@ -324,3 +324,22 @@
 - 금지 장치: 영문 라벨(Chapter 01, eyebrow), 장식용 모노 숫자, 'PLUCK |' 같은 pill kicker 배지, 똑같은 카드 그리드, 티커/마키, 모든 블록 scroll fade-up, 버튼 shine sweep, 카운트업 숫자, 떠 있는 칩·하단 고정 바.
 - 금지 카피: "~말고, ~보세요" 슬로건, 혜택 3개 나열(triad), "흔한 외주 vs PLUCK" 비교표, em dash(—), 완벽히 평행한 문장 반복.
 - 대신: 사이트 토큰·컴포넌트(.shell .wordmark .header-contact .button* .section-title .qz* .footer, --paper/--ink/--blue/--sage) 재사용, 실제 스크린샷을 크게·일부는 디테일로 크롭, 손그림 링·화살표·짧은 메모(손글씨 웹폰트는 사이트가 안 쓰므로 Noto Sans KR 700 + 살짝 기울임), 1인칭 구어 해요체, 실제 숫자(getPortfolioStats·pricing.ts)만. 섹션마다 '왼쪽 제목/오른쪽 내용'만 반복하지 말고 한 칼럼 섹션을 섞는다.
+
+# /lp/go 할인권 봉투 이벤트: 10% 쿠폰, render(t) 씬, 4경로, 리드 연결(source.coupon), 오너 편집 상수 lib/coupon.ts
+
+## 구조와 WHY (2026-11-13, 오너: "광고 들어와서 저런 이벤트 하고 10% 할인권 받으면 기분 좋잖아", 10% 오너 승인)
+- 페이지의 **유일한 리치 모먼트**(reveal-craft 스킬). 나머지 v4 수제 톤은 그대로 — 이벤트가 AI 티(글로우·반짝이·마스코트)를 다시 들여오지 않게 종이·잉크·사이트 토큰만. 소개 바로 아래(최근에 만든 것 위) sage 패널 섹션.
+- 정직성: 모두 같은 10%, 추첨·확률·다른 상품·카운트다운 금지. 조건 문구·기간·퍼센트는 **lib/coupon.ts `COUPON`** 한 곳(오너 편집). validDays 와 terms 의 '30일' 문구를 같이 바꿀 것.
+- 코드: 브라우저에서 1회 생성 `PLK-` + 6자(0/O/1/I/L 제외), localStorage `pluck_coupon_v1` {code, issuedAt}. 이미 있으면 봉투가 열린 상태로 시작 → 새로고침해도 같은 코드(파밍 방지). 서버는 **형식만** 검사(isCouponCode/isCouponIssuedAt) — 실제 할인은 계약 때 오너가 적용.
+- 리드: go-quiz → QuoteLeadForm extra {coupon, coupon_issued} → submitGoInquiry 가 inquiries.source.coupon {code, issued_at} + message 첫 줄 "[10% 할인권 PLK-… · YYYY. MM. DD 발급]". Discord 필드 "🎟️ 할인권", 관리자 문의 상세 '유입 경로'에 '할인권' 행. jsonb 라 마이그레이션 없음. Lead 이벤트는 그대로, 공개 시 fbq trackCustom CouponOpened / gtag coupon_opened {path}(새로 발급될 때 1회, 전환 아님).
+
+## 씬 구조 (app/lp/go/coupon/)
+- scene.ts `pose(t)` 순수 함수: t 0→1 = 찢은 정도(손이 scrub), t=1 찢김(흔들림·종이 섬광·조각 낙하·봉투 squash), 1.22~2.5 쿠폰이 빠져나오고 봉투는 떨어졌다 뒤로 들어감, 1.0~3.6 veil, 2.5~3.05 쿠폰 위 빛 한 번, T_END 3.7. engine.ts 가 t 를 움직이고 **t 교차로** 소리(sfx.ts WebAudio 합성)·진동을 낸다 → 손/자동이 같은 소리.
+- 레이어: back 캔버스(그림자·뒷판) < 쿠폰 DOM(코드 선택·복사 가능) < front 캔버스(앞면·띠·조각). 쿠폰이 주머니를 완전히 벗어난 순간(cleared(): t 이전 구간 샘플링)부터 맨 앞 z — 봉투가 다시 올라와도 래치. veil 은 fixed z40, 무대는 veil 동안만 z41(data-lit) → 쿠폰만 밝게, 봉투는 brightness 필터로 살짝만 어둡게. veil 구멍을 크게 밝히면 '라디얼 글로우'로 보여서 0.34→0.5 로 약하게만.
+- 찢긴 띠는 정면에서 보이는 그대로 그림: 폭은 항상 세로, 접힘(θ)·말림은 깊이 방향이라 단축·음영 + 손끝의 작은 종이 롤 + 집힌 파란 탭. 화면 평면에서 휘는 띠(처음 버전)는 종이로 안 읽혔음.
+- 캔버스는 무대보다 96px 아래로 더 큼(BLEED) — 데스크톱에서 봉투가 떨어질 때 잘리던 문제. 캔버스·쿠폰은 섹션이 600px 안에 들어올 때 생성(lazy).
+- 4경로+: 드래그(touch-action pan-y, 80% 넘기고 놓으면 완료, 찢긴 건 안 돌아감) / 세 번 탭(각 1/3, 탭 사이 정지 프레임 흔들림 0) / '자동으로 열기' / '바로 받기'(즉시 최종) / 화면 55% 이상 보인 채 7초 방치 → 탭 당김 1초 → 자동. 키보드: 무대 포커스 후 → 키 한 칸, Enter 자동. reduced-motion: 찢김 순간 바로 최종(흔들림·섬광·조각·veil·빛 없음). 소리는 첫 제스처 전엔 AudioContext 자체를 안 만듦.
+
+## 확인 도구
+- dev 에서만 `window.__coupon.seek(t, mode, nudge)` (프로덕션 번들에 없음). 레포 밖 C:\Temp\coupon-harness: `sheet.mjs <url> <WxH> <t,...|t n nudge> <out> [cols] [mode] [scale]`(CLIP=1 이면 무대만), `drive.mjs <url> [paths]` = hand,tap,auto,skip,idle,reduced 각각 새 컨텍스트 → 쿠폰 표시·localStorage·이벤트 큐·퀴즈 클릭 가능·새로고침 후 같은 코드.
+- 이 레포는 다른 세션이 dev 서버(3107)를 띄워둘 때가 있음 — 새 next dev 는 "Another next dev server" 로 실패하니 그걸 쓴다.

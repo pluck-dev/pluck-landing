@@ -33,6 +33,7 @@ import {
   type StartWant,
 } from "@/lib/crm/constants";
 import { SITE_URL } from "@/lib/site";
+import { COUPON, formatCouponDate, isCouponCode, isCouponIssuedAt } from "@/lib/coupon";
 import { lastTouchSummary, sanitizeTouch } from "@/lib/crm/attribution";
 import {
   DESIGNS,
@@ -321,12 +322,28 @@ export async function submitDevInquiry(
   return quoteInquiry(formData, DEV_FORM_SOURCE, { variant }, `[광고 LP v=${variant}]`);
 }
 
-/** 상세페이지형 ad landing page /lp/go: same calculator answers, tagged source.form = "lp-go". */
+/**
+ * 상세페이지형 ad landing page /lp/go: same calculator answers, tagged source.form = "lp-go".
+ * If the visitor opened the envelope, its 10% coupon (code + browser issue time) rides along:
+ * format check only (lib/coupon.ts), stored in source.coupon and as the first message line.
+ */
 export async function submitGoInquiry(
   _prev: QuoteState,
   formData: FormData,
 ): Promise<QuoteState> {
-  return quoteInquiry(formData, GO_FORM_SOURCE, undefined, "[광고 LP · 상세페이지형]");
+  const code = formData.get("coupon");
+  const issued = formData.get("coupon_issued");
+  const header = "[광고 LP · 상세페이지형]";
+  if (!isCouponCode(code)) return quoteInquiry(formData, GO_FORM_SOURCE, undefined, header);
+  const issuedAt = isCouponIssuedAt(issued) ? issued : undefined;
+  const issuedNote = issuedAt ? ` · ${formatCouponDate(issuedAt)} 발급` : "";
+  return quoteInquiry(
+    formData,
+    GO_FORM_SOURCE,
+    { coupon: { code, ...(issuedAt ? { issued_at: issuedAt } : {}) } },
+    `[${COUPON.percent}% 할인권 ${code}${issuedNote}]
+${header}`,
+  );
 }
 
 async function quoteInquiry(
@@ -650,6 +667,7 @@ async function notifyDiscord(
               field("첨부", data.attachments.length ? `${data.attachments.length}개` : null),
               field("유입", lastTouchSummary(source)),
               field("접수 페이지", source.page),
+              ...(source.coupon ? [field("🎟️ 할인권", couponSummary(source.coupon), false)] : []),
               field("내용", data.message.slice(0, 500), false),
             ],
             timestamp: new Date().toISOString(),
@@ -660,6 +678,11 @@ async function notifyDiscord(
   } catch (error) {
     console.error("[inquiry] discord webhook failed", error);
   }
+}
+
+function couponSummary(coupon: NonNullable<InquirySource["coupon"]>) {
+  const issued = coupon.issued_at ? ` (${formatCouponDate(coupon.issued_at)} 발급)` : "";
+  return `${coupon.code} · ${COUPON.title}${issued}`;
 }
 
 function clientIp(requestHeaders: Headers) {
