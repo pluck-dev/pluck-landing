@@ -11,6 +11,10 @@
  * Two canvases sandwich the coupon (a real DOM element so the code is selectable and readable):
  * back = contact shadow + back panel, front = front face, tear strip, fibers, bits, flash.
  */
+import { clamp, DEG, inOutCubic, lerp, outCubic, rng, seg, smooth } from "../paper/ease";
+import { BLUE, fibers, handledRim, INK, INSIDE, PAPER, PAPER_BACK, rubberStamp } from "../paper/draw";
+
+export { rng };
 
 export const T_RIP = 1;
 export const T_RISE = 1.22;
@@ -27,27 +31,6 @@ export type SceneInput = {
   nudge: number;
   reduced: boolean;
 };
-
-const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
-const seg = (t: number, a: number, b: number) => clamp((t - a) / (b - a));
-const smooth = (a: number, b: number, t: number) => {
-  const k = seg(t, a, b);
-  return k * k * (3 - 2 * k);
-};
-const outCubic = (k: number) => 1 - (1 - k) ** 3;
-const inOutCubic = (k: number) => (k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2);
-const DEG = Math.PI / 180;
-
-export function rng(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let r = Math.imul(a ^ (a >>> 15), 1 | a);
-    r = (r + Math.imul(r ^ (r >>> 7), 61 | r)) ^ r;
-    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 export type Layout = ReturnType<typeof makeLayout>;
 export const BLEED = 96;
@@ -241,12 +224,6 @@ export function pose(t: number, L: Layout, input: SceneInput) {
 
 /* ------------------------------------------------------------------ painter ---- */
 
-const PAPER = "#f4f2e8";
-const PAPER_BACK = "#e9e6da";
-const INSIDE = "#dedbcd";
-const INK = "#202523";
-const BLUE = "#335aeb";
-
 type Bit = { x0: number; y0: number; vx: number; vy: number; rot: number; spin: number; floor: number; pts: number[]; tape: boolean; sway: number };
 
 export class Painter {
@@ -284,31 +261,10 @@ export class Painter {
     const g = canvas.getContext("2d")!;
     g.scale(this.dpr, this.dpr);
     g.translate(pad + ew / 2, pad + eh / 2);
-    const rand = rng(7);
-
     g.fillStyle = PAPER;
     g.fillRect(-ew / 2, -eh / 2, ew, eh);
-    // Fibers: short faint strokes, light and dark.
-    const count = Math.round((ew * eh) / 70);
-    g.lineWidth = 0.6;
-    for (let i = 0; i < count; i++) {
-      const x = -ew / 2 + rand() * ew;
-      const y = -eh / 2 + rand() * eh;
-      const a = rand() * Math.PI;
-      const l = 1.5 + rand() * 5;
-      g.strokeStyle = rand() < 0.55 ? `rgba(120,108,80,${0.05 + rand() * 0.06})` : `rgba(255,255,250,${0.3 + rand() * 0.3})`;
-      g.beginPath();
-      g.moveTo(x, y);
-      g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l);
-      g.stroke();
-    }
-    // Slightly darker rim, like handled paper.
-    g.save();
-    g.filter = "blur(4px)";
-    g.strokeStyle = "rgba(110,98,70,0.10)";
-    g.lineWidth = 6;
-    g.strokeRect(-ew / 2, -eh / 2, ew, eh);
-    g.restore();
+    fibers(g, -ew / 2, -eh / 2, ew, eh, 7);
+    handledRim(g, -ew / 2, -eh / 2, ew, eh);
 
     // Tear strip: blue tape down the middle of the band + perforation along its lower edge.
     g.fillStyle = BLUE;
@@ -335,40 +291,16 @@ export class Painter {
     // Rubber stamp.
     const sw = 27 * u;
     const sh = 15 * u;
-    const stamp = document.createElement("canvas");
-    stamp.width = Math.round((sw + 8) * this.dpr);
-    stamp.height = Math.round((sh + 8) * this.dpr);
-    const sg = stamp.getContext("2d")!;
-    sg.scale(this.dpr, this.dpr);
-    sg.translate(4, 4);
-    sg.strokeStyle = BLUE;
-    sg.fillStyle = BLUE;
-    sg.lineWidth = Math.max(1.6, 0.7 * u);
-    sg.beginPath();
-    sg.roundRect(0, 0, sw, sh, 2.2 * u);
-    sg.stroke();
-    sg.lineWidth = Math.max(0.8, 0.3 * u);
-    sg.beginPath();
-    sg.roundRect(1.6 * u, 1.6 * u, sw - 3.2 * u, sh - 3.2 * u, 1.4 * u);
-    sg.stroke();
-    sg.textAlign = "center";
-    sg.font = `800 ${6.2 * u}px ${this.font}`;
-    if ("letterSpacing" in sg) (sg as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${0.5 * u}px`;
-    sg.fillText("PLUCK", sw / 2, sh * 0.58);
-    if ("letterSpacing" in sg) (sg as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = "0px";
-    sg.font = `600 ${2.6 * u}px ${this.font}`;
-    sg.fillText("개발 스튜디오", sw / 2, sh * 0.82);
-    // Uneven ink.
-    sg.globalCompositeOperation = "destination-out";
-    const sr = rng(11);
-    for (let i = 0; i < 260; i++) {
-      sg.globalAlpha = 0.25 + sr() * 0.6;
-      sg.beginPath();
-      sg.arc(sr() * sw, sr() * sh, 0.3 + sr() * 0.9, 0, Math.PI * 2);
-      sg.fill();
-    }
-    sg.globalAlpha = 0.35;
-    sg.fillRect(sw * 0.62, -2, 2.4 * u, sh + 4);
+    const stamp = rubberStamp({
+      w: sw,
+      h: sh,
+      u,
+      font: this.font,
+      lines: [
+        { text: "PLUCK", size: 6.2, weight: 800, y: 0.58, spacing: 0.5 },
+        { text: "개발 스튜디오", size: 2.6, weight: 600, y: 0.82 },
+      ],
+    }).canvas;
     g.save();
     g.translate(ew / 2 - 22 * u, eh / 2 - 17 * u);
     g.rotate(-8 * DEG);

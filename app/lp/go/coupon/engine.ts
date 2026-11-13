@@ -1,7 +1,8 @@
 "use client";
 
 import { makeLayout, NOTCHES, Painter, pose, T_END, T_RIP, T_RISE, type Layout, type Mode, type SceneInput } from "./scene";
-import { sfxChime, sfxRip, sfxSlide, sfxTap, sfxTick, unlockSound, vibrate } from "./sfx";
+import { inOutSine, outCubic } from "../paper/ease";
+import { sfxChime, sfxRip, sfxSlide, sfxTap, sfxTick, unlockSound, vibrate } from "../paper/sfx";
 
 /**
  * Drives t for the envelope scene. Four ways to open, all ending at the same coupon:
@@ -44,8 +45,6 @@ const GIVE = 0.06;
 
 const resist = (raw: number) => (raw < RESIST ? GIVE * Math.max(0, raw / RESIST) ** 1.5 : GIVE + (raw - RESIST) * 1.05);
 const unresist = (p: number) => (p < GIVE ? RESIST * (p / GIVE) ** (2 / 3) : RESIST + (p - GIVE) / 1.05);
-const inOutSine = (k: number) => -(Math.cos(Math.PI * k) - 1) / 2;
-const outCubic = (k: number) => 1 - (1 - k) ** 3;
 
 type Tween = { from: number; to: number; start: number; dur: number; ease: (k: number) => number };
 

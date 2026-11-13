@@ -9,15 +9,16 @@ import {
   QUIZ_STEP_COUNT,
   QuizQuestions,
   QuoteLeadForm,
-  QuoteResultCard,
   useQuoteQuiz,
   useStepFocus,
 } from "@/components/quote/quote-quiz";
 import { ConsentNotice } from "../dev/dev-quiz";
 import { REPLY_PROMISE } from "../dev/config";
 import { CouponNote, useActiveCoupon } from "./coupon/coupon-note";
+import { unlockSound } from "./paper/sfx";
+import { GoReceipt } from "./receipt/go-receipt";
 
-/** /lp/go quiz: questions → result → name/contact form (form tag "lp-go"). */
+/** /lp/go quiz: questions → printed receipt (go-receipt.tsx) → name/contact form (form tag "lp-go"). */
 export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: string }) {
   const quiz = useQuoteQuiz(1);
   const coupon = useActiveCoupon();
@@ -25,7 +26,8 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
   useStepFocus(quiz.step, rootRef);
 
   return (
-    <div className="qz go-quiz" ref={rootRef}>
+    // Any answer tap is a gesture: let the receipt printer make sound later (no AudioContext before that).
+    <div className="qz go-quiz" ref={rootRef} onPointerDown={unlockSound}>
       {quiz.step >= 1 && quiz.step <= QUIZ_STEP_COUNT && (
         // Keyed by step so each question slides in (go.css .go-step; off under reduced motion).
         <div className="go-step" key={quiz.step}>
@@ -35,7 +37,7 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
 
       {quiz.step > QUIZ_STEP_COUNT && quiz.answers && (
         <div className="qz-result">
-          <QuoteResultCard answers={quiz.answers} onRestart={quiz.restart} />
+          <GoReceipt answers={quiz.answers} onRestart={quiz.restart} />
           <div className="qz-card qz-lead go-lead" id="apply">
             <h2>이 조건으로 기획안·견적 받기</h2>
             <p>

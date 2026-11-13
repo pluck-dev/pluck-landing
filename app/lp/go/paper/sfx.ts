@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Paper sounds synthesized with WebAudio (no files) + navigator.vibrate.
+ * Shared paper sounds for every /lp/go moment, synthesized with WebAudio (no files) + navigator.vibrate.
  * Silent until the visitor has touched the page: the AudioContext is only created inside a gesture
  * (unlock), so idle auto-open on an untouched page makes no sound and no vibration.
  */
@@ -128,4 +128,97 @@ export function sfxChime() {
   tone(audio, { dur: 0.7, gain: 0.07, freq: 784 });
   tone(audio, { at: 0.09, dur: 0.9, gain: 0.06, freq: 1175 });
   tone(audio, { at: 0.09, dur: 0.5, gain: 0.015, freq: 2350, type: "triangle" });
+}
+
+/* ---------- receipt printer ---------- */
+
+/** Printer waking up: relay click + short motor spin-up. */
+export function sfxPrinterOn() {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.018, gain: 0.16, type: "highpass", freq: 3000 });
+  burst(audio, { at: 0.03, dur: 0.22, gain: 0.05, type: "bandpass", freq: 300, freqTo: 900, q: 3 });
+}
+
+/** One line fed: a quick motor zip and the print head's tick. Pitch walks a little per line. */
+export function sfxFeed(index: number) {
+  const audio = ready();
+  if (!audio) return;
+  const f = 1100 + (index % 4) * 70;
+  burst(audio, { dur: 0.07, gain: 0.07, type: "bandpass", freq: f, freqTo: f * 1.35, q: 4 });
+  burst(audio, { at: 0.05, dur: 0.016, gain: 0.13, type: "highpass", freq: 3600 });
+}
+
+/** Cutter at the end of the receipt. */
+export function sfxCut() {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.09, gain: 0.12, type: "highpass", freq: 2200, freqTo: 5200 });
+  burst(audio, { at: 0.085, dur: 0.02, gain: 0.14, type: "bandpass", freq: 2600, q: 2 });
+}
+
+/* ---------- rubber stamps ---------- */
+
+/**
+ * "쿵": a rubber stamp hitting paper on a table. Low body thump + rubber slap + wood knock.
+ * weight 0..1 (the last stamp of a set lands heavier and lower).
+ */
+export function sfxStamp(weight = 0, index = 0) {
+  const audio = ready();
+  if (!audio) return;
+  const low = 1 - weight * 0.25;
+  tone(audio, { dur: 0.16 + weight * 0.08, gain: 0.26 + weight * 0.08, freq: 150 * low + index * 4, freqTo: 52 });
+  burst(audio, { dur: 0.07, gain: 0.2, type: "lowpass", freq: 900 + weight * 300 });
+  burst(audio, { dur: 0.02, gain: 0.08, type: "bandpass", freq: 2400, q: 1.5 });
+  tone(audio, { at: 0.005, dur: 0.035, gain: 0.04, freq: 520 - weight * 80, type: "triangle" });
+}
+
+/* ---------- crumpling a sheet ---------- */
+
+/** A handful of crackles; k (0..1) = how far the crumple has gone (later = tighter, higher). */
+export function sfxCrumple(k: number) {
+  const audio = ready();
+  if (!audio) return;
+  let at = 0;
+  const n = 3 + Math.round(Math.random() * 3);
+  for (let i = 0; i < n; i++) {
+    const dur = 0.012 + Math.random() * 0.03;
+    burst(audio, { at, dur, gain: 0.07 + Math.random() * 0.1, type: "bandpass", freq: 1800 + k * 2200 + Math.random() * 1600, q: 1.2 });
+    at += dur * (0.4 + Math.random() * 0.9);
+  }
+  burst(audio, { dur: 0.09, gain: 0.03, type: "lowpass", freq: 700 });
+}
+
+/** Paper ball tossed aside. */
+export function sfxToss() {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.3, gain: 0.06, type: "bandpass", freq: 1800, freqTo: 500, q: 0.8 });
+}
+
+/** A sheet settling onto the table. */
+export function sfxSettle() {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.12, gain: 0.08, type: "lowpass", freq: 600 });
+  tone(audio, { dur: 0.09, gain: 0.06, freq: 95, freqTo: 60 });
+}
+
+/* ---------- folding a letter ---------- */
+
+/** One fold: paper swish, then the crease pressed flat. */
+export function sfxFold() {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.18, gain: 0.06, type: "bandpass", freq: 900, freqTo: 2600, q: 0.9 });
+  burst(audio, { at: 0.17, dur: 0.03, gain: 0.1, type: "bandpass", freq: 1700, q: 1.4 });
+}
+
+/** Envelope pushed out of frame. */
+export function sfxSend() {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.36, gain: 0.07, type: "bandpass", freq: 500, freqTo: 2800, q: 0.7 });
+  tone(audio, { at: 0.3, dur: 0.6, gain: 0.05, freq: 784 });
+  tone(audio, { at: 0.39, dur: 0.8, gain: 0.045, freq: 1175 });
 }

@@ -1,0 +1,175 @@
+/*
+ * /lp/go 견적 영수증. The receipt sits on a sage table (same surface as the coupon panel);
+ * paper, printer and stamp are canvas, every printed word is DOM text.
+ */
+.go .go-rc-card {
+  display: grid;
+  justify-items: center;
+  padding: 26px 18px 22px;
+  background: var(--sage);
+  box-shadow: none;
+}
+.rc {
+  position: relative;
+  width: min(340px, 100%);
+  padding-top: 40px; /* PRINTER.slot */
+  touch-action: pan-y;
+}
+.rc[data-printing] .rc-paper {
+  /* While it prints, a vertical drag on the paper pulls it out instead of scrolling. */
+  touch-action: none;
+  cursor: grab;
+}
+.rc canvas {
+  position: absolute;
+  pointer-events: none;
+}
+.rc-printer {
+  z-index: 3;
+  top: 0;
+}
+.rc-paper {
+  position: relative;
+  transform-origin: 50% 0;
+}
+.rc-bg {
+  z-index: 0;
+}
+.rc-ink {
+  z-index: 2;
+  mix-blend-mode: multiply;
+}
+.rc-lines {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  padding: 18px 20px 34px;
+  color: var(--ink);
+  font-size: 14.5px;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  word-break: keep-all;
+}
+.rc-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 5px;
+}
+.rc-value {
+  flex: none;
+  font-weight: 700;
+  text-align: right;
+}
+.rc-head {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding-bottom: 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #20252322;
+  text-align: center;
+}
+.rc-title {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.rc-title:focus {
+  outline: none;
+}
+.rc-title span {
+  margin-left: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-3);
+}
+.rc-date {
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+.rc-row.is-mult {
+  color: var(--text-3);
+}
+.rc-row.is-mult .rc-value {
+  font-weight: 600;
+}
+.rc-row.is-sub {
+  margin-top: 4px;
+  padding-top: 9px;
+  border-top: 1px solid #20252318;
+}
+.rc-row.is-total .rc-label,
+.rc-row.is-coupon .rc-label {
+  display: grid;
+  font-weight: 700;
+}
+.rc-row.is-total small,
+.rc-row.is-coupon small {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+}
+.rc-row.is-coupon {
+  padding-bottom: 46px;
+}
+.rc-row.is-coupon[data-stamped] .rc-value {
+  color: var(--blue);
+}
+.rc-rule {
+  height: 0;
+  margin: 10px 0 8px;
+  border-top: 1.5px dashed #20252366;
+}
+.rc-row.is-total {
+  align-items: center;
+  font-size: 15px;
+  font-weight: 700;
+}
+.rc-row.is-total .rc-value {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.rc-note {
+  display: block;
+  margin-top: 8px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+.rc-skip {
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 0 6px;
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: #b9c1b2;
+  text-underline-offset: 5px;
+  cursor: pointer;
+}
+.rc-warn {
+  max-width: 340px;
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-2);
+  word-break: keep-all;
+}
+.go .rc-restart {
+  margin-top: 10px;
+  color: var(--text-2);
+}
+/* No JS yet / before measuring: the receipt is simply printed. */
+@media (scripting: none) {
+  .rc-printer {
+    display: none;
+  }
+}
