@@ -8,6 +8,7 @@ import { formatPriceRange, PROJECT_KINDS, type KindKey } from "@/lib/quote/prici
 import { PLAN_PROMISE, REPLY_PROMISE } from "../dev/config";
 import { CouponNote } from "./coupon/coupon-note";
 import { GoCoupon } from "./coupon/go-coupon";
+import { GoCrumple } from "./crumple/go-crumple";
 import { GoDraw } from "./go-draw";
 import { GoQuiz } from "./go-quiz";
 import { Shot, type Mark } from "./shot";
@@ -47,6 +48,8 @@ type Story = {
   /** Paragraphs in the owner's voice. Facts only from the project's entry in lib/portfolio.ts. */
   text: string[];
   main: { src: string; crop?: readonly [number, number, number, number]; marks?: Mark[]; caption: string; tall?: boolean };
+  /** The old spreadsheet printout (예시) crumples off this screenshot as you scroll (crumple/). */
+  crumple?: boolean;
   side?: { src: string; crop?: readonly [number, number, number, number]; marks?: Mark[]; caption: string };
 };
 
@@ -54,6 +57,7 @@ type Story = {
 const STORIES: Story[] = [
   {
     slug: "dealer-settlement",
+    crumple: true,
     text: [
       "카영은 자동차보험 딜러들에게 수수료를 정산해 주는 회사예요. 계약이랑 딜러별 수수료를 엑셀로 사람이 하나하나 맞춰 보고 있어서 누락이 생기기 쉬웠어요.",
       "그래서 웹을 3개 만들었어요. 회사 소개 사이트, 운영팀이 쓰는 관리자, 딜러가 폰으로 보는 딜러 웹이요. 관리자랑 딜러 웹은 같은 DB를 봐요.",
@@ -281,23 +285,25 @@ export default function GoLandingPage() {
               <p>설명보다 화면이 빠를 것 같아서요. 아래 링크는 지금 다 열려요.</p>
             </div>
 
-            {stories.map(({ project, text, main, side }, index) => (
+            {stories.map(({ project, text, main, side, crumple }, index) => {
+              const shot = (
+                <Shot
+                  src={main.src}
+                  alt={project.gallery.find((image) => image.src === main.src)?.alt ?? project.cover.alt}
+                  crop={main.crop}
+                  marks={main.marks}
+                  caption={main.caption}
+                  vw={main.tall ? 62 : 100}
+                  px={main.tall ? 340 : 720}
+                />
+              );
+              return (
               <article
                 key={project.slug}
                 className={`go-story${index % 2 ? " is-flip" : ""}${main.tall ? " is-tall" : ""}`}
                 aria-labelledby={`story-${project.slug}`}
               >
-                <div className="go-story-media">
-                  <Shot
-                    src={main.src}
-                    alt={project.gallery.find((image) => image.src === main.src)?.alt ?? project.cover.alt}
-                    crop={main.crop}
-                    marks={main.marks}
-                    caption={main.caption}
-                    vw={main.tall ? 62 : 100}
-                    px={main.tall ? 340 : 720}
-                  />
-                </div>
+                <div className="go-story-media">{crumple ? <GoCrumple>{shot}</GoCrumple> : shot}</div>
                 <div className="go-story-text">
                   <p className="go-story-meta">
                     {categoryLabels[project.category]} · {yearsOf(project)}
@@ -327,7 +333,8 @@ export default function GoLandingPage() {
                   )}
                 </div>
               </article>
-            ))}
+              );
+            })}
 
             <div className="go-after">
               <p>

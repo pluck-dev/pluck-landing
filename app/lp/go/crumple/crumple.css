@@ -1,0 +1,28 @@
+/*
+ * /lp/go 엑셀 → 실제 화면. The canvas (printout, its shadow, the ball rolling off) hangs over the
+ * screenshot with room around it; it never takes clicks (the screenshot below handles the tap).
+ */
+.crm {
+  position: relative;
+}
+.crm-canvas {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+.crm .shot-stage {
+  transform-origin: 50% 60%;
+}
+.crm[data-covered] .shot-stage {
+  cursor: pointer;
+}
+/* The hand marks wait until the printout is out of the way, then draw (go-draw.tsx timing). */
+.go .crm[data-covered] [data-draw] .mk path {
+  stroke-dashoffset: 1;
+  stroke-dasharray: 1;
+  transition: none;
+}
+.go .crm[data-covered] [data-draw] .mk-note {
+  opacity: 0;
+  transition: none;
+}
