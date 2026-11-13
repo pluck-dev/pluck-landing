@@ -80,8 +80,8 @@ export const strokeAt = (h: number) => clamp(h + 0.035 * Math.sin(h * 19) * (1 -
  * and it continues. When it finishes the pen flicks off, a small "확인" stamp lands (쿵, [20,30,40], the slip
  * shakes), it rests 0.6 s, then the page scrolls to the form and focuses the name field.
  * Paths: hand (hold; keyboard: hold Space/Enter on the line) · plain button (straight to the form) ·
- * idle 7 s (the pen only wiggles over the line: signing stays the visitor's) · reduced motion (a press signs
- * at once, no shake). render() is a pure function of (h, since-done, clock).
+ * idle 7 s (the pen only wiggles over the line: signing stays the visitor's) · reduced motion (same hold,
+ * no pen wiggle, no shake, the stamp ink just soaks in). render() is a pure function of (h, since-done, clock).
  */
 export function GoSign({ rows, onDone }: { rows: [string, string][]; onDone: () => void }) {
   const slipRef = useRef<HTMLDivElement>(null);
@@ -259,7 +259,8 @@ export function GoSign({ rows, onDone }: { rows: [string, string][]; onDone: () 
       clock += dt;
       if (holding && after < 0) {
         const before = h;
-        h = reduced ? 1 : Math.min(1, h + dt / HOLD);
+        // Reduced motion signs at the same pace: the pen line is the visitor's own press, not decoration.
+        h = Math.min(1, h + dt / HOLD);
         const speed = clamp(((strokeAt(h) - strokeAt(before)) / Math.max(dt, 1e-3)) * 0.8);
         if (clock - lastTick > 0.06) {
           sfxScribble(speed);

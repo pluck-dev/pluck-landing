@@ -38,7 +38,8 @@ export function chadPose(s: number, seed: number) {
  * away), a clean hole appears with a little shade inside, and the paper chad tumbles out below. The fifth
  * hole is the heavy one ([20,30,40], bigger shake, two chads). A pencil caret marks the open question.
  * Reads the quiz state only (answered count), never changes it. Holes stay when you go back (the answer
- * is still there); a restart brings a fresh card. Reduced motion: holes appear, nothing falls or shakes.
+ * is still there); a restart brings a fresh card. Reduced motion: each answer still opens its hole (a short
+ * fade, with the click and buzz), but no punch comes down, no chad falls, the card doesn't jump.
  */
 export function GoPunch({ answered, labels, current }: { answered: number; labels: string[]; current: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -178,15 +179,16 @@ export function GoPunch({ answered, labels, current }: { answered: number; label
       hits.forEach((hit, i) => {
         if (hit === null || clock < hit) return;
         const { x, y } = hole(i);
-        const k = reduced ? 1 : outCubic(seg(clock - hit, 0, 0.06));
+        const k = reduced ? outCubic(seg(clock - hit, 0, 0.22)) : outCubic(seg(clock - hit, 0, 0.06));
         // Cover the printed dashed target, then cut the hole: page seen through, in the card's own shade.
         g.fillStyle = PAPER;
         g.beginPath();
         g.arc(x, y, HOLE_R + 4.2, 0, Math.PI * 2);
         g.fill();
+        if (reduced) g.globalAlpha = k;
         g.fillStyle = "#c7cac1";
         g.beginPath();
-        g.arc(x, y, HOLE_R * (0.6 + 0.4 * k), 0, Math.PI * 2);
+        g.arc(x, y, HOLE_R * (reduced ? 1 : 0.6 + 0.4 * k), 0, Math.PI * 2);
         g.fill();
         g.strokeStyle = "rgba(32,37,35,0.5)";
         g.lineWidth = 2.4;
@@ -198,6 +200,7 @@ export function GoPunch({ answered, labels, current }: { answered: number; label
         g.beginPath();
         g.arc(x, y, HOLE_R + 0.6, 0, Math.PI * 2);
         g.stroke();
+        g.globalAlpha = 1;
       });
       // Pencil caret under the open question.
       if (caret < n) {
@@ -244,7 +247,7 @@ export function GoPunch({ answered, labels, current }: { answered: number; label
       }
     };
 
-    const busy = () => hits.some((hit) => hit !== null && clock < hit + 1.2);
+    const busy = () => hits.some((hit) => hit !== null && clock < hit + (reduced ? 0.3 : 1.2));
     const loop = new Loop((dt) => {
       const prev = clock;
       clock += dt;
@@ -268,11 +271,11 @@ export function GoPunch({ answered, labels, current }: { answered: number; label
           last = hits[i]!;
           continue;
         }
-        hits[i] = reduced ? -10 : Math.max(clock + STAMP_FALL + 0.02, last + SPACING);
+        hits[i] = reduced ? Math.max(clock + 0.02, last + SPACING * 0.6) : Math.max(clock + STAMP_FALL + 0.02, last + SPACING);
         last = hits[i]!;
       }
       render();
-      if (!reduced) loop.wake();
+      loop.wake();
     };
 
     let alive = true;

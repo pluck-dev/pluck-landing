@@ -38,7 +38,7 @@ type Box = { x: number; y: number; size: number };
  * the screen height; close hits are one hand carrying the stamp box to box): the wooden stamp falls, hits with a 쿵, squashes, the ink spreads, the card
  * shakes a little; the last box lands heavier ([20,30,40] + a bigger shake). Forward only.
  * Paths: scroll (auto), tap the card (hand: stamps the next box), arriving below it (skip: all
- * stamped at once, silently), reduced motion (stamped already, nothing moves).
+ * stamped at once, silently), reduced motion (box by box, ink only: no tool, no shake).
  * render(clock) is a pure function of the clock and each box's hit time.
  */
 export function GoStamps({ steps }: { steps: Step[] }) {
@@ -231,10 +231,10 @@ export function GoStamps({ steps }: { steps: Step[] }) {
       started = true;
       measure();
       card.setAttribute("data-armed", "");
-      // Skip: reaching the card from below (anchor jump past it, reload lower down) or reduced motion
-      // → all stamped at once, silently.
+      // Skip: reaching the card from below (anchor jump past it, reload lower down) → all stamped at
+      // once, silently. Reduced motion still stamps box by box as you read (ink only: no tool, no jump).
       const below = card.getBoundingClientRect().top < 0;
-      if (reduced || below) hits.forEach((_, i) => (hits[i] = -10));
+      if (below) hits.forEach((_, i) => (hits[i] = -10));
       render();
       check();
     };

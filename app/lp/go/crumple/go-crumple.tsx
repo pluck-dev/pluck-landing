@@ -164,8 +164,9 @@ function drawTri(g: CanvasRenderingContext2D, img: HTMLCanvasElement, s: number[
 
 /**
  * Wraps the 카영 story screenshot. Scroll scrubs p (eased toward the scroll target both ways, so wheel
- * steps move like a hand); tapping the printout plays it to the end; reduced motion or arriving from
- * below shows the screenshot alone. The hand marks on the screenshot draw only once it's uncovered.
+ * steps move like a hand); tapping the printout plays it to the end; arriving from below shows the
+ * screenshot alone. Reduced motion: same scroll/tap paths, but the printout stays flat and only fades
+ * off the screenshot (no crumpling, rolling, lift or landing shake). The hand marks on the screenshot draw only once it's uncovered.
  */
 export function GoCrumple({ children }: { children: ReactNode }) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -178,7 +179,7 @@ export function GoCrumple({ children }: { children: ReactNode }) {
     const frame = root.querySelector<HTMLElement>(".shot-frame");
     const stage = root.querySelector<HTMLElement>(".shot-stage");
     if (!frame || !stage) return;
-    if (prefersReduced()) return;
+    const reduced = prefersReduced();
 
     const dpr = dprOf();
     let p = 0;
@@ -218,6 +219,16 @@ export function GoCrumple({ children }: { children: ReactNode }) {
 
     const render = () => {
       if (!ready || !mesh || !sheet) return;
+      if (reduced) {
+        // Flat printout dissolving off the screenshot as p goes 0.1 → 0.6.
+        const fade = Math.min(1, Math.max(0, (p - 0.1) / 0.5));
+        const flat = pose(0, mesh, sw, sh, fw, fh);
+        paint({ ...flat, alpha: flat.alpha * (1 - fade * fade * (3 - 2 * fade)) });
+        stage.style.transform = "";
+        frame.style.boxShadow = "";
+        root.toggleAttribute("data-covered", fade < 0.6);
+        return;
+      }
       const P = pose(p, mesh, sw, sh, fw, fh);
       paint(P);
       const s = clock - beatAt;

@@ -40,7 +40,7 @@ export function lampLevel(t: number, i: number, n: number, blink: { at: number; 
  * with its live link. One client is not named on ad pages: its lamp is lit but the tape says so, no link.
  * Paths: hand (tap / keyboard: lamps are buttons) · auto (chase on view) · idle 7 s (the first lamp's
  * label prints by itself, to show what a tap does) · skip (arrived from below: all lit) · reduced motion
- * (all lit, tape appears at once). render(t) is a pure function of t, the blink and the tape clock.
+ * (same chase and tape, lamps only switch on: no panel shake). render(t) is a pure function of t, the blink and the tape clock.
  */
 export function GoLamps({ lamps }: { lamps: Lamp[] }) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -214,7 +214,7 @@ export function GoLamps({ lamps }: { lamps: Lamp[] }) {
       }
       // Tape: revealed one pressed character at a time (stepwise), with the link once it is through.
       if (tapeAt >= 0 && blink) {
-        const k = reduced ? tapeLen : Math.floor(clamp((t - blink.at - TAPE0) / CHAR, 0, tapeLen));
+        const k = Math.floor(clamp((t - blink.at - TAPE0) / CHAR, 0, tapeLen));
         const frac = tapeLen ? k / tapeLen : 1;
         tape.style.clipPath = `inset(0 ${((1 - frac) * 100).toFixed(1)}% 0 0)`;
         tape.toggleAttribute("data-full", frac >= 1);
@@ -259,8 +259,7 @@ export function GoLamps({ lamps }: { lamps: Lamp[] }) {
       tape.style.clipPath = "inset(0 100% 0 0)";
       tape.removeAttribute("data-full");
       setPicked(i);
-      if (reduced) render();
-      else loop.wake();
+      loop.wake();
     };
     pickRef.current = pick;
 
@@ -268,7 +267,7 @@ export function GoLamps({ lamps }: { lamps: Lamp[] }) {
     const start = (skip: boolean) => {
       if (started) return;
       started = true;
-      t = skip || reduced ? TOTAL : 0;
+      t = skip ? TOTAL : 0;
       render();
       if (t < TOTAL) loop.wake();
       idleTimer = window.setTimeout(() => {

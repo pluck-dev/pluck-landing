@@ -37,12 +37,13 @@ type View = "stage" | "card" | "done";
  * are new) and React corrects it right after hydration.
  */
 let loadView: View | undefined;
-const readLoadView = (): View =>
-  (loadView ??= currentCoupon()
-    ? "done"
-    : window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? "card"
-      : "stage");
+/*
+ * Reduced motion keeps the stage too: the pull is driven by the visitor's own scroll/hand, and the scene
+ * has a calm variant (no shake, flash, bits, veil or scale-in). Windows "animation effects" off and
+ * Android "remove animations" both report reduce, so a static card here meant most of those visitors
+ * never saw the envelope at all.
+ */
+const readLoadView = (): View => (loadView ??= currentCoupon() ? "done" : "stage");
 const noSubscribe = () => () => {};
 
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
@@ -59,7 +60,9 @@ export function GoCoupon() {
   const coupon = useCoupon();
   const baseView = useSyncExternalStore(noSubscribe, readLoadView, () => "stage" as View);
   const [skipped, setSkipped] = useState(false);
-  const view: View = skipped && baseView === "stage" ? "card" : baseView;
+  /** Returning visitor asked to open the envelope again: same code (store keeps it), in-page card. */
+  const [replay, setReplay] = useState(false);
+  const view: View = replay ? "card" : skipped && baseView === "stage" ? "card" : baseView;
   const [phase, setPhase] = useState<"closed" | "opening" | "open">("closed");
   const [preview, setPreview] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -78,7 +81,7 @@ export function GoCoupon() {
   const kickRef = useRef<() => void>(() => {});
 
   // A coupon from an earlier visit means the envelope is already open.
-  const open = phase === "open" || (phase === "closed" && Boolean(coupon));
+  const open = phase === "open" || (phase === "closed" && Boolean(coupon) && !replay);
   const code = coupon?.code ?? (preview ? PREVIEW_CODE : "PLK-······");
   const expired = coupon ? isExpired(coupon) : false;
 
@@ -116,9 +119,9 @@ export function GoCoupon() {
           },
         },
         pageFont(),
-        Boolean(currentCoupon()),
+        Boolean(currentCoupon()) && !replay,
         reducedQuery.matches,
-        view === "stage" ? { maxEw: 700, present: 0.9 } : { idle: !skipped },
+        view === "stage" ? { maxEw: 700, present: 0.9 } : { idle: !skipped && !replay },
       );
       engineRef.current = engine;
       stage.dataset.ready = "";
@@ -172,7 +175,7 @@ export function GoCoupon() {
       engine?.destroy();
       engineRef.current = null;
     };
-  }, [view, skipped]);
+  }, [view, skipped, replay]);
 
   // Full-screen stage: scroll progress → entry dim, pull, hold, settle. rAF-throttled, read-then-write.
   useEffect(() => {
@@ -185,6 +188,7 @@ export function GoCoupon() {
     let trackH = track.offsetHeight;
     /** Scroll offset (in P) where the settle starts; fixed once the coupon has been out for HOLD_MS. */
     let settleAt: number | null = null;
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const update = () => {
       raf = 0;
@@ -216,7 +220,7 @@ export function GoCoupon() {
 
       const enter = clamp((P - top) / P);
       const s = settleAt === null ? 0 : clamp((y - settleAt * P) / (SETTLE * P));
-      pin.style.setProperty("--sc", (0.94 + 0.06 * smooth(enter)).toFixed(4));
+      pin.style.setProperty("--sc", reducedQuery.matches ? "1" : (0.94 + 0.06 * smooth(enter)).toFixed(4));
       pin.style.setProperty("--k", smooth(clamp(s / 0.22)).toFixed(3));
       section.toggleAttribute("data-settling", s > 0);
       section.toggleAttribute("data-settled", s >= 1);
@@ -251,13 +255,13 @@ export function GoCoupon() {
 
   // 건너뛰기: the stage collapses into the in-page card; keep that card in view.
   useLayoutEffect(() => {
-    if (!skipped || view !== "card") return;
+    if (!(skipped || replay) || view !== "card") return;
     const section = sectionRef.current;
     if (!section) return;
     const rect = section.getBoundingClientRect();
     if (rect.top < 88) window.scrollTo({ top: window.scrollY + rect.top - 88, behavior: "instant" });
     section.querySelector<HTMLButtonElement>(".cpn-buttons .button")?.focus({ preventScroll: true });
-  }, [skipped, view]);
+  }, [skipped, replay, view]);
 
   async function copyCode(event: MouseEvent<HTMLButtonElement>) {
     if (!coupon) return;
@@ -352,6 +356,7 @@ export function GoCoupon() {
       <section ref={sectionRef} className="go-coupon shell" aria-labelledby="go-coupon-title" data-open="">
         <DonePanel
           heading
+          onReplay={coupon && !expired ? () => setReplay(true) : undefined}
           cardRef={doneCardRef}
           coupon={coupon}
           code={code}
@@ -386,7 +391,7 @@ export function GoCoupon() {
                     onClick={() => engineRef.current?.auto()}
                     disabled={phase === "opening"}
                   >
-                    {skipped ? "열기" : "자동으로 열기"}
+                    {skipped || replay ? "열기" : "자동으로 열기"}
                   </button>
                   <button
                     type="button"
@@ -538,8 +543,9 @@ function DonePanel({
   heading = false,
   cardRef,
   terms,
+  onReplay,
   ...face
-}: FaceProps & { heading?: boolean; cardRef: Ref<HTMLDivElement>; terms: ReactNode }) {
+}: FaceProps & { heading?: boolean; cardRef: Ref<HTMLDivElement>; terms: ReactNode; onReplay?: () => void }) {
   const Title = heading ? "h2" : "p";
   return (
     <div className="cpn-panel cpn-done">
@@ -561,6 +567,11 @@ function DonePanel({
           </>
         )}
         {terms}
+        {onReplay && (
+          <button type="button" className="cpn-skip cpn-replay" onClick={onReplay}>
+            봉투 다시 뜯어 보기
+          </button>
+        )}
       </div>
     </div>
   );

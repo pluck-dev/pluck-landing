@@ -280,11 +280,6 @@ export class CouponEngine {
       vibrate([20, 30, 40]);
       this.events.rip(this.mode);
       this.state = "play";
-      if (this.input.reduced) {
-        this.t = T_END;
-        this.finish();
-        return;
-      }
     }
     if (prev < T_RISE && next >= T_RISE) sfxSlide();
     if (prev < 2.3 && next >= 2.3) sfxChime();
@@ -318,7 +313,9 @@ export class CouponEngine {
       if (k >= 1) this.tween = null;
       this.advance(target);
     } else if (this.state === "play") {
-      this.advance(this.t + dt);
+      // Reduced motion still plays the reveal (the scene drops shake, flash, bits, veil and the spin),
+      // a little quicker, so the coupon comes out of the envelope instead of just appearing.
+      this.advance(this.t + dt * (this.input.reduced ? 1.6 : 1));
     } else if (this.state === "rest" && !this.drag && this.scrollTarget > this.t + 1e-4) {
       // Scroll arrives in wheel/fling steps; ease toward it so the strip moves like a hand.
       this.mode = "scroll";

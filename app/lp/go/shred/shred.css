@@ -48,13 +48,4 @@
     padding-top: 74px;
   }
 }
-/* Reduced motion: no track to scroll through, just the final sheet on the desk. */
-@media (prefers-reduced-motion: reduce) {
-  .shr-track {
-    height: auto;
-  }
-  .shr-pin {
-    position: relative;
-    height: min(100svh, 860px);
-  }
-}
+

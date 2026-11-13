@@ -62,9 +62,11 @@ export function sealPose(t: number, L: SealLayout, reduced: boolean) {
   const s = t - T_SEND;
   const dip = s > 0 ? 7 * Math.sin(Math.PI * seg(s, 0, 0.18)) : 0;
   const out = inCubic(seg(s, 0.1, 0.48));
-  const sendY = dip - out * (L.env.y + L.eh + 40);
-  const sendRot = -4 * DEG * out + ring(s, 1.2 * DEG, 6, 3) * (1 - out);
+  // Reduced motion: the envelope fades where it lies instead of flying out the top.
+  const sendY = reduced ? 0 : dip - out * (L.env.y + L.eh + 40);
+  const sendRot = reduced ? 0 : -4 * DEG * out + ring(s, 1.2 * DEG, 6, 3) * (1 - out);
+  const sendAlpha = reduced ? 1 - out : 1;
   const text = outCubic(seg(t, 3.4, 3.9));
 
-  return { t, f1, f2, bounce: bounce * motion, envIn, packetY, drop, flap, stamp, shake, sendY, sendRot, sent: out >= 1, text };
+  return { t, f1, f2, bounce: bounce * motion, envIn, packetY, drop, flap, stamp, shake, sendY, sendRot, sendAlpha, sent: out >= 1, text };
 }

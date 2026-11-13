@@ -329,7 +329,7 @@
 - 구조(v6 에서 연출 5종 추가 → 아래 "/lp/go v6 연출 5종"): 상단 바(파란 "견적 받기") → 히어로(h1 "상담한 개발자가 / 직접 만들어요" + "홈페이지 · 앱 · 업무 시스템" + 큰 숫자 56/21(getPortfolioStats, 작은 라벨, v6 부터 split-flap) + 버튼 1개 + 폰 1대 히어로 릴, 아래 "히어로 비주얼 규칙") → 쿠폰 무대 → 최근에 만든 것 = 릴(2026-11-13 부터 냉킵·Setflow·THOUSAND·DVIA·카영·BAYADA 순, 아래 "보여주기 순서" 참고: 기기 프레임 영상 + 이름 + 결과 한 줄 + 공개 링크, 카영은 엑셀 구김 샷 유지) → 비용 = 찢긴 종이 영수증(pricing.ts 숫자 그대로) → 도장 카드(단계 문구 ≤ 15자) → FAQ 4개(details, 접힘) → 30초 견적(마지막 화면이 퀴즈 카드라 텍스트만인 화면 없음) → 푸터.
 - 영상: public/lp/go/video/<name>.{mp4,webm,jpg} (폰: dealer·setflow·thousand 390x844 녹화, naengkeep 540x1170 렌더 — CSS 가 aspect 360/780 cover 라 크기 무관; 브라우저: academy·dvia 960x600; 8–10s, 각 0.1–0.8MB). 녹화 하네스 C:\Temp\lp-v5
 ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 addInitScript 로 막음, 트래커 차단) → ffmpeg x264 crf30 / vp9 crf42. dealer 는 로그인 전 샘플 데이터라 "로그인 전 샘플 데이터" 라벨 필수. BAYADA 는 "개발·시연 서버" 라벨. DVIA(WebGL)는 swiftshader 플래그 필요.
-- go-video.tsx: <source> 는 400px 근처에서만 붙임(preload none 만으론 일부 브라우저가 메타데이터를 받음) → 첫 로드엔 히어로 3개만. 보일 때만 play, 화면 밖 pause, reduced-motion 이면 <video> 자체를 안 그림(포스터만). 포스터는 next/image(지연 로드) — video poster 속성은 안 씀(즉시 로드돼서). 일시정지(WCAG 2.2.2)는 화면 전체가 버튼(.gv-tap, aria-label) + 작은 아이콘은 hover/focus/일시정지 상태에서만 보임(평소 안 보임, 2026-11-13 오너 "정지 버튼 보여서 지저분").
+- go-video.tsx: <source> 는 400px 근처에서만 붙임(preload none 만으론 일부 브라우저가 메타데이터를 받음) → 첫 로드엔 히어로 3개만. 보일 때만 play, 화면 밖 pause, reduced-motion 이면 일시정지 상태로 시작 + 재생 아이콘 보임(탭하면 재생; 2026-11-13 이전엔 포스터만이라 재생 수단이 없었음). 포스터는 next/image(지연 로드) — video poster 속성은 안 씀(즉시 로드돼서). 일시정지(WCAG 2.2.2)는 화면 전체가 버튼(.gv-tap, aria-label) + 작은 아이콘은 hover/focus/일시정지 상태에서만 보임(평소 안 보임, 2026-11-13 오너 "정지 버튼 보여서 지저분").
 - CTA 스타일은 파란 button-primary 하나만(헤더 .header-contact 도 .go 범위에서 파랑). 쿠폰의 '자동으로 열기'는 조작 버튼이라 ghost.
 - 링크는 공개 페이지만: apps 중 summary 에 "로그인 화면" 이 있는 관리자 앱은 릴 링크에서 뺌.
 
@@ -339,13 +339,15 @@ ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 
 - 히어로 클립은 **밝고 의미 있는 첫 프레임**만(현재 클립은 아래 "보여주기 순서"). 예전 hero-bayada/hero-knife/knife/bayada 영상은 2026-11-13 삭제.
 ec2.mjs (pre 단계에서 시작 위치로 이동 후 녹화 구간 시작).
 - 정직성 라벨은 그 클립에만: HeroClip.note 가 있는 클립이 보일 때만 탭 아래 한 줄(자리 고정이라 점프 없음). 공용 캡션("실제 사이트 녹화 …") 없음.
-- 로드: 첫 화면에선 현재 클립만 소스, 재생 시작하면 다음 클립 소스를 붙임(preload auto). reduced-motion 이면 포스터만, 탭으로 전환.
+- 로드: 첫 화면에선 현재 클립만 소스, 재생 시작하면 다음 클립 소스를 붙임(preload auto). reduced-motion 이면 일시정지로 시작(재생 아이콘), 화면·이름 탭하면 재생.
 
 ## 보여주기 순서: UI 예쁜 것 먼저 (2026-11-13, 오너: "보여주기에 UI가 이쁜 건 냉킵, 셋플로우 이런 거잖아. 이쁜 UI 위주로 보여줘")
 - **규칙(모든 광고 LP·포트폴리오 노출)**: 첫인상 자리(히어로·릴 맨 위)는 UI가 가장 예쁜 프로젝트. 업무 성과가 큰 프로젝트(카영 엑셀→웹, BAYADA 3개 앱)는 빼지 말고 아래로. 오너가 "안 예쁘다"고 한 것: BAYADA·칼가는곳·카영 화면. 예쁜 쪽: 냉킵·Setflow, 그다음 THOUSAND(따뜻한 진열장). 보령은 절대 안 씀.
 - 지금 히어로 = 냉킵 → Setflow → THOUSAND. 릴 = 냉킵·Setflow·THOUSAND·DVIA·카영(구김)·BAYADA. 칼가는곳은 릴에서 뺌(램프 보드엔 그대로).
 - 클립 출처: **naengkeep** = 테스터 빌드만 있어(공개 앱 없음, 운영 Firebase 라 로컬 실행 금지) D:\dev\personalridge-ai-app 의 실기기 에뮬레이터 캡처 1080x2400(build/fridge-installed, build/installed-picker(가장자리 6px 연두 테두리 크롭), build/emulator-preview, tmp/welcome-check)를 C:\Temp\lp-pretty
-kender.mjs(Playwright 로 프레임별 transform/opacity → 540x1170 PNG → ffmpeg)로 팬·밀기·종이색 dip. 크로스페이드는 두 화면이 겹쳐 유령처럼 보여서 dip 사용. 750x1624 캡처는 DEBUG 리본·두부 글자라 쓰지 말 것. 라벨 "테스트 버전 화면". **setflow** = 라이브 녹화(C:\Temp\lp-prettyec.mjs): flt-glass-pane 대기 + 4.5s 후 기록 탭 → '월요일 상체' 루틴 편집에서 시작. 라이브 홈·커뮤니티는 실사용자 이름·사진이 보이므로 **녹화 금지**. Flutter 스크롤은 mouse.wheel 을 시간 기준으로(대기 루프로 돌리면 8초씩 걸림), 클릭 후 마우스를 치워야 툴팁이 안 뜸. **thousand** = 라이브 녹화, 밝은 상품 상세에서 시작(진열장·시트 첫 프레임은 어둡거나 흐림) → 뒤로 → 진열장 → 파이 시트. 라벨 "결제 없는 시연 버전"(배포본이 결제 없는 시연).
+k
+ender.mjs(Playwright 로 프레임별 transform/opacity → 540x1170 PNG → ffmpeg)로 팬·밀기·종이색 dip. 크로스페이드는 두 화면이 겹쳐 유령처럼 보여서 dip 사용. 750x1624 캡처는 DEBUG 리본·두부 글자라 쓰지 말 것. 라벨 "테스트 버전 화면". **setflow** = 라이브 녹화(C:\Temp\lp-pretty
+ec.mjs): flt-glass-pane 대기 + 4.5s 후 기록 탭 → '월요일 상체' 루틴 편집에서 시작. 라이브 홈·커뮤니티는 실사용자 이름·사진이 보이므로 **녹화 금지**. Flutter 스크롤은 mouse.wheel 을 시간 기준으로(대기 루프로 돌리면 8초씩 걸림), 클릭 후 마우스를 치워야 툴팁이 안 뜸. **thousand** = 라이브 녹화, 밝은 상품 상세에서 시작(진열장·시트 첫 프레임은 어둡거나 흐림) → 뒤로 → 진열장 → 파이 시트. 라벨 "결제 없는 시연 버전"(배포본이 결제 없는 시연).
 - 히어로 캡처 함정: #go-work-title 로 바로 scrollIntoView 하면 쿠폰 무대 veil 이 남아 회색으로 찍힘 → 쿠폰 '건너뛰기' 먼저.
 
 ## 폰트 = 페이퍼로지(Paperlogy), /lp/go 전용 (2026-11-13, 오너: "폰트를 페이퍼로지로")
@@ -375,10 +377,10 @@ kender.mjs(Playwright 로 프레임별 transform/opacity → 540x1170 PNG → f
 - 레이어: back 캔버스(그림자·뒷판) < 쿠폰 DOM(코드 선택·복사 가능) < front 캔버스(앞면·띠·조각). 쿠폰이 주머니를 완전히 벗어난 순간(cleared(): t 이전 구간 샘플링)부터 맨 앞 z — 봉투가 다시 올라와도 래치. veil 은 fixed z40, 무대는 veil 동안만 z41(data-lit) → 쿠폰만 밝게, 봉투는 brightness 필터로 살짝만 어둡게. veil 구멍을 크게 밝히면 '라디얼 글로우'로 보여서 0.34→0.5 로 약하게만.
 - 찢긴 띠는 정면에서 보이는 그대로 그림: 폭은 항상 세로, 접힘(θ)·말림은 깊이 방향이라 단축·음영 + 손끝의 작은 종이 롤 + 집힌 파란 탭. 화면 평면에서 휘는 띠(처음 버전)는 종이로 안 읽혔음.
 - 캔버스는 무대보다 96px 아래로 더 큼(BLEED) — 데스크톱에서 봉투가 떨어질 때 잘리던 문제. 캔버스·쿠폰은 섹션이 600px 안에 들어올 때 생성(lazy).
-- 4경로+: 드래그(touch-action pan-y, 80% 넘기고 놓으면 완료, 찢긴 건 안 돌아감) / 세 번 탭(각 1/3, 탭 사이 정지 프레임 흔들림 0) / '자동으로 열기' / '바로 받기'(즉시 최종) / 화면 55% 이상 보인 채 7초 방치 → 탭 당김 1초 → 자동. 키보드: 무대 포커스 후 → 키 한 칸, Enter 자동. reduced-motion: 찢김 순간 바로 최종(흔들림·섬광·조각·veil·빛 없음). 소리는 첫 제스처 전엔 AudioContext 자체를 안 만듦.
+- 4경로+: 드래그(touch-action pan-y, 80% 넘기고 놓으면 완료, 찢긴 건 안 돌아감) / 세 번 탭(각 1/3, 탭 사이 정지 프레임 흔들림 0) / '자동으로 열기' / '바로 받기'(즉시 최종) / 화면 55% 이상 보인 채 7초 방치 → 탭 당김 1초 → 자동. 키보드: 무대 포커스 후 → 키 한 칸, Enter 자동. reduced-motion: 공개도 재생(1.6배속, scene 의 reduced 분기 = 흔들림·섬광·조각·veil·빛·회전 없음), 무대 진입 scale 없음. 소리는 첫 제스처 전엔 AudioContext 자체를 안 만듦.
 
 ## 전체 화면 무대 (2026-11-13, 오너: "스크롤 내리다가 지나칠 수 있으니까, 해당 영역 가면 저 쿠폰이 전체 영역으로 돼야")
-- 뷰 3개(go-coupon.tsx View, 페이지 로드 때 한 번 정해 고정 — 무대 도중 쿠폰이 발급돼도 뷰가 바뀌면 안 되니까): **stage**(첫 방문) / **card**(reduced-motion, 또는 '건너뛰기' 누름 = 예전 인페이지 카드, 미개봉 + '열기') / **done**(localStorage 쿠폰 있음 = 작은 발급 쿠폰 카드, 봉투 없음). 서버는 stage 를 렌더하고 hydration 직후 useSyncExternalStore 로 교정(useLayoutEffect setState 는 lint react-hooks/set-state-in-effect 에 걸림).
+- 뷰 3개(go-coupon.tsx View, 페이지 로드 때 한 번 정해 고정 — 무대 도중 쿠폰이 발급돼도 뷰가 바뀌면 안 되니까): **stage**(첫 방문) / **card**('건너뛰기' 누름, 또는 done 에서 '봉투 다시 뜯어 보기' = 인페이지 카드, 미개봉 + '열기'; 2026-11-13 부터 reduced-motion 도 stage) / **done**(localStorage 쿠폰 있음 = 작은 발급 쿠폰 카드, 봉투 없음). 서버는 stage 를 렌더하고 hydration 직후 useSyncExternalStore 로 교정(useLayoutEffect setState 는 lint react-hooks/set-state-in-effect 에 걸림).
 - stage = .cpn-track(220svh) 안의 sticky .cpn-pin(100svh, z41 → 상단 바(z30)까지 덮음). 진입 중 veil 로 페이지 어둡게 + 시트 0.94→1 scale(레이아웃 안 바꾸는 transform 이라 엔진 relayout 없음). 고정 후 스크롤 0.04P~0.6P = engine.scrub(당김 t, 앞으로만, exp 이징 → 휠 계단도 손처럼, 눈금 틱/진동 동일, mode "scroll"). t=1 이후 찢김·공개는 시간 기반.
 - **트랙 늘이기(WHY)**: scroll-jacking 없이 "공개 중엔 안 풀리고 1초 정지"를 만들려고, 공개+HOLD 1s 끝날 때까지 트랙 높이를 화면 아래쪽에서 계속 늘린다(y+2P 확보, 0.5P 단위). 화면 밖이라 점프 없음. 정지 끝나면 settleAt=현재 y 로 고정하고 트랙을 settleAt+0.75P+P 로 맞춤(줄어드는 것도 화면 밖). MAX_GROW 6P 안전 상한. 앵커(#quiz)로 이미 지나갔으면 settle 완료로 처리 → 핀이 다시 붙지 않음.
 - settle: .cpn-done-wrap(done 패널)이 margin-top -75svh 로 트랙 마지막 SETTLE(0.75P) 구간에 겹쳐 있어 아래에서 올라오고, 핀 쿠폰이 그 .cp-static 의 실시간 rect 로 날아감(engine.settle, 캔버스 재그리기 없이 transform 만). s=1 에 핀 숨기고 static 보임(data-settled). 시트 배경·글·봉투는 s/0.22 로 빨리 사라져야 done 제목과 안 겹침. 스크롤 올리면 순수 함수라 거꾸로 재생.
@@ -427,3 +429,21 @@ kender.mjs(Playwright 로 프레임별 transform/opacity → 540x1170 PNG → f
 - 폰트: 새 문구를 넣은 파일은 C:\Temp\lp-heroontiles.txt 에 추가 후 subset2.py → out2 → public/fonts/paperlogy. v6 에서 6개 파일 추가(core 870→873자).
 - 함정: shred 의 skip 은 "멀리서 앵커 점프 후 중간으로 돌아오기"에서 처음엔 새로 갈리던 버그가 있었음 → 시작 시 top<0 = 아래서 옴. 프레임 시트에 Next dev 'N' 배지가 보이는 건 dev 서버라서(프로덕션 없음).
 
+# /lp/go 실기기 함정: 동작 줄이기(reduce) = 조용한 버전, 터치 탭은 click, 재방문 봉투, 소리 unlock, 터치 재현 하네스
+
+## 왜 "영상처럼 안 된다"였나 (2026-11-13, 오너: "내가 사이트에서 직접 동작할 때는 왜 펀치기나 너가 영상에 보여준 대로 안 되는 거지?")
+- 오너 PC(이 호스트) 실측: Windows '애니메이션 효과' 꺼짐(SPI_GETCLIENTAREAANIMATION=False) → Chrome/Edge 가 prefers-reduced-motion: reduce. 원격 데스크톱·성능 옵션 PC, Android '애니메이션 효과 제거'/배율 0 도 같음. 예전 reduce 경로가 전부 '최종 상태로 건너뜀'이라 페이지 전체가 정지 화면이었음(펀치는 구멍만, 봉투는 카드, 파쇄기 트랙 없음, 영상 포스터만). 우리 검증은 늘 no-preference 라 못 봄.
+- **규칙(모든 연출)**: reduce = '조용한 버전'. 흔들림·섬광·조각/칩 낙하·큰 비행·도장/펀치 도구·튕김만 뺀다. 손 조작(당기기·펀치·누르기·스크롤 스크럽)과 순서(점등·도장·인쇄)는 그대로, 짧은 opacity/제자리 변화로. **reduce 에서 최종 상태로 점프하는 코드 금지.** stampPose(reduced) 는 도구 없음 + 잉크 spread 만.
+- 재방문: localStorage 쿠폰이 있으면 done 카드라 봉투가 다시 안 나옴(녹화는 늘 새 컨텍스트) → done 패널에 '봉투 다시 뜯어 보기'(replay, 같은 코드라 파밍 방지 유지).
+- 배포·캐시는 원인 아니었음(라이브 = 최신 커밋 확인법: curl HTML + gh api deployments).
+
+## 터치 함정
+- 핀/스크롤 무대 위의 '탭'은 **click** 으로 받는다. pointerdown 을 탭으로 쓰면 스크롤하는 손가락이 닿자마자 발동(파쇄기가 첫 터치에 자동 재생으로 바뀌던 버그). 드래그는 pointer* + touch-action 으로.
+- touch-action: none 은 꼭 필요한 작은 영역만(서명 패드). 세로로 당기는 종이(영수증)는 pan-down = 손가락 아래로 = 당김, 위로 = 스크롤.
+- 터치 pointerdown 은 사용자 활성화가 아님(HTML: pointerup/touchend/click/keydown) → paper/sfx.ts 가 그 이벤트들에서 전역으로 unlock/resume 재시도. 스크롤만 한 방문자는 여전히 무음(정책).
+- 관성 스크롤 중 탭은 스크롤만 멈추고 click 이 안 됨(플랫폼 동작, 버그 아님) — 하네스에서도 재현되니 탭 전에 정지 대기.
+
+## 터치 재현 하네스 (레포 밖 C:\Temp\lp-touch, lib.mjs = 레포 playwright/sharp)
+- openMobile: Android UA·isMobile·hasTouch·DPR3·384x780, submit 은 init script 로 차단, 트래커 차단. 스크롤은 CDP Input.dispatchTouchEvent 드래그(swipe/swipeTo; fling 생김). **Input.synthesizeScrollGesture 는 headless 에서 스크롤 안 됨.** motion() = 스크린샷 2장 픽셀 차이로 '움직였나' 측정.
+- probe.mjs <url> motion|reduce <prefix> (10개 연출 순회), desk.mjs(1440 휠·클릭·mousedown), sign.mjs(서명 이벤트 타임라인), replay.mjs(재방문 봉투·reduce 영상 탭), rec.mjs(터치 점 표시 녹화 → ffmpeg mp4). 결과·진단: discord-codex-bridge data/outputs/1526768620972019765/2026-11-13T07-18-57-411Z/diagnosis.md.
+- 확인 못 함: 실제 삼성 설정·진동·소리 체감, 삼성 인터넷·카카오 인앱·iOS 의 pan-down/길게 누르기 차이, 실제 서버 성공 후 봉투.

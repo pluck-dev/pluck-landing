@@ -58,7 +58,8 @@ const today = () =>
 /**
  * /lp/go 견적 영수증 (reveal-craft moment): the quiz result prints out of a small printer, line by line.
  * Paths: auto (prints once it is on screen), hand (drag the paper down to pull it out faster),
- * skip ("바로 보기", whole receipt at once) and reduced motion (printed already, nothing moves).
+ * skip ("바로 보기", whole receipt at once) and reduced motion (prints the same,
+ * without the printer drop-in, jiggle, sway, shake or stamp tool).
  * Replaces the dark QuoteResultCard on this page only; same estimate(), same QuoteCalculated event.
  */
 export function GoReceipt({ answers, onRestart }: { answers: QuoteAnswers; onRestart: () => void }) {
@@ -197,11 +198,10 @@ export function GoReceipt({ answers, onRestart }: { answers: QuoteAnswers; onRes
         measure();
         render();
       });
-    if (reduced) finish();
-    else {
-      root.setAttribute("data-printing", "");
-      render();
-    }
+    // Reduced motion prints too (the scene drops the printer drop-in, jiggle, sway, shake and the stamp
+    // tool); only "바로 보기" or the end of the paper finish it.
+    root.setAttribute("data-printing", "");
+    render();
 
     skipRef.current = () => {
       if (finished) return;

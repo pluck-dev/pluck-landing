@@ -122,7 +122,7 @@ class SealPainter {
       g.save();
       g.translate(L.env.x, L.env.y + (1 - P.envIn) * 14 + P.sendY);
       g.rotate(P.sendRot);
-      g.globalAlpha = P.envIn;
+      g.globalAlpha = P.envIn * P.sendAlpha;
       this.envelopeBack(g, P);
       if (folded) this.packet(g, P);
       this.envelopeFront(g, P);
@@ -287,15 +287,14 @@ class SealPainter {
 /**
  * The success moment: the sheet the visitor filled in folds into an envelope, gets the PLUCK stamp and
  * slides out the top; then the existing thank-you text comes up. Mounted only inside QuoteLeadForm's
- * success render, i.e. after the server action returned success. Reduced motion: text only.
+ * success render, i.e. after the server action returned success. Reduced motion: calm version (sealPose).
  * Tap/click skips to the text. Drag up on the envelope sends it right away (hand path).
  */
 export function GoSeal({ sheet, children }: { sheet: SealSheet; children: React.ReactNode }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
-  // Mounted only on the client after a confirmed send, so window is there; reduced motion = text only.
-  const [done, setDone] = useState(() => typeof window !== "undefined" && prefersReduced());
+  const [done, setDone] = useState(false);
   const skipRef = useRef<() => void>(() => {});
 
   useLayoutEffect(() => {
@@ -317,10 +316,13 @@ export function GoSeal({ sheet, children }: { sheet: SealSheet; children: React.
       });
     let t = 0;
     let finished = false;
+    // Mounted only on the client after a confirmed send. Reduced motion plays the calm version: folds and
+    // the stamp ink without bounce, shake or stamp tool, and the envelope fades instead of flying off.
+    const reduced = prefersReduced();
 
     const textEl = root.querySelector<HTMLElement>(".seal-text");
     const render = () => {
-      const P = sealPose(t, L, false);
+      const P = sealPose(t, L, reduced);
       painter.draw(P);
       root.style.setProperty("--seal-text", P.text.toFixed(3));
       // Once the envelope is gone the stage shrinks to the thank-you text (no jump at the end).

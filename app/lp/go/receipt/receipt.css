@@ -16,8 +16,12 @@
   touch-action: pan-y;
 }
 .rc[data-printing] .rc-paper {
-  /* While it prints, a vertical drag on the paper pulls it out instead of scrolling. */
-  touch-action: none;
+  /*
+   * While it prints, a finger moving down on the paper pulls it out; a finger moving up still scrolls the
+   * page down (pan-down = scrolling that starts downward). touch-action: none here used to trap phone
+   * visitors on a tall receipt until it finished printing.
+   */
+  touch-action: pan-down;
   cursor: grab;
 }
 .rc canvas {

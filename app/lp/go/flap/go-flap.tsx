@@ -71,7 +71,8 @@ export const boardShake = (t: number, end: number) => ring(t - end, 1.4, 11, 9);
  * on the same digit, staggered left to right, the last flap of each bouncing on its stop. Tapping the
  * board turns it again, with sound (WebAudio only exists after a gesture, so the load run is silent).
  * Paths: auto (load) · hand (tap) · skip (hero not on screen at load → stays at rest) ·
- * reduced motion (never turns). The digits are DOM text in Paperlogy; only transforms change per frame.
+ * reduced motion (same run, flat: each card just changes in place, no turning leaves, no bounce or shake).
+ * The digits are DOM text in Paperlogy; only transforms change per frame.
  */
 export function GoFlapStats({ items }: { items: FlapStat[] }) {
   const rootRef = useRef<HTMLDListElement>(null);
@@ -108,6 +109,16 @@ export function GoFlapStats({ items }: { items: FlapStat[] }) {
       modules.forEach((_, i) => {
         const P = modulePose(t, offsets[i], flat[i]);
         const el = parts[i];
+        if (reduced) {
+          // Flat card: the digit changes in place (cur while the top leaf would fall, then nxt).
+          const shown = P.bot !== null ? P.nxt : P.cur;
+          setText(el.top, shown);
+          setText(el.bot, shown);
+          el.leafT.style.visibility = "hidden";
+          el.leafB.style.visibility = "hidden";
+          el.cast.style.opacity = "0";
+          return;
+        }
         setText(el.top, P.nxt);
         setText(el.bot, P.cur);
         setText(el.leafTd, P.cur);
@@ -149,7 +160,6 @@ export function GoFlapStats({ items }: { items: FlapStat[] }) {
     });
 
     const run = () => {
-      if (reduced) return;
       t = 0;
       render();
       loop.wake();

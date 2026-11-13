@@ -682,6 +682,17 @@
     transform: translateX(14px);
   }
 }
+/* Reduced motion: the next question still arrives (a short fade), it just doesn't slide. */
+@media (prefers-reduced-motion: reduce) {
+  .go-step {
+    animation: go-step-fade 0.2s ease-out;
+  }
+}
+@keyframes go-step-fade {
+  from {
+    opacity: 0;
+  }
+}
 
 /* ---------- 6. FAQ: four questions, collapsed ---------- */
 .go-faq {

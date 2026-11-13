@@ -12,7 +12,8 @@ export const STAMP_LIFT = 0.46;
 
 /** dir = which side the hand comes from and goes back to (1 = right, -1 = left). */
 export function stampPose(s: number, baseRot: number, reduced = false, dir = 1) {
-  if (reduced) return { h: 0, alpha: 0, sx: 1, sy: 1, rot: baseRot, dx: 0, dy: 0, ink: s >= 0 ? 1 : 0, spread: s >= 0 ? 1 : 0 };
+  // Reduced motion: no tool travelling in or lifting away, the ink still soaks in (opacity/size only).
+  if (reduced) return { h: 0, alpha: 0, sx: 1, sy: 1, rot: baseRot, dx: 0, dy: 0, ink: s >= 0 ? 1 : 0, spread: outCubic(seg(s, 0, 0.28)) };
   const fall = seg(s, -STAMP_FALL, 0);
   const lift = outCubic(seg(s, 0.1, STAMP_LIFT));
   const squash = s >= 0 ? ring(s, 0.07, 16, 5.5) : 0;

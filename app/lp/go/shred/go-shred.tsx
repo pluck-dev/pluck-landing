@@ -37,7 +37,9 @@ const IDLE_MS = 5000;
  * three total-only example quotes get shredded, then the itemised PLUCK quote is handed out on its own
  * clock. No scroll-jacking: stop scrolling and the shredder stops.
  * Paths: scroll (hand) · tap the stage, or stop inside the stage for 5 s (auto) · arriving from below or
- * an anchor jump past it (skip, final state) · reduced motion (final state, nothing moves).
+ * an anchor jump past it (skip, final state) · reduced motion (same scroll scrub, the scene drops the
+ * motor jitter, wobble, landing shake and rattle). Tap = a real tap (click): on phones the finger that
+ * scrolls the pinned stage also lands on it, and pointerdown used to start the auto run mid-scroll.
  * Sound only after a gesture (paper/sfx.ts); the motor hum follows the feed speed.
  */
 export function GoShred({ quotes, sheet, label }: { quotes: Quote[]; sheet: PluckSheet; label: string }) {
@@ -181,9 +183,9 @@ export function GoShred({ quotes, sheet, label }: { quotes: Quote[]; sheet: Pluc
       started = true;
       measure();
       stage.setAttribute("data-armed", "");
-      // Skip: already past the section (anchor jump, reload lower down) or reduced motion → final.
+      // Skip: already past the section (anchor jump, reload lower down) → final.
       // (Started with the track's top already above the screen = we came from below, not through it.)
-      if (reduced || track.getBoundingClientRect().top < -2) finish();
+      if (track.getBoundingClientRect().top < -2) finish();
       else {
         onScroll();
         draw();
@@ -200,11 +202,11 @@ export function GoShred({ quotes, sheet, label }: { quotes: Quote[]; sheet: Pluc
     window.addEventListener("scroll", onScroll, { passive: true });
     const onTap = () => {
       unlockSound();
-      if (!L || reduced || target >= 1) return;
+      if (!L || target >= 1) return;
       auto = true;
       loop.wake();
     };
-    stage.addEventListener("pointerdown", onTap);
+    stage.addEventListener("click", onTap);
     const resize = new ResizeObserver(() => {
       if (L && (stage.clientWidth !== L.W || stage.clientHeight !== L.H)) {
         measure();
@@ -237,7 +239,7 @@ export function GoShred({ quotes, sheet, label }: { quotes: Quote[]; sheet: Pluc
       loop.stop();
       shredHum(0);
       window.removeEventListener("scroll", onScroll);
-      stage.removeEventListener("pointerdown", onTap);
+      stage.removeEventListener("click", onTap);
       resize.disconnect();
     };
   }, [quotes, sheet]);

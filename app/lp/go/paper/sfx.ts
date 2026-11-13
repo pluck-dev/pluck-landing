@@ -27,6 +27,18 @@ export function unlockSound() {
   }
 }
 
+/*
+ * Touch pointerdown is not a user-activation event (HTML spec: pointerup/touchend/click are), so an
+ * AudioContext made there starts suspended on phones. Every moment calls unlockSound on its own gesture;
+ * these page-wide listeners retry on the events that do carry activation, so the first real tap anywhere
+ * (an answer, a lamp, the strip) turns sound on.
+ */
+if (typeof window !== "undefined") {
+  for (const type of ["pointerup", "touchend", "click", "keydown"]) {
+    window.addEventListener(type, () => (!ctx || ctx.state === "suspended" ? unlockSound() : undefined), { capture: true, passive: true });
+  }
+}
+
 export function setMuted(value: boolean) {
   muted = value;
 }
