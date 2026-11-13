@@ -22,7 +22,7 @@ import "./go.css";
 /**
  * /lp/go (v5, video-first): an ad landing page that should read like the owner wrote it himself.
  * v5 rule (outside marketer + owner): visuals persuade, text is a caption. One short headline per section,
- * at most one short line, real recorded loops of the live sites (public/lp/go/video/, go-video.tsx),
+ * at most one short line, real loops of the prettiest UIs first (public/lp/go/video/, go-video.tsx),
  * the paper moments (coupon, receipt, stamps, crumple, seal) kept. Legal/honesty text stays, small.
  * No generated imagery, no gradients/glows, no scroll-reveal on everything (see .fry/MEMORY.md "AI 티").
  * Every number comes from lib/portfolio.ts or lib/quote/pricing.ts. Leads: submitGoInquiry → "lp-go".
@@ -48,7 +48,12 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: `${TITLE} | PLUCK 플럭`, description: DESCRIPTION },
 };
 
-/** The reel. Videos are real recordings of the public live sites (C:\Temp\lp-v5\rec.mjs, scroll/click only). */
+/**
+ * The reel, prettiest UI first (owner, 2026-11-13: "이쁜 UI 위주로 보여줘"). Loops are real pixels only:
+ * live recordings of public screens (C:\Temp\lp-prettyec.mjs, C:\Temp\lp-v5ec.mjs: scroll/tap only) or,
+ * for 냉킵 (tester build, no public app), its real emulator screenshots panned in a phone (C:\Temp\lp-pretty
+k).
+ */
 type Reel = {
   slug: string;
   name: string;
@@ -57,25 +62,37 @@ type Reel = {
   loop: Loop;
   /** Small honesty label under the media. */
   note?: string;
+  /** Link text when the project has a single url (default "사이트 열기"). */
+  linkLabel?: string;
   /** 카영: the old spreadsheet printout crumples off the admin screenshot (crumple/). */
   crumple?: boolean;
 };
 
-const KNIFE: Loop = { name: "knife", device: "phone", alt: "칼가는곳 사이트를 폰으로 내려 보는 화면" };
+const NAENGKEEP: Loop = { name: "naengkeep", device: "phone", alt: "냉킵 앱의 냉장고 화면, 재료 넣기, 바나나 보관 정보, 시작 화면" };
+const SETFLOW: Loop = { name: "setflow", device: "phone", alt: "Setflow 웹 앱의 루틴 편집 화면을 내려 보고 기록 탭과 기록 방법 시트를 여는 화면" };
+const THOUSAND: Loop = { name: "thousand", device: "phone", alt: "THOUSAND 파이 상세 화면에서 조명 켜진 진열장으로 돌아가 파이 하나를 눌러 보는 화면" };
 const DEALER: Loop = { name: "dealer", device: "phone", alt: "카영 딜러 웹을 넘겨 보는 화면. 로그인 전 샘플 데이터 대시보드" };
 /**
- * Hero: one phone, three real loops in turn (go-video.tsx GoHeroReel). Every clip opens on a bright,
- * readable frame (hero-knife is re-recorded from the price cards, not the dark knife intro).
- * Only 카영 carries a label: its screens are the pre-login sample data.
+ * Hero: one phone, the three best-looking UIs in turn (go-video.tsx GoHeroReel). Every clip opens on a
+ * bright, readable frame. Labels only where the clip needs one (tester build, demo shop without payment).
  */
 const HERO: HeroClip[] = [
-  { name: "hero-bayada", label: "BAYADA", alt: "BAYADA 고객용 사이트를 폰으로 내려 보는 화면" },
-  { name: "hero-knife", label: "칼가는곳", alt: "칼가는곳 사이트의 연마 종류와 가격 카드를 폰으로 내려 보는 화면" },
-  { name: "dealer", label: "카영", alt: DEALER.alt, note: "카영 · 로그인 전 샘플 데이터" },
+  { name: NAENGKEEP.name, label: "냉킵", alt: NAENGKEEP.alt, note: "냉킵 · 테스트 버전 화면" },
+  { name: SETFLOW.name, label: "Setflow", alt: SETFLOW.alt },
+  { name: THOUSAND.name, label: "THOUSAND", alt: THOUSAND.alt, note: "THOUSAND · 결제 없는 시연 버전" },
 ];
 
-/** Owner rule: never 보령 on ad pages. */
+/** Owner rule: never 보령 on ad pages. Visual strength first; 카영 (crumple) and BAYADA stay, lower down. */
 const REEL: Reel[] = [
+  { slug: "naengkeep", name: "냉킵", result: "냉장고 칸 그대로, 가족과 함께", loop: NAENGKEEP, note: "테스트 버전 화면", linkLabel: "지원 페이지" },
+  { slug: "setflow", name: "Setflow", result: "운동 기록 · 코칭 · 짐 관리를 앱 하나로", loop: SETFLOW, linkLabel: "웹 앱 열기" },
+  { slug: "thousand", name: "THOUSAND", result: "진열장 위 파이가 하나씩 반응하는 쇼핑몰", loop: THOUSAND, note: "결제 없는 시연 버전" },
+  {
+    slug: "dvia",
+    name: "DVIA 대일시스템",
+    result: "장비 제조사, 3D 글로벌 사이트",
+    loop: { name: "dvia", device: "browser", url: "DVIA", alt: "대일시스템 사이트의 진동 파형 파티클 첫 화면과 3D 제품 섹션" },
+  },
   { slug: "dealer-settlement", name: "카영", result: "엑셀 정산 → 웹 3개", loop: DEALER, note: "로그인 전 샘플 데이터", crumple: true },
   {
     slug: "homecare-platform",
@@ -83,13 +100,6 @@ const REEL: Reel[] = [
     result: "웹 · 교육 · 관리자, 한 번에 3개",
     loop: { name: "academy", device: "browser", url: "BAYADA Academy", alt: "BAYADA 교육 아카데미 첫 화면과 프로그램 목록을 내려 보는 화면" },
     note: "개발·시연 서버",
-  },
-  { slug: "knife-sharpening", name: "칼가는곳", result: "가게 방문 → 집에서 수거 신청", loop: KNIFE },
-  {
-    slug: "dvia",
-    name: "DVIA 대일시스템",
-    result: "장비 제조사, 3D 글로벌 사이트",
-    loop: { name: "dvia", device: "browser", url: "DVIA", alt: "대일시스템 사이트의 진동 파형 파티클 첫 화면과 3D 제품 섹션" },
   },
 ];
 
@@ -135,10 +145,10 @@ const FAQ: [string, string][] = [
   ["혼자면 바쁠 땐요?", "동시 진행 수를 정해 두고, 일정부터 확정해요."],
 ];
 
-function linksOf(project: PortfolioProject) {
+function linksOf(project: PortfolioProject, single = "사이트 열기") {
   // Public pages only: admin apps link to a login screen, so they are left out here.
   const apps = project.apps?.filter((app) => app.url && !app.summary.includes("로그인 화면"));
-  if (!apps?.length) return project.url ? [{ url: project.url, label: "사이트 열기" }] : [];
+  if (!apps?.length) return project.url ? [{ url: project.url, label: single }] : [];
   return apps.map((app) => ({ url: app.url!, label: app.name.split(" · ").at(-1)! }));
 }
 
@@ -209,7 +219,7 @@ export default function GoLandingPage() {
             <h2 id="go-work-title" className="section-title">
               최근에 만든 것
             </h2>
-            {reel.map(({ project, name, result, loop, note, crumple }, index) => (
+            {reel.map(({ project, name, result, loop, note, linkLabel, crumple }, index) => (
               <article
                 key={project.slug}
                 className={`gr-item is-${loop.device}${index % 2 ? " is-flip" : ""}`}
@@ -226,7 +236,7 @@ export default function GoLandingPage() {
                   <h3 id={`reel-${project.slug}`}>{name}</h3>
                   <p className="gr-result">{result}</p>
                   <p className="gr-links">
-                    {linksOf(project).map((link) => (
+                    {linksOf(project, linkLabel).map((link) => (
                       <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer">
                         {link.label} <ArrowUpRight size={14} aria-hidden="true" />
                       </a>

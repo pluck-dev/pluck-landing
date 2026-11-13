@@ -326,8 +326,8 @@
 - 대신: 사이트 토큰·컴포넌트(.shell .wordmark .header-contact .button* .section-title .qz* .footer, --paper/--ink/--blue/--sage) 재사용, 실제 스크린샷을 크게·일부는 디테일로 크롭, 손그림 링·화살표·짧은 메모(손글씨 웹폰트는 사이트가 안 쓰므로 Noto Sans KR 700 + 살짝 기울임), 1인칭 구어 해요체, 실제 숫자(getPortfolioStats·pricing.ts)만. 섹션마다 '왼쪽 제목/오른쪽 내용'만 반복하지 말고 한 칼럼 섹션을 섞는다.
 
 ## v5 = 영상 우선 + 텍스트 다이어트 (2026-11-13, 외부 마케터: "텍스트 밀도가 너무 높아서 불필요한 거 다 날리고 이미지랑 영상 위주로. 진짜 바보도 설득될 정도로")
-- 구조(v6 에서 연출 5종 추가 → 아래 "/lp/go v6 연출 5종"): 상단 바(파란 "견적 받기") → 히어로(h1 "상담한 개발자가 / 직접 만들어요" + "홈페이지 · 앱 · 업무 시스템" + 큰 숫자 56/21(getPortfolioStats, 작은 라벨, v6 부터 split-flap) + 버튼 1개 + 폰 1대 히어로 릴, 아래 "히어로 비주얼 규칙") → 쿠폰 무대 → 최근에 만든 것 = 릴(카영·BAYADA·칼가는곳·DVIA: 기기 프레임 영상 + 이름 + 결과 한 줄 + 공개 링크, 카영은 엑셀 구김 샷 유지) → 비용 = 찢긴 종이 영수증(pricing.ts 숫자 그대로) → 도장 카드(단계 문구 ≤ 15자) → FAQ 4개(details, 접힘) → 30초 견적(마지막 화면이 퀴즈 카드라 텍스트만인 화면 없음) → 푸터. Setflow 는 빠짐(Flutter 라 라이브 녹화가 로딩 화면뿐).
-- 영상: public/lp/go/video/<name>.{mp4,webm,jpg} (knife·dealer 폰 360x780, bayada·academy·dvia 브라우저 960x600, 8–10s, 각 0.1–0.8MB). 녹화 하네스 C:\Temp\lp-v5
+- 구조(v6 에서 연출 5종 추가 → 아래 "/lp/go v6 연출 5종"): 상단 바(파란 "견적 받기") → 히어로(h1 "상담한 개발자가 / 직접 만들어요" + "홈페이지 · 앱 · 업무 시스템" + 큰 숫자 56/21(getPortfolioStats, 작은 라벨, v6 부터 split-flap) + 버튼 1개 + 폰 1대 히어로 릴, 아래 "히어로 비주얼 규칙") → 쿠폰 무대 → 최근에 만든 것 = 릴(2026-11-13 부터 냉킵·Setflow·THOUSAND·DVIA·카영·BAYADA 순, 아래 "보여주기 순서" 참고: 기기 프레임 영상 + 이름 + 결과 한 줄 + 공개 링크, 카영은 엑셀 구김 샷 유지) → 비용 = 찢긴 종이 영수증(pricing.ts 숫자 그대로) → 도장 카드(단계 문구 ≤ 15자) → FAQ 4개(details, 접힘) → 30초 견적(마지막 화면이 퀴즈 카드라 텍스트만인 화면 없음) → 푸터.
+- 영상: public/lp/go/video/<name>.{mp4,webm,jpg} (폰: dealer·setflow·thousand 390x844 녹화, naengkeep 540x1170 렌더 — CSS 가 aspect 360/780 cover 라 크기 무관; 브라우저: academy·dvia 960x600; 8–10s, 각 0.1–0.8MB). 녹화 하네스 C:\Temp\lp-v5
 ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 addInitScript 로 막음, 트래커 차단) → ffmpeg x264 crf30 / vp9 crf42. dealer 는 로그인 전 샘플 데이터라 "로그인 전 샘플 데이터" 라벨 필수. BAYADA 는 "개발·시연 서버" 라벨. DVIA(WebGL)는 swiftshader 플래그 필요.
 - go-video.tsx: <source> 는 400px 근처에서만 붙임(preload none 만으론 일부 브라우저가 메타데이터를 받음) → 첫 로드엔 히어로 3개만. 보일 때만 play, 화면 밖 pause, reduced-motion 이면 <video> 자체를 안 그림(포스터만). 포스터는 next/image(지연 로드) — video poster 속성은 안 씀(즉시 로드돼서). 일시정지(WCAG 2.2.2)는 화면 전체가 버튼(.gv-tap, aria-label) + 작은 아이콘은 hover/focus/일시정지 상태에서만 보임(평소 안 보임, 2026-11-13 오너 "정지 버튼 보여서 지저분").
 - CTA 스타일은 파란 button-primary 하나만(헤더 .header-contact 도 .go 범위에서 파랑). 쿠폰의 '자동으로 열기'는 조작 버튼이라 ghost.
@@ -336,10 +336,17 @@ ec.mjs(라이브 공개 페이지만, 스크롤·'다음' 클릭만, submit 은 
 ## 히어로 비주얼 규칙 (2026-11-13, 오너: "30초 견적 받기 버튼 아래 섹션 이상해")
 - 이전(브라우저 BAYADA + 폰 2대 겹친 콜라주, 칼가는곳 검은 첫 프레임, 보이는 정지 버튼, 긴 캡션)은 '지저분'으로 폐기. **겹치는 콜라주 재도입 금지.**
 - 지금: sage 패널 하나 + 폰 1대(GoHeroReel, go-video.tsx)가 실영상 3개를 순서대로 1회씩 재생 → 0.7s 크로스페이드, 아래 프로젝트 이름 탭(누르면 전환). 세로 폰 3개 나란히(옵션 b)는 390 폭에서 화면이 너무 작아 안 씀. 데스크톱은 왼쪽 카피 / 오른쪽 패널(max 520, 폰 262px)로 900px 높이 안에 들어옴.
-- 히어로 클립은 **밝고 의미 있는 첫 프레임**만: hero-bayada(모바일 390 녹화, 사이트의 우하단 고정 채팅 버튼은 녹화 때 숨김, 6.3s로 잘라 글 벽 구간 제외), hero-knife(검은 칼 인트로가 아니라 '어떤 연마가 필요하신가요' 가격 카드부터 녹화), dealer. 녹화 하네스 C:\Temp\lp-hero
+- 히어로 클립은 **밝고 의미 있는 첫 프레임**만(현재 클립은 아래 "보여주기 순서"). 예전 hero-bayada/hero-knife/knife/bayada 영상은 2026-11-13 삭제.
 ec2.mjs (pre 단계에서 시작 위치로 이동 후 녹화 구간 시작).
-- 정직성 라벨은 그 클립에만: 카영이 보일 때만 탭 아래 "카영 · 로그인 전 샘플 데이터"(자리 고정이라 점프 없음). 공용 캡션("실제 사이트 녹화 …") 없음.
+- 정직성 라벨은 그 클립에만: HeroClip.note 가 있는 클립이 보일 때만 탭 아래 한 줄(자리 고정이라 점프 없음). 공용 캡션("실제 사이트 녹화 …") 없음.
 - 로드: 첫 화면에선 현재 클립만 소스, 재생 시작하면 다음 클립 소스를 붙임(preload auto). reduced-motion 이면 포스터만, 탭으로 전환.
+
+## 보여주기 순서: UI 예쁜 것 먼저 (2026-11-13, 오너: "보여주기에 UI가 이쁜 건 냉킵, 셋플로우 이런 거잖아. 이쁜 UI 위주로 보여줘")
+- **규칙(모든 광고 LP·포트폴리오 노출)**: 첫인상 자리(히어로·릴 맨 위)는 UI가 가장 예쁜 프로젝트. 업무 성과가 큰 프로젝트(카영 엑셀→웹, BAYADA 3개 앱)는 빼지 말고 아래로. 오너가 "안 예쁘다"고 한 것: BAYADA·칼가는곳·카영 화면. 예쁜 쪽: 냉킵·Setflow, 그다음 THOUSAND(따뜻한 진열장). 보령은 절대 안 씀.
+- 지금 히어로 = 냉킵 → Setflow → THOUSAND. 릴 = 냉킵·Setflow·THOUSAND·DVIA·카영(구김)·BAYADA. 칼가는곳은 릴에서 뺌(램프 보드엔 그대로).
+- 클립 출처: **naengkeep** = 테스터 빌드만 있어(공개 앱 없음, 운영 Firebase 라 로컬 실행 금지) D:\dev\personalridge-ai-app 의 실기기 에뮬레이터 캡처 1080x2400(build/fridge-installed, build/installed-picker(가장자리 6px 연두 테두리 크롭), build/emulator-preview, tmp/welcome-check)를 C:\Temp\lp-pretty
+kender.mjs(Playwright 로 프레임별 transform/opacity → 540x1170 PNG → ffmpeg)로 팬·밀기·종이색 dip. 크로스페이드는 두 화면이 겹쳐 유령처럼 보여서 dip 사용. 750x1624 캡처는 DEBUG 리본·두부 글자라 쓰지 말 것. 라벨 "테스트 버전 화면". **setflow** = 라이브 녹화(C:\Temp\lp-prettyec.mjs): flt-glass-pane 대기 + 4.5s 후 기록 탭 → '월요일 상체' 루틴 편집에서 시작. 라이브 홈·커뮤니티는 실사용자 이름·사진이 보이므로 **녹화 금지**. Flutter 스크롤은 mouse.wheel 을 시간 기준으로(대기 루프로 돌리면 8초씩 걸림), 클릭 후 마우스를 치워야 툴팁이 안 뜸. **thousand** = 라이브 녹화, 밝은 상품 상세에서 시작(진열장·시트 첫 프레임은 어둡거나 흐림) → 뒤로 → 진열장 → 파이 시트. 라벨 "결제 없는 시연 버전"(배포본이 결제 없는 시연).
+- 히어로 캡처 함정: #go-work-title 로 바로 scrollIntoView 하면 쿠폰 무대 veil 이 남아 회색으로 찍힘 → 쿠폰 '건너뛰기' 먼저.
 
 ## 폰트 = 페이퍼로지(Paperlogy), /lp/go 전용 (2026-11-13, 오너: "폰트를 페이퍼로지로")
 - 출처: 공식 freesentation.blog/paperlogyfont → github.com/Freesentation/paperlogy v1.001 TTF, 저작권 PT&N(이주임·김도균), **SIL OFL 1.1**(상업 이용·웹 임베딩·서브셋 OK, 폰트 단독 판매 금지; Reserved Font Name 없음). 라이선스 사본 public/fonts/paperlogy/OFL.txt. 눈누 CDN 파일은 v1.0 재배포라 안 씀.
