@@ -333,3 +333,15 @@ export function sfxEmboss(index: number) {
   burst(audio, { dur: 0.022, gain: 0.14, type: "bandpass", freq: 1500 + (index % 3) * 180, q: 2 });
   tone(audio, { dur: 0.04, gain: 0.05, freq: 300, freqTo: 160, type: "triangle" });
 }
+
+/* ---------- ticket punch ---------- */
+
+/** Steel jaws snapping through card: a bright metal click, the paper pop, a little ring. heavy = last hole. */
+export function sfxPunch(heavy = false) {
+  const audio = ready();
+  if (!audio) return;
+  burst(audio, { dur: 0.018, gain: heavy ? 0.22 : 0.16, type: "highpass", freq: 3400 });
+  burst(audio, { at: 0.006, dur: 0.05, gain: 0.12, type: "bandpass", freq: heavy ? 700 : 950, q: 1.2 });
+  tone(audio, { at: 0.004, dur: heavy ? 0.22 : 0.12, gain: heavy ? 0.06 : 0.035, freq: heavy ? 1250 : 1650, freqTo: heavy ? 900 : 1300, type: "triangle" });
+  if (heavy) tone(audio, { dur: 0.14, gain: 0.12, freq: 140, freqTo: 60 });
+}

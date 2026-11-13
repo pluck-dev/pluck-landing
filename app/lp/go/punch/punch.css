@@ -1,0 +1,28 @@
+/*
+ * /lp/go quiz punch card: a paper strip above the question card; its canvas reaches above (the punch
+ * coming down) and below (chads falling over the card), never catching pointer events.
+ */
+.pch {
+  position: relative;
+  z-index: 2;
+  height: 72px;
+  margin-bottom: 12px;
+  pointer-events: none;
+}
+.pch-canvas {
+  position: absolute;
+  left: 0;
+  pointer-events: none;
+}
+/* The bar and "n/5" stay for screen readers; the holes are the visible progress. */
+.go-quiz .qz-progress,
+.go-quiz .qz-count {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.go-quiz .qz-top {
+  min-height: 40px;
+}

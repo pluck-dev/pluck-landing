@@ -18,6 +18,10 @@ import { unlockSound } from "./paper/sfx";
 import { PROJECT_KINDS, SCALES } from "@/lib/quote/pricing";
 import { GoSuccess } from "./go-success";
 import { GoReceipt } from "./receipt/go-receipt";
+import { GoPunch } from "./punch/go-punch";
+
+/** Punch card columns, one per question (same order as QuizQuestions). */
+const PUNCH_LABELS = ["종류", "화면", "기능", "디자인", "일정"];
 
 /** /lp/go quiz: questions → printed receipt (go-receipt.tsx) → name/contact form (form tag "lp-go"). */
 export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: string }) {
@@ -35,6 +39,12 @@ export function GoQuiz({ formEnabled, email }: { formEnabled: boolean; email: st
   return (
     // Any answer tap is a gesture: let the receipt printer make sound later (no AudioContext before that).
     <div className="qz go-quiz" ref={rootRef} onPointerDown={unlockSound}>
+      {/* Progress as a punch card: reads the step, never changes it (punch/). A restart = a fresh card. */}
+      <GoPunch
+        answered={quiz.draft.kind ? Math.min(QUIZ_STEP_COUNT, quiz.step - 1) : 0}
+        current={Math.min(QUIZ_STEP_COUNT, quiz.step - 1)}
+        labels={PUNCH_LABELS}
+      />
       {quiz.step >= 1 && quiz.step <= QUIZ_STEP_COUNT && (
         // Keyed by step so each question slides in (go.css .go-step; off under reduced motion).
         <div className="go-step" key={quiz.step}>
