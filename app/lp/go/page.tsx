@@ -11,6 +11,7 @@ import { GoCoupon } from "./coupon/go-coupon";
 import { GoDraw } from "./go-draw";
 import { GoQuiz } from "./go-quiz";
 import { Shot, type Mark } from "./shot";
+import { GoStamps, type Step } from "./stamps/go-stamps";
 import "./go.css";
 
 /**
@@ -141,12 +142,24 @@ const KIND_KEYS = Object.keys(PROJECT_KINDS) as KindKey[];
 const toWeeks = ([low, high]: readonly [number, number]) =>
   [Math.max(2, Math.round(low / 7)), Math.max(3, Math.round(high / 7))] as const;
 
-const STEPS = [
-  "아래 견적 계산을 해 보고 연락처를 남기시거나, 메일을 보내주세요.",
-  `${REPLY_PROMISE}드려요. 통화나 메시지로 몇 가지 여쭤볼게요.`,
-  `${PLAN_PROMISE} 안에 기획안 초안이랑 기능별 견적, 일정을 보내드려요. 보시고 안 하셔도 괜찮아요.`,
-  "계약하면 만드는 동안 실제로 눌러볼 수 있는 화면으로 중간중간 보여드려요.",
-  "오픈하면 소스코드랑 계정을 전부 넘겨드려요. 나중에 다른 개발자가 이어받아도 돼요.",
+/**
+ * The process as a stamp card (stamps/go-stamps.tsx). `when` is cut from the same promises the text
+ * uses (app/lp/dev/config.ts), so the stamp can never say a different duration than the sentence.
+ */
+const STEPS: Step[] = [
+  { label: "신청", text: "아래 견적 계산을 해 보고 연락처를 남기시거나, 메일을 보내주세요." },
+  {
+    label: "답장",
+    when: REPLY_PROMISE.replace(/^영업일 기준 /, "").replace(/에 답장$/, ""),
+    text: `${REPLY_PROMISE}드려요. 통화나 메시지로 몇 가지 여쭤볼게요.`,
+  },
+  {
+    label: "기획안",
+    when: PLAN_PROMISE.match(/\d+~\d+일/)?.[0],
+    text: `${PLAN_PROMISE} 안에 기획안 초안이랑 기능별 견적, 일정을 보내드려요. 보시고 안 하셔도 괜찮아요.`,
+  },
+  { label: "중간 확인", text: "계약하면 만드는 동안 실제로 눌러볼 수 있는 화면으로 중간중간 보여드려요." },
+  { label: "오픈", text: "오픈하면 소스코드랑 계정을 전부 넘겨드려요. 나중에 다른 개발자가 이어받아도 돼요." },
 ];
 
 /** Same answers as the /lp/dev FAQ (app/lp/dev/faqs.ts), in the owner's 해요체. No new promises. */
@@ -384,11 +397,7 @@ export default function GoLandingPage() {
           <h2 id="go-process-title" className="section-title">
             이렇게 진행해요
           </h2>
-          <ol>
-            {STEPS.map((step) => (
-              <li key={step}>{step}</li>
-            ))}
-          </ol>
+          <GoStamps steps={STEPS} />
         </section>
 
         <section className="go-quiz-sec shell" aria-labelledby="go-quiz-title">

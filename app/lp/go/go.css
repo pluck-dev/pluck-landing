@@ -395,35 +395,10 @@
 }
 
 /* ---------- 4. Process ---------- */
-/* One plain column on purpose: not every section is "title left, content right". */
+/* One plain column on purpose: not every section is "title left, content right". The card is stamps/. */
 .go-process {
   padding-top: 140px;
 }
-.go-process ol {
-  display: grid;
-  gap: 6px;
-  max-width: 44em;
-  margin: 28px 0 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: step;
-}
-.go-process li {
-  display: grid;
-  grid-template-columns: 2em minmax(0, 1fr);
-  padding-block: 12px;
-  font-size: 17px;
-  line-height: 1.75;
-  color: var(--text-2);
-  word-break: keep-all;
-  counter-increment: step;
-}
-.go-process li::before {
-  content: counter(step) ".";
-  font-weight: 700;
-  color: var(--ink);
-}
-
 /* ---------- 5. Quiz ---------- */
 .go-quiz-sec {
   display: grid;
@@ -576,8 +551,7 @@
   .go-intro-copy > p,
   .go-head > p,
   .go-price-copy > p,
-  .go-quiz-copy > p:not(.go-fine),
-  .go-process li {
+  .go-quiz-copy > p:not(.go-fine) {
     font-size: 16px;
   }
   .go-intro-actions .button {

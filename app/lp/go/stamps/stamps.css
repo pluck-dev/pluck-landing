@@ -1,0 +1,82 @@
+/*
+ * /lp/go 진행 과정 도장 카드. Paper card on the page, canvas draws paper, printed boxes, ink and the
+ * wooden stamp; the step text is DOM beside each box.
+ */
+.stc {
+  position: relative;
+  max-width: 44em;
+  margin-top: 28px;
+  padding: 22px 26px 26px;
+}
+.stc-canvas {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+.stc-head {
+  position: relative;
+  z-index: 1;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+.stc-list {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.stc-row {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  padding-block: 8px;
+}
+.stc-box {
+  width: 76px;
+  aspect-ratio: 1;
+}
+.stc-text strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+/* Once the card is live, a step's title stays pencil-grey until its box is stamped. */
+.stc[data-armed] .stc-row:not([data-stamped]) .stc-text strong {
+  color: var(--text-3);
+}
+.stc-text strong {
+  transition: color 0.25s ease;
+}
+.stc-text strong span {
+  font-weight: 600;
+  color: var(--text-3);
+}
+.stc-text p {
+  margin-top: 2px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-2);
+  word-break: keep-all;
+}
+@media (max-width: 640px) {
+  .stc {
+    padding: 18px 16px 20px;
+  }
+  .stc-row {
+    grid-template-columns: 68px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+  }
+  .stc-box {
+    width: 68px;
+  }
+  .stc-text p {
+    font-size: 15px;
+  }
+}

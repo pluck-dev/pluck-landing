@@ -3,8 +3,8 @@
  *
  *   0 → 0.42       printer drops into place (y outBack + squash on landing)
  *   start[i]       line i feeds (paper grows by that line's height, outCubic) and its ink comes up
- *   stampHit       (only with an opened coupon) the rubber stamp falls (inCubic), hits the coupon line
- *                  (thunk, squash, ink spread, shake), lifts away turning (outCubic)
+ *   stampHit       (only with an opened coupon) paper/stamp.ts: the rubber stamp falls, hits the coupon
+ *                  line (thunk, squash, ink spread, shake), lifts away turning
  *   cut            cutter: the receipt drops out of the slot (outBack), sways on its top (damped sine)
  *                  and its bottom curls up a little (outCubic), then rests
  *   end            everything at rest (≥ 0.5 s still frames before it)
@@ -12,7 +12,8 @@
  * The numbers are real DOM text (selectable, readable by screen readers); the canvases only draw paper,
  * printer, stamp tool and ink. Line heights come from the DOM (layout.edges).
  */
-import { clamp, DEG, inCubic, lerp, outBack, outCubic, ring, seg } from "../paper/ease";
+import { clamp, DEG, lerp, outBack, outCubic, ring, seg } from "../paper/ease";
+import { stampPose, stampShake } from "../paper/stamp";
 
 export const FEED = 0.17;
 const GAP = 0.23;
@@ -91,40 +92,9 @@ export function pose(t: number, L: ReceiptLayout, T: Timeline, reduced: boolean)
   let jiggle = 0;
   if (motion) for (const s of T.start) jiggle += ring(t - s - FEED * 0.6, 0.9, 22, 10);
 
-  // Stamp: tool falls (h 1→0), hits, lifts away. sImp = time since impact.
-  let stamp = null as null | {
-    h: number;
-    alpha: number;
-    sx: number;
-    sy: number;
-    rot: number;
-    dx: number;
-    dy: number;
-    ink: number;
-    spread: number;
-  };
-  let shake = { x: 0, y: 0 };
-  if (T.stampHit !== null) {
-    const sImp = t - T.stampHit;
-    const fall = seg(t, T.stampHit - 0.24, T.stampHit);
-    const lift = outCubic(seg(sImp, 0.1, 0.46));
-    const h = sImp < 0 ? 1 - inCubic(fall) : lift;
-    const squash = sImp >= 0 ? ring(sImp, 0.07, 16, 5.5) : 0;
-    stamp = {
-      h,
-      alpha: sImp < 0 ? clamp((fall - 0.02) * 5) : 1 - seg(sImp, 0.22, 0.46),
-      sx: 1 + squash * 0.6,
-      sy: 1 - squash,
-      rot: (-12 + (sImp < 0 ? -6 * (1 - fall) : 9 * lift)) * DEG,
-      dx: sImp < 0 ? 18 * (1 - fall) : 26 * lift,
-      dy: sImp < 0 ? -10 * (1 - fall) : -22 * lift,
-      ink: sImp >= 0 ? 1 : 0,
-      spread: outCubic(seg(sImp, 0, 0.28)),
-    };
-    if (motion && sImp > 0 && sImp < 0.7) {
-      shake = { x: ring(sImp, 3.2, 8, 13), y: ring(sImp, 2.4, 8, 17, 1) };
-    }
-  }
+  // Stamp: tool falls, hits the coupon line, lifts away (shared paper/stamp.ts).
+  const stamp = T.stampHit !== null ? stampPose(t - T.stampHit, -12 * DEG, reduced) : null;
+  const shake = T.stampHit !== null && motion ? stampShake(t - T.stampHit, 3.2) : { x: 0, y: 0 };
 
   // Cut: drop out of the slot, sway on its top edge, curl the bottom.
   const sCut = t - T.cut;
@@ -135,5 +105,5 @@ export function pose(t: number, L: ReceiptLayout, T: Timeline, reduced: boolean)
   // Paper under the slot is in the printer's shade; fades once it hangs free.
   const shade = 1 - seg(sCut, 0, 0.25);
 
-  return { t, printer, len, ink, jiggle: jiggle + 0, stamp, shake, detached, drop, sway, curl, shade, reduced };
+  return { t, printer, len, ink, jiggle, stamp, shake, detached, drop, sway, curl, shade, reduced };
 }
